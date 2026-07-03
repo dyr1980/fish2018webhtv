@@ -975,11 +975,10 @@
 
     <string-array name="select_ui_scale">
         <item>跟隨系統</item>
+        <item>超級大</item>
+        <item>大</item>
         <item>標準</item>
-        <item>較緊湊</item>
-        <item>緊湊</item>
-        <item>更緊湊</item>
-        <item>更小</item>
+        <item>小</item>
     </string-array>
 
     <string-array name="select_scale">

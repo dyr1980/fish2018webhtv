@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
-import android.util.DisplayMetrics;
 
 import androidx.core.content.ContextCompat;
 
@@ -26,11 +24,11 @@ public class Setting {
 
     public static final int UI_SCALE_FOLLOW_SYSTEM = 0;
     public static final int UI_SCALE_STANDARD = 1;
-    public static final int UI_SCALE_COMPACT = 2;
-    public static final int UI_SCALE_SMALLER = 3;
-    public static final int UI_SCALE_MILD_COMPACT = 4;
-    public static final int UI_SCALE_MORE_COMPACT = 5;
-    private static final int[] UI_SCALE_OPTIONS = {UI_SCALE_FOLLOW_SYSTEM, UI_SCALE_STANDARD, UI_SCALE_MILD_COMPACT, UI_SCALE_COMPACT, UI_SCALE_MORE_COMPACT, UI_SCALE_SMALLER};
+    public static final int UI_SCALE_SMALL = 2;
+    public static final int UI_SCALE_LARGE = 6;
+    public static final int UI_SCALE_SUPER_LARGE = 7;
+    private static final int[] UI_SCALE_OPTIONS = {UI_SCALE_FOLLOW_SYSTEM, UI_SCALE_SUPER_LARGE, UI_SCALE_LARGE, UI_SCALE_STANDARD, UI_SCALE_SMALL};
+    private static final int UI_DESIGN_WIDTH_DP = 390;
 
     public static final int WALL_CINEMA = 5;
     public static final int WALL_CINEMA_WARM = 6;
@@ -353,35 +351,20 @@ public class Setting {
         return false;
     }
 
-    public static Context wrapUiScale(Context context) {
+    public static int getUiScaleDesignWidth() {
         int scale = getUiScale();
-        if (scale == UI_SCALE_FOLLOW_SYSTEM) return context;
-        float factor = getUiScaleFactor(scale);
-        Configuration config = new Configuration(context.getResources().getConfiguration());
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        int stableDensity = DisplayMetrics.DENSITY_DEVICE_STABLE > 0 ? DisplayMetrics.DENSITY_DEVICE_STABLE : metrics.densityDpi;
-        int densityDpi = Math.max(DisplayMetrics.DENSITY_LOW, Math.round(stableDensity * factor));
-        config.densityDpi = densityDpi;
-        config.fontScale = 1.0f;
-        config.screenWidthDp = pxToDp(metrics.widthPixels, densityDpi);
-        config.screenHeightDp = pxToDp(metrics.heightPixels, densityDpi);
-        config.smallestScreenWidthDp = Math.min(config.screenWidthDp, config.screenHeightDp);
-        return context.createConfigurationContext(config);
+        if (scale == UI_SCALE_FOLLOW_SYSTEM) return 0;
+        return Math.round(UI_DESIGN_WIDTH_DP / getUiScaleFactor(scale));
     }
 
     private static float getUiScaleFactor(int scale) {
         return switch (scale) {
-            case UI_SCALE_STANDARD -> 0.9f;
-            case UI_SCALE_MILD_COMPACT -> 0.85f;
-            case UI_SCALE_COMPACT -> 0.8f;
-            case UI_SCALE_MORE_COMPACT -> 0.75f;
-            case UI_SCALE_SMALLER -> 0.7f;
+            case UI_SCALE_SUPER_LARGE -> 1.2f;
+            case UI_SCALE_LARGE -> 1.1f;
+            case UI_SCALE_STANDARD -> 1.0f;
+            case UI_SCALE_SMALL -> 0.9f;
             default -> 1.0f;
         };
-    }
-
-    private static int pxToDp(int px, int densityDpi) {
-        return Math.max(1, Math.round(px * (float) DisplayMetrics.DENSITY_DEFAULT / densityDpi));
     }
 
     public static boolean isDriveCheck() {

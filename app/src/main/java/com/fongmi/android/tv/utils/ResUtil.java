@@ -1,5 +1,6 @@
 package com.fongmi.android.tv.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -29,7 +30,8 @@ import com.fongmi.android.tv.App;
 public class ResUtil {
 
     public static DisplayMetrics getDisplayMetrics() {
-        return getDisplayMetrics(App.get());
+        Activity activity = App.activity();
+        return getDisplayMetrics(activity != null ? activity : App.get());
     }
 
     public static DisplayMetrics getDisplayMetrics(Context context) {

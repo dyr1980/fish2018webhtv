@@ -2,7 +2,8 @@ package com.fongmi.android.tv.ui.base;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
-import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,17 +26,14 @@ import com.google.android.material.color.DynamicColors;
 import com.google.android.material.color.DynamicColorsOptions;
 
 import org.greenrobot.eventbus.EventBus;
+
+import me.jessyan.autosize.AutoSizeCompat;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract ViewBinding getBinding();
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(Setting.wrapUiScale(newBase));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +124,26 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void enableDynamicColor() {
         int color = Setting.getDynamicColor();
         if (color != 0) DynamicColors.applyToActivityIfAvailable(this, new DynamicColorsOptions.Builder().setContentBasedSource(color).build());
+    }
+
+    private Resources hackResources(Resources resources) {
+        try {
+            int designWidth = Setting.getUiScaleDesignWidth();
+            if (designWidth <= 0) {
+                AutoSizeCompat.cancelAdapt(resources);
+                return resources;
+            }
+            boolean isPortrait = resources.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+            AutoSizeCompat.autoConvertDensity(resources, designWidth, isPortrait);
+            return resources;
+        } catch (Exception ignored) {
+            return resources;
+        }
+    }
+
+    @Override
+    public Resources getResources() {
+        return hackResources(super.getResources());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
