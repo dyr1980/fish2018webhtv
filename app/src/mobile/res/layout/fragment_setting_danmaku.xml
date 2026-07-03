@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/transparent"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIconTint="@android:color/white"
+        app:navigationIconTint="@color/md_paper"
+        app:titleTextColor="@color/md_paper"
         app:title="@string/setting_danmaku"
         app:titleTextAppearance="@style/ToolbarTextAppearance" />
 
@@ -32,7 +34,7 @@
                 android:id="@+id/danmakuLoad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_item"
+                android:background="@drawable/mdm_g_item"
                 android:orientation="horizontal">
 
                 <com.google.android.material.textview.MaterialTextView
@@ -40,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:text="@string/danmaku_load"
-                    android:textColor="@color/white"
+                    android:textColor="@color/md_paper"
                     android:textSize="16sp" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -48,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
-                    android:textColor="@color/white"
+                    android:textColor="@color/md_mist"
                     android:textSize="16sp"
                     tools:text="開" />
 
@@ -59,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/shape_item"
+                android:background="@drawable/mdm_g_item"
                 android:orientation="horizontal"
                 android:visibility="gone"
                 tools:visibility="visible">
@@ -69,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:text="@string/danmaku_api"
-                    android:textColor="@color/white"
+                    android:textColor="@color/md_paper"
                     android:textSize="16sp" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -79,7 +81,7 @@
                     android:ellipsize="middle"
                     android:gravity="end"
                     android:singleLine="true"
-                    android:textColor="@color/white"
+                    android:textColor="@color/md_mist"
                     android:textSize="16sp"
                     tools:text="https://" />
 
@@ -90,7 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/shape_item"
+                android:background="@drawable/mdm_g_item"
                 android:orientation="horizontal"
                 android:visibility="gone"
                 tools:visibility="visible">
@@ -100,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:text="@string/danmaku_auto_load"
-                    android:textColor="@color/white"
+                    android:textColor="@color/md_paper"
                     android:textSize="16sp" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -108,7 +110,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
-                    android:textColor="@color/white"
+                    android:textColor="@color/md_mist"
                     android:textSize="16sp"
                     tools:text="關" />
 
@@ -119,7 +121,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/shape_item"
+                android:background="@drawable/mdm_g_item"
                 android:orientation="horizontal"
                 android:visibility="gone"
                 tools:visibility="visible">
@@ -129,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:text="@string/danmaku_spider_first"
-                    android:textColor="@color/white"
+                    android:textColor="@color/md_paper"
                     android:textSize="16sp" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -137,7 +139,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
-                    android:textColor="@color/white"
+                    android:textColor="@color/md_mist"
                     android:textSize="16sp"
                     tools:text="關" />
 

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>webHTV · 手机端观看历史 · 午夜首映</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body{display:flex;justify-content:center;padding:28px 0;
+    background:#060709 radial-gradient(900px 480px at 50% -8%,rgba(232,163,61,.07),transparent 65%);}
+  .phone{position:relative;width:390px;height:844px;overflow:hidden;
+    border-radius:48px;border:1px solid #23242C;background:var(--ink);box-shadow:var(--sh-3);}
+  .scroll{height:100%;overflow-y:auto;padding-bottom:40px;}
+
+  .topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:12px;
+    padding:22px 20px 14px;background:linear-gradient(180deg,var(--ink) 66%,transparent);}
+  .back{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:15px;
+    background:var(--panel);border:1px solid var(--line);color:var(--paper);}
+  .topbar h1{margin:0;font-family:var(--f-display);font-weight:900;font-size:21px;letter-spacing:2px;}
+  .topbar .count{font-size:11.5px;color:var(--mist-dim);margin-top:2px;}
+  .edit{margin-left:auto;font-size:13px;color:var(--mist);padding:7px 15px;
+    border-radius:var(--r-pill);border:1px solid var(--line-2);}
+
+  .day{padding:14px 20px 6px;display:flex;align-items:baseline;gap:10px;}
+  .day b{font-family:var(--f-display);font-weight:900;font-size:15px;letter-spacing:2px;}
+  .day span{font-size:11px;color:var(--mist-dim);}
+
+  .it{display:flex;gap:13px;padding:10px 20px;align-items:center;}
+  .it .pic{position:relative;flex:0 0 128px;height:74px;border-radius:var(--r-md);overflow:hidden;box-shadow:var(--sh-1);}
+  .it .bar{position:absolute;z-index:2;left:0;right:0;bottom:0;height:3px;background:rgba(243,238,227,.16);}
+  .it .bar i{display:block;height:100%;background:var(--amber);}
+  .it .done{position:absolute;z-index:2;right:6px;bottom:7px;font-size:9.5px;color:var(--paper);
+    padding:2px 7px;border-radius:var(--r-pill);background:rgba(11,13,19,.65);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+  .it .info{flex:1;min-width:0;}
+  .it .name{font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .it .sub{margin-top:5px;font-size:12px;color:var(--mist);}
+  .it .src{margin-top:5px;font-size:11px;color:var(--mist-dim);}
+  .it .go{color:var(--mist-dim);font-size:14px;}
+  .it.editing .go{display:none;}
+  .ck{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line-2);}
+  .ck.on{border-color:var(--amber);background:var(--amber);display:grid;place-items:center;
+    color:#20150A;font-size:12px;font-weight:700;}
+  .ck.on::after{content:"✓";}
+
+  .clear-tip{margin:22px 20px 0;text-align:center;font-size:11.5px;color:var(--mist-dim);}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="scroll">
+
+    <div class="topbar">
+      <div class="back">‹</div>
+      <div><h1>观看历史</h1><div class="count">共 26 条 · 跨源同步</div></div>
+      <div class="edit">编辑</div>
+    </div>
+
+    <div class="day"><b>今天</b></div>
+    <div class="it">
+      <div class="pic art art-cold"><div class="bar"><i style="width:62%"></i></div></div>
+      <div class="info">
+        <div class="name">暗涌</div>
+        <div class="sub">第 8 集 · 看到 23:14</div>
+        <div class="src">非凡影视 · 1080P</div>
+      </div><div class="go">›</div>
+    </div>
+    <div class="it">
+      <div class="pic art art-space"><div class="bar"><i style="width:81%"></i></div></div>
+      <div class="info">
+        <div class="name">深空回响</div>
+        <div class="sub">第 6 集 · 看到 01:12:30 · 还剩 26 分钟</div>
+        <div class="src">量子资源 · 4K</div>
+      </div><div class="go">›</div>
+    </div>
+
+    <div class="day"><b>昨天</b></div>
+    <div class="it">
+      <div class="pic art art-warm"><div class="bar"><i style="width:24%"></i></div></div>
+      <div class="info">
+        <div class="name">春溪食堂</div>
+        <div class="sub">第 3 集 · 看到 08:40</div>
+        <div class="src">非凡影视 · 1080P</div>
+      </div><div class="go">›</div>
+    </div>
+    <div class="it">
+      <div class="pic art art-dusk"><div class="bar"><i style="width:47%"></i></div></div>
+      <div class="info">
+        <div class="name">纸鸢</div>
+        <div class="sub">看到 44:02</div>
+        <div class="src">索尼资源 · HD</div>
+      </div><div class="go">›</div>
+    </div>
+
+    <div class="day"><b>更早</b><span>7 天前的记录会自动折叠</span></div>
+    <div class="it">
+      <div class="pic art art-green"><div class="bar"><i style="width:35%"></i></div></div>
+      <div class="info">
+        <div class="name">南方有风</div>
+        <div class="sub">第 12 集 · 看到 12:05</div>
+        <div class="src">非凡影视 · 1080P</div>
+      </div><div class="go">›</div>
+    </div>
+    <div class="it">
+      <div class="pic art art-sea"><div class="done">已看完</div></div>
+      <div class="info">
+        <div class="name">月落大江</div>
+        <div class="sub">HD 中字 · 已看完</div>
+        <div class="src">红牛资源 · HD</div>
+      </div><div class="go">›</div>
+    </div>
+    <div class="it">
+      <div class="pic art art-wuxia"><div class="bar"><i style="width:12%"></i></div></div>
+      <div class="info">
+        <div class="name">山河入梦</div>
+        <div class="sub">第 2 集 · 看到 05:18</div>
+        <div class="src">非凡影视 · 1080P</div>
+      </div><div class="go">›</div>
+    </div>
+
+    <div class="clear-tip">左滑单条删除 · 编辑模式可批量清除</div>
+  </div>
+</div>
+</body>
+</html>

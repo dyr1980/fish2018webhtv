@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
-    android:background="@drawable/shape_live"
+    android:background="@drawable/mdm_l_channel_bg"
     android:orientation="vertical">
 
     <com.google.android.material.textview.MaterialTextView
@@ -15,7 +15,7 @@
         android:duplicateParentState="true"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:textColor="@color/selector_live_text"
+        android:textColor="@color/mdm_l_text_secondary"
         android:textSize="14sp"
         tools:text="七龍珠" />
 
@@ -26,7 +26,7 @@
         android:duplicateParentState="true"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:textColor="@color/selector_live_text"
+        android:textColor="@color/mdm_l_text_tertiary"
         android:textSize="12sp"
         tools:text="18:00 ~ 19:00" />
 

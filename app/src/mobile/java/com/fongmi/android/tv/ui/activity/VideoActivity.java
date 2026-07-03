@@ -766,11 +766,13 @@ public class VideoActivity extends PlaybackActivity implements Clock.Callback, C
 
     private void setOther(TextView view, Vod item) {
         StringBuilder sb = new StringBuilder();
-        if (!item.getYear().isEmpty()) sb.append(getString(R.string.detail_year, item.getYear())).append("  ");
-        if (!item.getArea().isEmpty()) sb.append(getString(R.string.detail_area, item.getArea())).append("  ");
-        if (!item.getTypeName().isEmpty()) sb.append(getString(R.string.detail_type, item.getTypeName())).append("  ");
+        if (!item.getYear().isEmpty()) sb.append(item.getYear()).append("  ·  ");
+        if (!item.getArea().isEmpty()) sb.append(item.getArea()).append("  ·  ");
+        if (!item.getTypeName().isEmpty()) sb.append(item.getTypeName()).append("  ·  ");
         view.setVisibility(sb.length() == 0 ? View.GONE : View.VISIBLE);
-        view.setText(Util.substring(sb.toString(), 2));
+        String text = sb.toString();
+        if (text.endsWith("  ·  ")) text = text.substring(0, text.length() - 5);
+        view.setText(text);
     }
 
     private void getPlayer(Flag flag, Episode episode) {

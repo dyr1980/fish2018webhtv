@@ -4,8 +4,10 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:fillViewport="true"
-    android:paddingStart="8dp"
+    android:paddingStart="14dp"
+    android:paddingTop="2dp"
     android:paddingEnd="8dp"
+    android:paddingBottom="2dp"
     android:scrollbars="none">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -17,70 +19,174 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/player"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:text="@string/play_exo" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/decode"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:text="@string/play_decode" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/speed"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:fontFeatureSettings="tnum"
             android:text="@string/play_speed" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/scale"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:text="@string/play_scale" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lut"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:text="@string/play_lut" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/reset"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:text="@string/play_reset" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/repeat"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:text="@string/play_repeat" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:tag="3"
             android:text="@string/play_track_text" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/audio"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:tag="1"
             android:text="@string/play_track_audio" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/video"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:tag="2"
             android:text="@string/play_track_video" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/opening"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:text="@string/play_op" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/ending"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:text="@string/play_ed" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/danmaku"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:text="@string/danmaku"
             android:visibility="gone"
             tools:visibility="visible" />
@@ -88,6 +194,14 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:text="@string/play_title"
             android:visibility="gone"
             tools:visibility="visible" />
@@ -95,16 +209,40 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/prev"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:text="@string/play_prev" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/next"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:text="@string/play_next" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/episodes"
             style="@style/Control"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/mdm_v_control_text"
+            android:textSize="12sp"
             android:text="@string/detail_episode" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

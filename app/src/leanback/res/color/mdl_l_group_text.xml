@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 分组文字：选中/焦点暖白，其余雾蓝三级 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/md_paper" android:state_focused="true" />
+    <item android:color="@color/md_paper" android:state_selected="true" />
+    <item android:color="@color/md_mist_dim" />
+</selector>

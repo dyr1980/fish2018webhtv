@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 琥珀胶囊（选中态 chip / 当前项） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/md_amber" />
+    <corners android:radius="999dp" />
+</shape>

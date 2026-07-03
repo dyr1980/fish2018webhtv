@@ -1,17 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- 午夜首映 · 热搜榜条目：排名序号 + 片名，竖排列表 -->
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/text"
-    android:layout_width="wrap_content"
-    android:layout_height="36dp"
-    android:layout_margin="4dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
     android:background="@drawable/selector_search_hot_word"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:gravity="center"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:paddingStart="10dp"
-    android:paddingEnd="10dp"
-    android:singleLine="true"
-    android:textColor="@color/white"
-    android:textSize="15sp"
-    tools:text="熱搜詞" />
+    android:paddingTop="9dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="9dp">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/number"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:fontFamily="@font/noto_serif_sc_bold"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/md_mist_dim"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="1" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/mdl_s_chip_text"
+        android:textSize="16sp"
+        tools:text="雾岛来客" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

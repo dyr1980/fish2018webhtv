@@ -313,6 +313,7 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
         mBinding.group.setHasFixedSize(true);
         mBinding.channel.setHasFixedSize(true);
         mBinding.epgData.setHasFixedSize(true);
+        mBinding.group.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false));
         mBinding.group.setAdapter(mGroupAdapter = new GroupAdapter(this));
         mBinding.channel.setAdapter(mChannelAdapter = new ChannelAdapter(this));
         mBinding.channel.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -506,6 +507,7 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
 
     private void setWidth(View view, int width) {
         if (isEmbeddedLiveUi()) return;
+        if (view == mBinding.group || view == mBinding.channel) return; // 上下布局：分组横向、频道全宽，宽度固定不动态调整
         ViewGroup.LayoutParams params = view.getLayoutParams();
         if (params.width == width) return;
         params.width = width;

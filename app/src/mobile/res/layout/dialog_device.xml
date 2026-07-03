@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/md_panel_18"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -19,9 +20,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/noto_serif_sc_bold"
             android:text="@string/device_select"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="16sp" />
+            android:textColor="@color/md_paper"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/mode"
@@ -32,6 +35,7 @@
             android:src="@drawable/ic_sync_two"
             android:tag="0"
             android:visibility="gone"
+            app:tint="@color/md_mist"
             tools:visibility="visible" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -40,14 +44,16 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_action_scan" />
+            android:src="@drawable/ic_action_scan"
+            app:tint="@color/md_mist" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_action_refresh" />
+            android:src="@drawable/ic_action_refresh"
+            app:tint="@color/md_mist" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

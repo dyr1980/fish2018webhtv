@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>webHTV · 手机端详情页 · 午夜首映</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body{display:flex;justify-content:center;padding:28px 0;
+    background:#060709 radial-gradient(900px 480px at 50% -8%,rgba(232,163,61,.07),transparent 65%);}
+  .phone{position:relative;width:390px;height:844px;overflow:hidden;
+    border-radius:48px;border:1px solid #23242C;background:var(--ink);box-shadow:var(--sh-3);}
+  .scroll{height:100%;overflow-y:auto;padding-bottom:118px;}
+
+  /* ── 顶部剧照 ─────────────────────── */
+  .backdrop{position:relative;height:296px;}
+  .backdrop .art{position:absolute;inset:0;filter:brightness(1.5) saturate(1.05);}
+  .backdrop .mask{position:absolute;inset:0;z-index:1;
+    background:linear-gradient(180deg,rgba(11,13,19,.25) 0%,transparent 30%,rgba(11,13,19,.6) 74%,var(--ink) 100%);}
+  .backdrop .bar{position:absolute;z-index:2;top:18px;left:16px;right:16px;display:flex;}
+  .rbtn{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:15px;color:var(--paper);
+    background:rgba(11,13,19,.5);border:1px solid var(--line-2);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
+  .rbtn+.rbtn{margin-left:10px;}
+  .backdrop .sp{flex:1;}
+
+  /* ── 标题区 ───────────────────────── */
+  .head{padding:0 20px;margin-top:-44px;position:relative;z-index:3;display:flex;gap:14px;align-items:flex-end;}
+  .head .title-wrap{flex:1;}
+  .head h1{margin:0;font-family:var(--f-display);font-weight:900;font-size:34px;letter-spacing:2px;
+    text-shadow:0 4px 24px rgba(0,0,0,.6);}
+  .head .meta{margin-top:8px;display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-size:12.5px;color:var(--mist);}
+  .chip{padding:2px 9px;border-radius:var(--r-pill);border:1px solid var(--line-2);font-size:11px;color:var(--mist);}
+  .dot{width:3px;height:3px;border-radius:50%;background:var(--mist-dim);}
+  .score-seal{width:52px;height:52px;flex-shrink:0;display:grid;place-items:center;
+    background:var(--amber);color:#20150A;border-radius:8px;
+    box-shadow:inset 0 0 0 1px rgba(32,21,10,.25),0 8px 24px var(--amber-glow);}
+  .score-seal b{font-family:var(--f-display);font-weight:900;font-size:21px;line-height:1;}
+  .score-seal i{font-style:normal;font-size:9px;letter-spacing:2px;margin-top:2px;}
+
+  /* ── 简介 ─────────────────────────── */
+  .desc{padding:0 20px;margin-top:14px;font-size:13px;line-height:1.75;color:var(--mist);}
+  .desc .fold{color:var(--amber);margin-left:4px;}
+
+  /* ── 区块通用 ─────────────────────── */
+  .section{margin-top:26px;padding:0 20px;}
+  .sec-head{display:flex;align-items:baseline;margin-bottom:12px;}
+  .sec-title{font-family:var(--f-display);font-weight:900;font-size:17px;letter-spacing:1px;}
+  .sec-sub{margin-left:9px;font-size:11px;color:var(--mist-dim);}
+  .sec-op{margin-left:auto;font-size:12px;color:var(--mist-dim);}
+  .sec-op b{color:var(--mist);font-weight:500;}
+
+  /* ── 线路 ─────────────────────────── */
+  .lines{display:flex;gap:9px;overflow-x:auto;}
+  .line-card{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:9px 14px;
+    border-radius:var(--r-md);background:var(--panel);border:1px solid var(--line);
+    font-size:13px;color:var(--mist);}
+  .line-card .sig{font-size:10px;color:var(--mist-dim);}
+  .line-card.on{border-color:var(--amber);color:var(--paper);background:rgba(232,163,61,.10);}
+  .line-card.on .sig{color:var(--amber);}
+
+  /* ── 选集 ─────────────────────────── */
+  .eps{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;}
+  .ep{position:relative;height:44px;display:grid;place-items:center;border-radius:var(--r-sm);
+    background:var(--panel);border:1px solid var(--line);
+    font-size:13.5px;font-weight:600;color:var(--mist);}
+  .ep.seen{color:var(--mist-dim);background:transparent;}
+  .ep.now{background:var(--amber);border-color:var(--amber);color:#20150A;
+    box-shadow:0 6px 18px var(--amber-glow);}
+  .ep.now::after{content:"";position:absolute;left:8px;right:8px;bottom:5px;height:2px;
+    border-radius:2px;background:rgba(32,21,10,.4);}
+  .ep .new{position:absolute;top:-5px;right:-4px;width:15px;height:15px;font-size:9px;border-radius:3px;}
+
+  /* ── 猜你喜欢 ─────────────────────── */
+  .likes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .gd .pic{aspect-ratio:2/2.82;border-radius:var(--r-md);overflow:hidden;box-shadow:var(--sh-1);}
+  .gd .name{margin-top:8px;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .gd .sub{margin-top:2px;font-size:11px;color:var(--mist-dim);}
+
+  /* ── 底部续播条 ───────────────────── */
+  .playbar{position:absolute;z-index:40;left:16px;right:16px;bottom:16px;height:66px;
+    display:flex;align-items:center;gap:10px;padding:0 10px 0 16px;
+    border-radius:22px;background:rgba(21,26,36,.82);border:1px solid var(--line);
+    -webkit-backdrop-filter:blur(22px) saturate(1.3);backdrop-filter:blur(22px) saturate(1.3);
+    box-shadow:var(--sh-2);}
+  .playbar .info{flex:1;min-width:0;}
+  .playbar .t{font-size:13px;font-weight:600;}
+  .playbar .s{margin-top:2px;font-size:11px;color:var(--mist-dim);}
+  .pb-btn{height:46px;padding:0 22px;border:none;border-radius:16px;cursor:pointer;
+    display:flex;align-items:center;gap:8px;font-family:var(--f-body);
+    font-size:14.5px;font-weight:700;color:#20150A;
+    background:linear-gradient(180deg,#F0B655 0%,var(--amber) 40%,var(--amber-deep) 100%);
+    box-shadow:0 8px 24px var(--amber-glow);}
+  .pb-ghost{width:46px;height:46px;border-radius:16px;display:grid;place-items:center;
+    background:transparent;border:1px solid var(--line-2);color:var(--mist);font-size:16px;}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="scroll">
+
+    <div class="backdrop">
+      <div class="art art-cold"></div>
+      <div class="mask"></div>
+      <div class="bar">
+        <div class="rbtn">‹</div><div class="sp"></div>
+        <div class="rbtn">📺</div><div class="rbtn">⇪</div>
+      </div>
+    </div>
+
+    <div class="head">
+      <div class="title-wrap">
+        <h1>暗涌</h1>
+        <div class="meta">
+          <span>2026</span><span class="dot"></span><span>共 12 集 · 已更新 12</span>
+          <span class="dot"></span><span>普通话</span>
+          <span class="chip">犯罪</span><span class="chip">悬疑</span>
+        </div>
+      </div>
+      <div class="score-seal"><b>9.1</b><i>豆瓣</i></div>
+    </div>
+
+    <div class="desc">
+      深夜的港口城市，一桩沉了十二年的旧案随涨潮浮出水面。刑警江桥追查线索时发现，
+      所有证词都指向早已结案的自己<span class="fold">展开</span>
+    </div>
+
+    <div class="section">
+      <div class="sec-head"><div class="sec-title">线路</div><div class="sec-sub">已按速度优选</div><div class="sec-op">测速 ›</div></div>
+      <div class="lines">
+        <div class="line-card on">非凡影视 <span class="sig">1080P · 快</span></div>
+        <div class="line-card">量子资源 <span class="sig">1080P</span></div>
+        <div class="line-card">索尼资源 <span class="sig">720P</span></div>
+        <div class="line-card">红牛资源 <span class="sig">720P</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-head"><div class="sec-title">选集</div><div class="sec-sub">连载中 · 周三周四更新</div><div class="sec-op"><b>正序</b> / 倒序</div></div>
+      <div class="eps">
+        <div class="ep seen">01</div><div class="ep seen">02</div><div class="ep seen">03</div>
+        <div class="ep seen">04</div><div class="ep seen">05</div><div class="ep seen">06</div>
+        <div class="ep seen">07</div><div class="ep now">08</div><div class="ep">09</div>
+        <div class="ep">10</div><div class="ep">11</div>
+        <div class="ep">12<span class="seal new">新</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-head"><div class="sec-title">猜你喜欢</div><div class="sec-op">换一批 ↻</div></div>
+      <div class="likes">
+        <div class="gd"><div class="pic art art-mist"></div><div class="name">雾岛来客</div><div class="sub">悬疑 · 9.2</div></div>
+        <div class="gd"><div class="pic art art-sea"></div><div class="name">月落大江</div><div class="sub">剧情 · 9.0</div></div>
+        <div class="gd"><div class="pic art art-neon"></div><div class="name">环形代码</div><div class="sub">科幻 · 8.7</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="playbar">
+    <div class="info">
+      <div class="t">上次看到 第 8 集 23:14</div>
+      <div class="s">非凡影视 · 1080P</div>
+    </div>
+    <div class="pb-ghost">弹</div>
+    <div class="pb-ghost">✦</div>
+    <button class="pb-btn">▶ 续播</button>
+  </div>
+</div>
+</body>
+</html>

@@ -3,14 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/md_ink">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/nativeContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingTop="80dp">
+        android:paddingTop="88dp"
+        android:paddingBottom="40dp">
 
         <androidx.leanback.widget.HorizontalGridView
             android:id="@+id/typeRecycler"
@@ -18,7 +20,7 @@
             android:layout_height="wrap_content"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:nextFocusUp="@id/title"
+            android:nextFocusUp="@id/funcRecycler"
             android:nextFocusDown="@id/recycler"
             android:paddingStart="24dp"
             android:paddingTop="4dp"
@@ -79,27 +81,130 @@
             android:layout_marginEnd="12dp"
             android:src="@drawable/ic_logo" />
 
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/md_seal_badge"
+            android:fontFamily="@font/noto_serif_sc_bold"
+            android:includeFontPadding="false"
+            android:padding="4dp"
+            android:text="映"
+            android:textColor="@color/md_paper"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
         <com.fongmi.android.tv.ui.custom.CustomTitleView
             android:id="@+id/title"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_weight="1"
+            android:layout_marginEnd="20dp"
             android:ellipsize="marquee"
             android:focusable="false"
-            android:nextFocusDown="@id/typeRecycler"
+            android:nextFocusDown="@id/funcRecycler"
+            android:fontFamily="@font/noto_serif_sc_bold"
+            android:maxWidth="180dp"
             android:singleLine="true"
             android:text="@string/app_name"
-            android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textColor="@color/md_paper"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <androidx.leanback.widget.HorizontalGridView
+            android:id="@+id/funcRecycler"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="16dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:gravity="center_vertical"
+            android:nextFocusDown="@id/typeRecycler"
+            app:focusOutEnd="false"
+            app:focusOutFront="false" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/clock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:fontFamily="@font/noto_serif_sc_bold"
+            android:textColor="@color/md_mist"
             android:textSize="24sp"
             tools:text="09:20:00" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/mdl_home_hintbar"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mdl_kbd_key"
+            android:paddingStart="8dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="2dp"
+            android:text="OK"
+            android:textColor="@color/md_mist"
+            android:textSize="12sp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="20dp"
+            android:text="播放"
+            android:textColor="@color/md_mist_dim"
+            android:textSize="12sp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mdl_kbd_key"
+            android:paddingStart="8dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="2dp"
+            android:text="长按 OK"
+            android:textColor="@color/md_mist"
+            android:textSize="12sp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="20dp"
+            android:text="收藏"
+            android:textColor="@color/md_mist_dim"
+            android:textSize="12sp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mdl_kbd_key"
+            android:paddingStart="8dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="2dp"
+            android:text="菜单"
+            android:textColor="@color/md_mist"
+            android:textSize="12sp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:text="换源"
+            android:textColor="@color/md_mist_dim"
+            android:textSize="12sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </FrameLayout>

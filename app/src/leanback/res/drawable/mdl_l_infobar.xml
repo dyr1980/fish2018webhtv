@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 直播底部信息条：影厅黑玻璃，自下而上渐隐 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <gradient
+        android:angle="90"
+        android:endColor="#990B0D13"
+        android:startColor="#F00B0D13"
+        android:type="linear" />
+
+</shape>

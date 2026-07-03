@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>webHTV · 电视端聚合搜索 · 午夜首映</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body{min-height:100vh;display:flex;justify-content:center;align-items:center;overflow:hidden;background:#040507;}
+  .stage{position:relative;width:1600px;height:900px;flex-shrink:0;overflow:hidden;
+    background:var(--ink);transform-origin:center center;border-radius:8px;box-shadow:var(--sh-3);}
+  .beam{position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:linear-gradient(247deg,rgba(232,163,61,.08) 0%,transparent 32%);}
+
+  .wrap{position:relative;z-index:2;height:100%;display:flex;gap:56px;padding:56px 64px 74px;}
+
+  /* ── 左：输入 + 键盘 ──────────────── */
+  .kb{width:340px;flex-shrink:0;display:flex;flex-direction:column;}
+  .kb h1{margin:0 0 20px;font-family:var(--f-display);font-weight:900;font-size:30px;letter-spacing:3px;}
+  .input{height:56px;display:flex;align-items:center;gap:10px;padding:0 18px;
+    border-radius:var(--r-md);background:var(--panel);border:1px solid var(--amber);
+    box-shadow:0 0 0 3px rgba(232,163,61,.12);}
+  .input .q{font-size:19px;font-weight:700;letter-spacing:2px;}
+  .input .cur{width:2px;height:24px;background:var(--amber);animation:blink 1.1s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0}}
+  .input .py{margin-left:auto;font-size:12px;color:var(--mist-dim);}
+  .keys{margin-top:18px;display:grid;grid-template-columns:repeat(6,1fr);gap:9px;}
+  .fi{transition:transform .18s ease,box-shadow .18s ease;border-radius:var(--r-sm);cursor:pointer;}
+  .fi.focus{transform:scale(1.12);box-shadow:var(--sh-focus);z-index:3;position:relative;}
+  .key{height:46px;display:grid;place-items:center;border-radius:var(--r-sm);
+    background:var(--panel);border:1px solid var(--line);font-size:16px;font-weight:600;color:var(--mist);}
+  .fi.focus .key{background:var(--amber);border-color:var(--amber);color:#20150A;}
+  .key.fn{font-size:12.5px;letter-spacing:1px;}
+  .kb .ops{margin-top:12px;display:flex;gap:9px;}
+  .kb .ops .fi{flex:1;}
+  .kb-tip{margin-top:auto;font-size:12.5px;color:var(--mist-dim);line-height:2;}
+  .kb-tip b{color:var(--mist);font-weight:500;}
+
+  /* ── 中：热搜 ─────────────────────── */
+  .hot{width:300px;flex-shrink:0;}
+  .hot h2{margin:0 0 18px;font-family:var(--f-display);font-weight:900;font-size:20px;letter-spacing:2px;
+    display:flex;align-items:baseline;gap:10px;}
+  .hot h2 span{font-size:12px;color:var(--mist-dim);font-family:var(--f-body);font-weight:400;}
+  .hw{display:flex;align-items:center;gap:14px;padding:11px 12px;border-radius:var(--r-md);}
+  .hw .no{width:26px;font-family:var(--f-display);font-weight:900;font-size:22px;color:var(--mist-dim);text-align:center;}
+  .hw:nth-child(-n+4) .no{color:var(--amber);}
+  .hw .w{font-size:16px;color:var(--mist);}
+  .hw .tg{margin-left:auto;font-size:10px;padding:2px 8px;border-radius:var(--r-pill);
+    background:rgba(199,68,59,.16);color:var(--seal);}
+
+  /* ── 右：结果 ─────────────────────── */
+  .res{flex:1;min-width:0;display:flex;flex-direction:column;}
+  .res-head{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .res-head b{font-family:var(--f-display);font-weight:900;font-size:20px;letter-spacing:2px;}
+  .res-head .agg{flex:1;height:3px;border-radius:3px;background:var(--panel-2);overflow:hidden;}
+  .res-head .agg i{display:block;width:75%;height:100%;background:var(--amber);}
+  .res-head span{font-size:13px;color:var(--mist-dim);}
+  .res-head span b{font-size:13px;color:var(--amber);letter-spacing:0;}
+  .rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px 18px;}
+  .rc .pic{position:relative;aspect-ratio:2/2.58;border-radius:var(--r-md);overflow:hidden;}
+  .rc .hd{position:absolute;z-index:2;left:0;right:0;bottom:0;padding:18px 9px 7px;text-align:right;
+    font-size:12px;color:var(--paper);background:linear-gradient(transparent,rgba(11,13,19,.9));}
+  .rc .name{margin-top:9px;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rc .name em{font-style:normal;color:var(--amber);}
+  .rc .src{margin-top:3px;font-size:12px;color:var(--mist-dim);}
+
+  .hintbar{position:absolute;z-index:5;left:0;right:0;bottom:0;height:54px;
+    display:flex;align-items:center;gap:26px;padding:0 64px;
+    border-top:1px solid var(--line);background:rgba(11,13,19,.7);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    font-size:13.5px;color:var(--mist-dim);}
+  .hintbar kbd{font-family:var(--f-body);font-size:12px;color:var(--mist);border:1px solid var(--line-2);
+    border-radius:5px;padding:2px 8px;margin-right:7px;}
+  .hintbar .r{margin-left:auto;}
+  .hintbar .r b{color:var(--mist);font-weight:500;}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="beam"></div>
+
+  <div class="wrap">
+    <div class="kb">
+      <h1>搜索</h1>
+      <div class="input">🔍 <span class="q">WD</span><span class="cur"></span><span class="py">雾岛 · 万达 · 舞蹈</span></div>
+      <div class="keys fr">
+        <div class="fi"><div class="key">A</div></div><div class="fi"><div class="key">B</div></div><div class="fi"><div class="key">C</div></div><div class="fi"><div class="key">D</div></div><div class="fi"><div class="key">E</div></div><div class="fi"><div class="key">F</div></div>
+        <div class="fi"><div class="key">G</div></div><div class="fi"><div class="key">H</div></div><div class="fi"><div class="key">I</div></div><div class="fi"><div class="key">J</div></div><div class="fi"><div class="key">K</div></div><div class="fi"><div class="key">L</div></div>
+        <div class="fi"><div class="key">M</div></div><div class="fi"><div class="key">N</div></div><div class="fi"><div class="key">O</div></div><div class="fi"><div class="key">P</div></div><div class="fi"><div class="key">Q</div></div><div class="fi"><div class="key">R</div></div>
+        <div class="fi"><div class="key">S</div></div><div class="fi"><div class="key">T</div></div><div class="fi"><div class="key">U</div></div><div class="fi"><div class="key">V</div></div><div class="fi"><div class="key">W</div></div><div class="fi"><div class="key">X</div></div>
+        <div class="fi"><div class="key">Y</div></div><div class="fi"><div class="key">Z</div></div><div class="fi"><div class="key">1</div></div><div class="fi"><div class="key">2</div></div><div class="fi"><div class="key">3</div></div><div class="fi"><div class="key">4</div></div>
+      </div>
+      <div class="ops fr">
+        <div class="fi"><div class="key fn">清空</div></div>
+        <div class="fi"><div class="key fn">删除</div></div>
+        <div class="fi"><div class="key fn">🎤 语音</div></div>
+      </div>
+      <div class="kb-tip">首字母搜索：输入 <b>WD</b> 即可命中「雾岛来客」<br>支持遥控器语音键直接说片名</div>
+    </div>
+
+    <div class="hot">
+      <h2>热搜榜<span>每小时更新</span></h2>
+      <div class="hw"><div class="no">1</div><div class="w">雾岛来客</div><span class="tg">热</span></div>
+      <div class="hw"><div class="no">2</div><div class="w">深空回响</div><span class="tg">新</span></div>
+      <div class="hw"><div class="no">3</div><div class="w">暗涌 大结局</div></div>
+      <div class="hw"><div class="no">4</div><div class="w">铜雀台之夜</div></div>
+      <div class="hw"><div class="no">5</div><div class="w">山河入梦</div></div>
+      <div class="hw"><div class="no">6</div><div class="w">春溪食堂</div></div>
+      <div class="hw"><div class="no">7</div><div class="w">月落大江</div></div>
+      <div class="hw"><div class="no">8</div><div class="w">环形代码</div></div>
+    </div>
+
+    <div class="res">
+      <div class="res-head"><b>“WD” 的结果</b><div class="agg"><i></i></div><span>聚搜 <b>18/24</b> 源 · 6 个结果</span></div>
+      <div class="rgrid fr">
+        <div class="fi rc"><div class="pic art art-mist"><div class="hd">更新至 12 集</div></div>
+          <div class="name"><em>雾岛</em>来客</div><div class="src">非凡 · 量子 · 索尼</div></div>
+        <div class="fi rc"><div class="pic art art-sea"><div class="hd">HD 中字</div></div>
+          <div class="name"><em>雾岛</em>夜航</div><div class="src">量子 · 红牛</div></div>
+        <div class="fi rc"><div class="pic art art-cold"><div class="hd">全 8 集</div></div>
+          <div class="name">迷雾之岛</div><div class="src">非凡 · 飞速</div></div>
+        <div class="fi rc"><div class="pic art art-green"><div class="hd">HD 国语</div></div>
+          <div class="name">雾中风景</div><div class="src">索尼</div></div>
+        <div class="fi rc"><div class="pic art art-dusk"><div class="hd">全 20 集</div></div>
+          <div class="name">往事随雾</div><div class="src">红牛</div></div>
+        <div class="fi rc"><div class="pic art art-neon"><div class="hd">更新至 4 集</div></div>
+          <div class="name">雾都密码</div><div class="src">飞速</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hintbar">
+    <span><kbd>OK</kbd>输入 / 打开</span>
+    <span><kbd>菜单</kbd>切换聚搜源</span>
+    <span><kbd>返回</kbd>退出搜索</span>
+    <div class="r">本页可用键盘方向键体验遥控焦点 · 已启用 <b>24</b> 个搜索源</div>
+  </div>
+</div>
+
+<script>
+  const stage=document.querySelector('.stage');
+  function fit(){const s=Math.min((innerWidth-24)/1600,(innerHeight-24)/900);stage.style.transform=`scale(${s})`;}
+  fit();addEventListener('resize',fit);
+
+  const rows=[...document.querySelectorAll('.fr')];
+  let r=0,c=22;
+  const cards=i=>[...rows[i].querySelectorAll('.fi')];
+  function go(nr,nc){
+    document.querySelector('.fi.focus')?.classList.remove('focus');
+    r=nr;c=nc;
+    cards(r)[c].classList.add('focus');
+  }
+  addEventListener('keydown',e=>{
+    const k=e.key;
+    if(!k.startsWith('Arrow'))return;
+    e.preventDefault();
+    if(k==='ArrowLeft') go(r,Math.max(0,c-1));
+    if(k==='ArrowRight')go(r,Math.min(cards(r).length-1,c+1));
+    if(k==='ArrowUp'){const nr=Math.max(0,r-1);go(nr,Math.min(c,cards(nr).length-1));}
+    if(k==='ArrowDown'){const nr=Math.min(rows.length-1,r+1);go(nr,Math.min(c,cards(nr).length-1));}
+  });
+  go(0,22);
+</script>
+</body>
+</html>

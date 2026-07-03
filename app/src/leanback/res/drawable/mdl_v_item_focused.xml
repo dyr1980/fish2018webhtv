@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 选集/条目 焦点态：放映琥珀实底（文字用 md_on_amber） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <gradient
+        android:angle="270"
+        android:endColor="@color/md_amber_deep"
+        android:startColor="#F0B655" />
+
+    <corners android:radius="10dp" />
+
+    <padding
+        android:bottom="8dp"
+        android:left="12dp"
+        android:right="12dp"
+        android:top="8dp" />
+
+</shape>

@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="40dp"
+    android:layout_height="42dp"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:padding="4dp">
@@ -10,13 +10,13 @@
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:background="@drawable/shape_search_hot_word"
+        android:layout_height="34dp"
+        android:background="@drawable/mdm_s_hot_word"
         android:gravity="center"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textSize="13sp"
+        android:textColor="@color/mdm_s_text_chip"
+        android:textSize="12sp"
         tools:text="熱搜詞" />
 </FrameLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 键帽文字/图标：默认雾蓝，焦点态（琥珀键帽上）用深色 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/md_on_amber" android:state_focused="true" />
+    <item android:color="@color/md_mist" />
+</selector>

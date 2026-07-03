@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 琥珀方章：详情页 remark / 评分等小方章底（文字用 md_on_amber） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="@color/md_amber" />
+
+    <corners android:radius="4dp" />
+
+</shape>

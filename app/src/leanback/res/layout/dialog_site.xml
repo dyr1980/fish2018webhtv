@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape_site_dialog"
+    android:background="@drawable/mdl_g_dialog_panel"
     android:orientation="vertical"
     android:padding="12dp">
 
@@ -30,8 +30,8 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:singleLine="true"
-            android:textColor="@color/white"
-            android:textColorHint="@color/text"
+            android:textColor="@color/md_paper"
+            android:textColorHint="@color/md_mist_dim"
             android:textSize="16sp"
             app:drawableStartCompat="@drawable/ic_site_search" />
 
@@ -78,83 +78,83 @@
                 android:id="@+id/config"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/selector_site_action"
+                android:background="@drawable/mdl_g_pill"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:nextFocusUp="@id/config"
                 android:nextFocusDown="@id/search"
                 android:padding="8dp"
                 android:src="@drawable/ic_site_config"
-                app:tint="@color/site_action_icon" />
+                app:tint="@color/mdl_g_pill_text" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/search"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/selector_site_action"
+                android:background="@drawable/mdl_g_pill"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:nextFocusUp="@id/config"
                 android:nextFocusDown="@id/change"
                 android:padding="8dp"
                 android:src="@drawable/ic_site_search"
-                app:tint="@color/site_action_icon" />
+                app:tint="@color/mdl_g_pill_text" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/change"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/selector_site_action"
+                android:background="@drawable/mdl_g_pill"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:nextFocusUp="@id/search"
                 android:nextFocusDown="@id/select"
                 android:padding="8dp"
                 android:src="@drawable/ic_site_change"
-                app:tint="@color/site_action_icon" />
+                app:tint="@color/mdl_g_pill_text" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/select"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/selector_site_action"
+                android:background="@drawable/mdl_g_pill"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:nextFocusUp="@id/change"
                 android:nextFocusDown="@id/cancel"
                 android:padding="8dp"
                 android:src="@drawable/ic_site_select"
-                app:tint="@color/site_action_icon" />
+                app:tint="@color/mdl_g_pill_text" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/cancel"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/selector_site_action"
+                android:background="@drawable/mdl_g_pill"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:nextFocusUp="@id/select"
                 android:nextFocusDown="@id/mode"
                 android:padding="8dp"
                 android:src="@drawable/ic_site_cancel"
-                app:tint="@color/site_action_icon" />
+                app:tint="@color/mdl_g_pill_text" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/mode"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/selector_site_action"
+                android:background="@drawable/mdl_g_pill"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:nextFocusUp="@id/cancel"
                 android:nextFocusDown="@id/mode"
                 android:padding="8dp"
-                app:tint="@color/site_action_icon"
+                app:tint="@color/mdl_g_pill_text"
                 tools:src="@drawable/ic_site_list" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,0 +1,18 @@
+:root{
+  --brand:#FF4D4F; --brand-2:#FF7A45; --brand-glow:rgba(255,77,79,.45);
+  --accent:#FFC53D; --info:#4DA6FF; --success:#52C41A;
+  --bg-0:#08090C; --bg-1:#0E1015; --bg-2:#16181F; --bg-3:#1F2229;
+  --bg-elev:rgba(28,31,40,.72);
+  --tx-1:#F5F6F8; --tx-2:#B4B8C2; --tx-3:#7A7F8C;
+  --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14); --white-20:rgba(255,255,255,.2);
+  --r-sm:8px; --r-md:14px; --r-lg:20px; --r-xl:28px; --r-pill:999px;
+  --sh-card:0 8px 24px rgba(0,0,0,.45); --sh-float:0 16px 48px rgba(0,0,0,.55);
+  --sh-brand:0 8px 30px var(--brand-glow);
+  --font:-apple-system,"PingFang SC","HarmonyOS Sans","Microsoft YaHei","Segoe UI",Roboto,system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{font-family:var(--font);color:var(--tx-1);background:var(--bg-0);}
+img{display:block;max-width:100%;}
+::-webkit-scrollbar{width:0;height:0;}
+.glass{background:var(--bg-elev);-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);border:1px solid var(--line);}

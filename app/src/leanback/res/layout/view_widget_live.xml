@@ -20,9 +20,11 @@
             android:layout_marginEnd="16dp"
             android:layout_toStartOf="@+id/clock"
             android:ellipsize="marquee"
+            android:fontFamily="@font/noto_serif_sc_bold"
             android:singleLine="true"
-            android:textColor="@color/white"
+            android:textColor="@color/md_paper"
             android:textSize="20sp"
+            android:textStyle="bold"
             tools:text="民視" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -32,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/title"
             android:layout_alignStart="@+id/title"
-            android:textColor="@color/white"
+            android:textColor="@color/md_mist"
             android:textSize="16sp"
             tools:text="1920 x 1080" />
 
@@ -43,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:fontFeatureSettings="tnum"
-            android:textColor="@color/white"
+            android:textColor="@color/md_paper"
             android:textSize="20sp"
             tools:text="09:20:00" />
 
@@ -54,7 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/shape_widget"
+        android:background="@drawable/mdl_v_shape_widget"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"
@@ -71,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:textColor="@color/white"
+            android:textColor="@color/md_paper"
             android:textSize="16sp"
             tools:text="@string/error_play_url" />
 
@@ -82,11 +84,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/shape_widget"
+        android:background="@drawable/mdl_v_shape_widget"
+        android:fontFamily="@font/noto_serif_sc_bold"
         android:includeFontPadding="false"
         android:letterSpacing="0.05"
-        android:textColor="@color/white"
+        android:textColor="@color/md_amber"
         android:textSize="64sp"
+        android:textStyle="bold"
         android:visibility="gone"
         tools:text="05"
         tools:visibility="visible" />
@@ -96,7 +100,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/shape_widget"
+        android:background="@drawable/mdl_v_shape_widget"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"
@@ -118,7 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFeatureSettings="tnum"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="16sp"
                 tools:text="00:00:00" />
 
@@ -128,7 +132,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:text="/"
-                android:textColor="@color/white"
+                android:textColor="@color/md_mist_dim"
                 android:textSize="16sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -136,7 +140,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFeatureSettings="tnum"
-                android:textColor="@color/white"
+                android:textColor="@color/md_mist"
                 android:textSize="16sp"
                 tools:text="00:00:00" />
 
@@ -148,7 +152,7 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_gravity="bottom"
-        android:background="@drawable/shape_live_info"
+        android:background="@drawable/mdl_l_infobar"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="16dp"
@@ -161,8 +165,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:textColor="@color/white"
+            android:fontFamily="@font/noto_serif_sc_bold"
+            android:fontFeatureSettings="tnum"
+            android:textColor="@color/md_amber"
             android:textSize="18sp"
+            android:textStyle="bold"
             tools:text="005" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -177,11 +184,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
+            android:fontFamily="@font/noto_serif_sc_bold"
             android:maxEms="48"
             android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textColor="@color/md_paper"
+            android:textSize="20sp"
+            android:textStyle="bold"
             tools:text="民視" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/md_seal_badge"
+            android:paddingStart="8dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="2dp"
+            android:text="LIVE"
+            android:textColor="@color/md_paper"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/play"
@@ -190,16 +214,16 @@
             android:layout_marginEnd="12dp"
             android:layout_weight="1"
             android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textColor="@color/md_mist"
+            android:textSize="16sp"
             tools:text="正在播放：食神" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/line"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textColor="@color/md_mist_dim"
+            android:textSize="16sp"
             tools:text="來源 1" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

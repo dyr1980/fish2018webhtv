@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · chip 焦点态：琥珀实心胶囊（文字用 md_on_amber） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <gradient
+        android:angle="270"
+        android:endColor="@color/md_amber_deep"
+        android:startColor="#F0B655" />
+
+    <corners android:radius="999dp" />
+
+    <padding
+        android:bottom="8dp"
+        android:left="14dp"
+        android:right="14dp"
+        android:top="8dp" />
+
+</shape>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 选集底（自带内边距，供 wrap_content 集数项使用） -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/md_amber_glow">
+    <item>
+        <selector>
+            <item android:state_activated="true">
+                <shape android:shape="rectangle">
+                    <corners android:radius="8dp" />
+                    <solid android:color="@color/md_amber" />
+                    <stroke android:width="1dp" android:color="@color/md_amber" />
+                    <padding android:bottom="8dp" android:left="12dp" android:right="12dp" android:top="8dp" />
+                </shape>
+            </item>
+            <item android:state_checked="true">
+                <shape android:shape="rectangle">
+                    <corners android:radius="8dp" />
+                    <solid android:color="@color/md_amber" />
+                    <stroke android:width="1dp" android:color="@color/md_amber" />
+                    <padding android:bottom="8dp" android:left="12dp" android:right="12dp" android:top="8dp" />
+                </shape>
+            </item>
+            <item android:state_selected="true">
+                <shape android:shape="rectangle">
+                    <corners android:radius="8dp" />
+                    <solid android:color="@color/md_amber" />
+                    <stroke android:width="1dp" android:color="@color/md_amber" />
+                    <padding android:bottom="8dp" android:left="12dp" android:right="12dp" android:top="8dp" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="8dp" />
+                    <solid android:color="@color/md_panel" />
+                    <stroke android:width="1dp" android:color="@color/md_line" />
+                    <padding android:bottom="8dp" android:left="12dp" android:right="12dp" android:top="8dp" />
+                </shape>
+            </item>
+        </selector>
+    </item>
+</ripple>

@@ -4,7 +4,7 @@
     android:id="@+id/text"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/selector_video_item"
+    android:background="@drawable/mdl_v_selector_item"
     android:ellipsize="marquee"
     android:focusable="true"
     android:focusableInTouchMode="true"
@@ -12,6 +12,6 @@
     android:nextFocusUp="@id/array"
     android:nextFocusDown="@id/part"
     android:singleLine="true"
-    android:textColor="@color/text"
+    android:textColor="@color/mdl_v_text_focus"
     android:textSize="16sp"
     tools:text="20" />

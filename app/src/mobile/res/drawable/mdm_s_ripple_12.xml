@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 圆角琥珀微光水波（随结果卡圆角升级为 16dp） -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/md_amber_glow">
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/md_paper" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+</ripple>

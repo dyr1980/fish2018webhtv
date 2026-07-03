@@ -657,7 +657,7 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
         @Override
         public Fragment getItem(int position) {
             Class type = mAdapter.get(position);
-            return FolderFragment.newInstance(getHome().getKey(), type, 4);
+            return FolderFragment.newInstance(getHome().getKey(), type, 4, position == 0);
         }
 
         @Override

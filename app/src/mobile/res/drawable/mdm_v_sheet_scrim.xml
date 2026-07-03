@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 弹层遮罩：面板亮阶到幕布深的纵向渐层，顶部 18dp 圆角 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners
+        android:topLeftRadius="18dp"
+        android:topRightRadius="18dp" />
+    <gradient
+        android:angle="270"
+        android:centerColor="@color/md_panel"
+        android:endColor="@color/md_panel"
+        android:startColor="@color/md_panel_2" />
+</shape>

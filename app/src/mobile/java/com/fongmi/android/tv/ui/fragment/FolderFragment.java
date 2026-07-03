@@ -25,13 +25,22 @@ public class FolderFragment extends BaseFragment {
     private Class mType;
 
     public static FolderFragment newInstance(String key, Class type, int y) {
+        return newInstance(key, type, y, false);
+    }
+
+    public static FolderFragment newInstance(String key, Class type, int y, boolean header) {
         Bundle args = new Bundle();
         args.putInt("y", y);
         args.putString("key", key);
         args.putParcelable("type", type);
+        args.putBoolean("header", header);
         FolderFragment fragment = new FolderFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private boolean showHeader() {
+        return getArguments().getBoolean("header");
     }
 
     private String getKey() {
@@ -62,7 +71,7 @@ public class FolderFragment extends BaseFragment {
     @Override
     protected void initView() {
         mType = getType();
-        getChildFragmentManager().beginTransaction().replace(R.id.container, TypeFragment.newInstance(getKey(), mType.getTypeId(), mType.getStyle(), getExtend(), mType.isFolder(), getY())).commit();
+        getChildFragmentManager().beginTransaction().replace(R.id.container, TypeFragment.newInstance(getKey(), mType.getTypeId(), mType.getStyle(), getExtend(), mType.isFolder(), getY(), showHeader())).commit();
     }
 
     private HashMap<String, String> getExtend() {
@@ -72,7 +81,7 @@ public class FolderFragment extends BaseFragment {
     }
 
     public void openFolder(String typeId, HashMap<String, String> extend) {
-        TypeFragment next = TypeFragment.newInstance(getKey(), typeId, mType.getStyle(), extend, mType.isFolder(), getY());
+        TypeFragment next = TypeFragment.newInstance(getKey(), typeId, mType.getStyle(), extend, mType.isFolder(), getY(), false);
         FragmentTransaction ft = getChildFragmentManager().beginTransaction();
         Optional.ofNullable(getChild()).ifPresent(ft::hide);
         ft.add(R.id.container, next);

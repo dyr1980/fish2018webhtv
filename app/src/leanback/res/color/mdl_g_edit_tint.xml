@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 输入框下划线：焦点琥珀，普通细描边 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/md_amber" android:state_focused="true" />
+    <item android:color="@color/md_line_2" />
+</selector>

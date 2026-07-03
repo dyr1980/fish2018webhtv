@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>webHTV · 电视端详情页 · 午夜首映</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body{min-height:100vh;display:flex;justify-content:center;align-items:center;overflow:hidden;background:#040507;}
+  .stage{position:relative;width:1600px;height:900px;flex-shrink:0;overflow:hidden;
+    background:var(--ink);transform-origin:center center;border-radius:8px;box-shadow:var(--sh-3);}
+
+  /* 右侧全幅剧照 + 左向渐隐 */
+  .backdrop{position:absolute;inset:0;z-index:0;}
+  .backdrop .art{position:absolute;top:0;right:0;width:70%;height:80%;filter:brightness(1.6) saturate(1.08);}
+  .backdrop .mask{position:absolute;inset:0;
+    background:linear-gradient(90deg,var(--ink) 30%,rgba(11,13,19,.6) 48%,rgba(11,13,19,.08) 72%,transparent 100%),
+               linear-gradient(180deg,rgba(11,13,19,.18) 0%,transparent 30%,rgba(11,13,19,.55) 64%,var(--ink) 84%);}
+  .beam{position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:linear-gradient(247deg,rgba(232,163,61,.08) 0%,transparent 32%);}
+
+  .wrap{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;padding:40px 64px 54px;}
+  .crumb{font-size:14px;color:var(--mist-dim);letter-spacing:1px;}
+  .crumb b{color:var(--mist);font-weight:500;}
+
+  /* ── 信息区 ───────────────────────── */
+  .info{margin-top:34px;width:52%;}
+  .title-line{display:flex;align-items:flex-start;gap:18px;}
+  .info h1{margin:0;font-family:var(--f-display);font-weight:900;font-size:64px;letter-spacing:6px;
+    line-height:1.05;text-shadow:0 6px 40px rgba(0,0,0,.55);}
+  .score-seal{margin-top:10px;width:58px;height:58px;flex-shrink:0;display:grid;place-items:center;
+    background:var(--amber);color:#20150A;border-radius:9px;
+    box-shadow:inset 0 0 0 1px rgba(32,21,10,.25),0 10px 28px var(--amber-glow);}
+  .score-seal b{font-family:var(--f-display);font-weight:900;font-size:23px;line-height:1;}
+  .score-seal i{font-style:normal;font-size:10px;letter-spacing:2px;margin-top:2px;}
+  .meta{margin-top:18px;display:flex;align-items:center;flex-wrap:wrap;gap:12px;font-size:16px;color:var(--mist);}
+  .dot{width:4px;height:4px;border-radius:50%;background:var(--mist-dim);}
+  .chip{padding:3px 12px;border-radius:var(--r-pill);border:1px solid var(--line-2);font-size:13px;}
+  .desc{margin-top:16px;font-size:15px;line-height:1.85;color:var(--mist);width:92%;
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+
+  /* ── 操作按钮（焦点行 1）──────────── */
+  .actions{margin-top:26px;display:flex;gap:14px;}
+  .fi{transition:transform .22s ease,box-shadow .22s ease;border-radius:var(--r-md);cursor:pointer;}
+  .fi.focus{transform:scale(1.06);box-shadow:var(--sh-focus);z-index:3;position:relative;}
+  .abtn{height:56px;padding:0 30px;display:flex;align-items:center;gap:10px;
+    border-radius:var(--r-md);font-size:17px;font-weight:600;color:var(--paper);
+    background:var(--panel);border:1px solid var(--line-2);}
+  .abtn.primary{color:#20150A;font-weight:700;border:none;
+    background:linear-gradient(180deg,#F0B655 0%,var(--amber) 40%,var(--amber-deep) 100%);}
+  .abtn .sub{font-size:12px;color:var(--mist-dim);font-weight:400;}
+  .abtn.primary .sub{color:rgba(32,21,10,.65);}
+
+  /* ── 选集（焦点行 2）──────────────── */
+  .eps-sec{margin-top:auto;}
+  .eps-head{display:flex;align-items:baseline;gap:14px;margin-bottom:16px;}
+  .eps-head b{font-family:var(--f-display);font-weight:900;font-size:22px;letter-spacing:2px;}
+  .eps-head span{font-size:13px;color:var(--mist-dim);}
+  .eps-head .line-tag{margin-left:auto;font-size:13px;color:var(--mist);
+    padding:5px 14px;border-radius:var(--r-pill);border:1px solid var(--line-2);}
+  .eps-head .line-tag b{color:var(--amber);font-size:13px;letter-spacing:0;}
+  .eps{display:flex;gap:12px;overflow:visible;padding-bottom:6px;}
+  .ep{flex-shrink:0;width:96px;height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    border-radius:var(--r-md);background:var(--panel);border:1px solid var(--line);
+    font-size:16px;font-weight:600;color:var(--mist);}
+  .ep .st{font-size:10.5px;font-weight:400;color:var(--mist-dim);letter-spacing:1px;}
+  .ep.seen{background:transparent;color:var(--mist-dim);}
+  .ep.now{background:rgba(232,163,61,.12);border-color:var(--amber);color:var(--amber);}
+  .ep.now .st{color:var(--amber);}
+  .fi.focus .ep{background:var(--amber);border-color:var(--amber);color:#20150A;}
+  .fi.focus .ep .st{color:rgba(32,21,10,.65);}
+  .ep-new{position:relative;}
+  .ep-new .seal{position:absolute;top:-7px;right:-6px;width:18px;height:18px;font-size:10px;}
+
+  /* ── 底部按键提示 ─────────────────── */
+  .hintbar{position:absolute;z-index:5;left:0;right:0;bottom:0;height:54px;
+    display:flex;align-items:center;gap:26px;padding:0 64px;
+    border-top:1px solid var(--line);background:rgba(11,13,19,.7);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    font-size:13.5px;color:var(--mist-dim);}
+  .hintbar kbd{font-family:var(--f-body);font-size:12px;color:var(--mist);border:1px solid var(--line-2);
+    border-radius:5px;padding:2px 8px;margin-right:7px;}
+  .hintbar .r{margin-left:auto;}
+  .hintbar .r b{color:var(--mist);font-weight:500;}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="backdrop">
+    <div class="art art-mist"></div>
+    <div class="mask"></div>
+  </div>
+  <div class="beam"></div>
+
+  <div class="wrap">
+    <div class="crumb">推荐 / 剧集 / <b>雾岛来客</b></div>
+
+    <div class="info">
+      <div class="title-line">
+        <h1>雾岛来客</h1>
+        <div class="score-seal"><b>9.2</b><i>豆瓣</i></div>
+      </div>
+      <div class="meta">
+        <span>2026</span><span class="dot"></span><span>共 16 集 · 已更新 12</span>
+        <span class="dot"></span><span>普通话 · 中字</span>
+        <span class="chip">悬疑</span><span class="chip">犯罪</span><span class="chip">1080P</span>
+      </div>
+      <div class="desc">
+        连环失踪案让雾岛重新回到公众视野。记者沈一苇登岛调查，却发现岛上居民对失踪者绝口不提，
+        灯塔在无人看守的深夜依然准时亮起。随着台风封岛，她意识到自己成了名单上的下一个名字。
+      </div>
+      <div class="actions fr">
+        <div class="fi"><div class="abtn primary">▶ 续播<span class="sub">第 8 集 · 23:14</span></div></div>
+        <div class="fi"><div class="abtn">从头播放</div></div>
+        <div class="fi"><div class="abtn">✦ 收藏</div></div>
+        <div class="fi"><div class="abtn">⇄ 换源<span class="sub">非凡 · 快</span></div></div>
+      </div>
+    </div>
+
+    <div class="eps-sec">
+      <div class="eps-head">
+        <b>选集</b><span>连载中 · 周三周四更新</span>
+        <div class="line-tag">线路 <b>非凡影视 1080P</b> · 按 菜单 切换</div>
+      </div>
+      <div class="eps fr">
+        <div class="fi"><div class="ep seen">01<span class="st">已看</span></div></div>
+        <div class="fi"><div class="ep seen">02<span class="st">已看</span></div></div>
+        <div class="fi"><div class="ep seen">03<span class="st">已看</span></div></div>
+        <div class="fi"><div class="ep seen">04<span class="st">已看</span></div></div>
+        <div class="fi"><div class="ep seen">05<span class="st">已看</span></div></div>
+        <div class="fi"><div class="ep seen">06<span class="st">已看</span></div></div>
+        <div class="fi"><div class="ep seen">07<span class="st">已看</span></div></div>
+        <div class="fi"><div class="ep now">08<span class="st">看到 23:14</span></div></div>
+        <div class="fi"><div class="ep">09</div></div>
+        <div class="fi"><div class="ep">10</div></div>
+        <div class="fi"><div class="ep">11</div></div>
+        <div class="fi"><div class="ep ep-new">12<span class="st">今日更新</span><span class="seal">新</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hintbar">
+    <span><kbd>OK</kbd>确认</span>
+    <span><kbd>菜单</kbd>换源 / 线路</span>
+    <span><kbd>▲</kbd>回到操作栏</span>
+    <span><kbd>返回</kbd>上一页</span>
+    <div class="r">本页可用键盘方向键体验遥控焦点 · 当前源 <b>非凡影视</b></div>
+  </div>
+</div>
+
+<script>
+  const stage=document.querySelector('.stage');
+  function fit(){const s=Math.min((innerWidth-24)/1600,(innerHeight-24)/900);stage.style.transform=`scale(${s})`;}
+  fit();addEventListener('resize',fit);
+
+  const rows=[...document.querySelectorAll('.fr')];
+  let r=0,c=0;
+  const cards=i=>[...rows[i].querySelectorAll('.fi')];
+  function go(nr,nc){
+    document.querySelector('.fi.focus')?.classList.remove('focus');
+    r=nr;c=nc;
+    const el=cards(r)[c];
+    el.classList.add('focus');
+    el.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+  }
+  addEventListener('keydown',e=>{
+    const k=e.key;
+    if(!k.startsWith('Arrow'))return;
+    e.preventDefault();
+    if(k==='ArrowLeft') go(r,Math.max(0,c-1));
+    if(k==='ArrowRight')go(r,Math.min(cards(r).length-1,c+1));
+    if(k==='ArrowUp'){const nr=Math.max(0,r-1);go(nr,Math.min(c,cards(nr).length-1));}
+    if(k==='ArrowDown'){const nr=Math.min(rows.length-1,r+1);go(nr,Math.min(c,cards(nr).length-1));}
+  });
+  go(0,0);
+</script>
+</body>
+</html>

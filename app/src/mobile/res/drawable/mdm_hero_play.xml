@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · Hero 主按钮「立即播放」：琥珀纵向渐变 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient android:angle="270" android:startColor="#F0B655" android:endColor="@color/md_amber_deep" />
+    <corners android:radius="12dp" />
+</shape>

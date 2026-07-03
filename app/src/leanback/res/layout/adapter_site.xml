@@ -24,7 +24,7 @@
         android:ellipsize="marquee"
         android:gravity="center"
         android:singleLine="true"
-        android:textColor="@color/white"
+        android:textColor="@color/mdl_text"
         android:textSize="18sp" />
 
     <com.google.android.material.checkbox.MaterialCheckBox
@@ -36,6 +36,6 @@
         android:enabled="false"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        app:buttonTint="@color/white" />
+        app:buttonTint="@color/md_amber" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

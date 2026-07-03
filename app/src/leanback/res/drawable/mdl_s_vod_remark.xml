@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 海报卡片备注条（更新至 X 集）：影厅黑遮罩底 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="@color/md_ink_70" />
+
+    <padding
+        android:bottom="4dp"
+        android:left="4dp"
+        android:right="4dp"
+        android:top="4dp" />
+
+    <corners
+        android:bottomRightRadius="4dp"
+        android:topRightRadius="4dp" />
+
+</shape>

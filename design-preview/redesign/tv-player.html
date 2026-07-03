@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>webHTV · 电视端播放 OSD · 午夜首映</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body{min-height:100vh;display:flex;justify-content:center;align-items:center;overflow:hidden;background:#040507;}
+  .stage{position:relative;width:1600px;height:900px;flex-shrink:0;overflow:hidden;
+    background:#000;transform-origin:center center;border-radius:8px;box-shadow:var(--sh-3);}
+
+  /* 全屏画面 */
+  .screen{position:absolute;inset:0;filter:brightness(1.35);}
+  .screen-mask{position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(4,5,7,.72) 0%,transparent 18%,transparent 62%,rgba(4,5,7,.88) 100%);}
+
+  /* 弹幕 */
+  .dm{position:absolute;font-size:22px;color:rgba(243,238,227,.88);white-space:nowrap;
+    text-shadow:0 2px 8px rgba(0,0,0,.8);}
+  .dm.a{top:96px;right:120px;}
+  .dm.b{top:140px;right:420px;color:rgba(143,163,188,.9);}
+  .dm.c{top:186px;right:230px;}
+  .dm.d{top:246px;left:170px;color:rgba(232,163,61,.95);}
+
+  /* ── 顶部 OSD ─────────────────────── */
+  .osd-top{position:absolute;z-index:4;top:0;left:0;right:0;display:flex;align-items:flex-start;
+    padding:34px 64px 0;gap:20px;}
+  .osd-top .t{flex:1;}
+  .osd-top h1{margin:0;font-family:var(--f-display);font-weight:900;font-size:34px;letter-spacing:3px;
+    text-shadow:0 4px 24px rgba(0,0,0,.7);}
+  .osd-top h1 i{font-style:normal;font-size:18px;color:rgba(243,238,227,.7);font-family:var(--f-body);
+    font-weight:400;margin-left:14px;letter-spacing:1px;}
+  .osd-top .sub{margin-top:8px;font-size:14px;color:var(--mist);display:flex;align-items:center;gap:12px;}
+  .qtag{font-size:12px;color:var(--amber);padding:3px 10px;border-radius:var(--r-pill);
+    border:1px solid rgba(232,163,61,.5);}
+  .clock{font-family:var(--f-display);font-weight:600;font-size:24px;color:rgba(243,238,227,.85);
+    text-shadow:0 2px 12px rgba(0,0,0,.7);}
+
+  /* ── 底部 OSD ─────────────────────── */
+  .osd-bot{position:absolute;z-index:4;left:0;right:0;bottom:0;padding:0 64px 26px;}
+
+  /* seek 预览卡 */
+  .preview{position:absolute;left:52%;bottom:176px;transform:translateX(-50%);width:224px;
+    border-radius:var(--r-md);overflow:hidden;border:2px solid var(--amber);
+    box-shadow:0 14px 40px rgba(0,0,0,.7),0 0 24px var(--amber-glow);}
+  .preview .pic{height:126px;}
+  .preview .tc{padding:7px 0 8px;text-align:center;font-size:14px;font-weight:700;color:var(--paper);
+    background:rgba(11,13,19,.9);font-variant-numeric:tabular-nums;}
+  .preview .tc i{font-style:normal;color:var(--mist-dim);font-weight:400;font-size:12px;}
+
+  .prog{position:relative;height:18px;display:flex;align-items:center;margin-bottom:10px;}
+  .prog .rail{position:absolute;left:0;right:0;height:5px;border-radius:5px;background:rgba(243,238,227,.18);}
+  .prog .buf{position:absolute;left:0;width:78%;height:5px;border-radius:5px;background:rgba(243,238,227,.28);}
+  .prog .cur{position:absolute;left:0;width:52%;height:5px;border-radius:5px;background:var(--amber);
+    box-shadow:0 0 12px var(--amber-glow);}
+  .prog .knob{position:absolute;left:52%;width:16px;height:16px;border-radius:50%;background:var(--amber);
+    border:3px solid #20150A;box-shadow:0 0 14px var(--amber-glow);transform:translateX(-50%);}
+  .prog .mark{position:absolute;top:14px;left:52%;transform:translateX(-50%);font-size:12px;color:var(--amber);}
+
+  .times{display:flex;font-size:15px;color:rgba(243,238,227,.85);font-variant-numeric:tabular-nums;margin-bottom:14px;}
+  .times b{color:var(--paper);font-weight:700;}
+  .times .r{margin-left:auto;color:var(--mist-dim);}
+  .times .r b{color:var(--mist);font-weight:500;}
+
+  /* 按钮行（焦点行） */
+  .btns{display:flex;gap:12px;align-items:center;}
+  .fi{transition:transform .18s ease,box-shadow .18s ease;border-radius:var(--r-md);cursor:pointer;}
+  .fi.focus{transform:scale(1.08);box-shadow:var(--sh-focus);position:relative;z-index:3;}
+  .ob{height:52px;padding:0 22px;display:flex;align-items:center;gap:9px;border-radius:var(--r-md);
+    background:rgba(21,26,36,.72);border:1px solid var(--line-2);font-size:15px;font-weight:600;color:var(--mist);
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);white-space:nowrap;}
+  .ob .sub{font-size:11.5px;color:var(--mist-dim);font-weight:400;}
+  .fi.focus .ob{background:var(--amber);border-color:var(--amber);color:#20150A;}
+  .fi.focus .ob .sub{color:rgba(32,21,10,.65);}
+  .ob.icon{width:52px;padding:0;justify-content:center;font-size:18px;}
+  .btns .sp{flex:1;}
+
+  .keyhint{margin-top:14px;display:flex;gap:24px;font-size:13px;color:var(--mist-dim);}
+  .keyhint kbd{font-family:var(--f-body);font-size:11.5px;color:var(--mist);border:1px solid var(--line-2);
+    border-radius:5px;padding:2px 8px;margin-right:6px;}
+  .keyhint .r{margin-left:auto;}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="screen art art-cold"></div>
+  <div class="screen-mask"></div>
+
+  <span class="dm a">这一段镜头调度太强了</span>
+  <span class="dm b">前方高能预警！！</span>
+  <span class="dm c">江桥别回头啊啊啊</span>
+  <span class="dm d">十二年前的答案来了</span>
+
+  <div class="osd-top">
+    <div class="t">
+      <h1>暗涌<i>第 8 集 · 罅隙</i></h1>
+      <div class="sub"><span class="qtag">1080P</span><span>非凡影视 · 线路 1/4</span><span>·</span><span>弹幕 开</span></div>
+    </div>
+    <div class="clock">21:36</div>
+  </div>
+
+  <div class="osd-bot">
+    <div class="preview">
+      <div class="pic art art-mist"></div>
+      <div class="tc">23:40 <i>/ 45:30</i></div>
+    </div>
+
+    <div class="prog">
+      <div class="rail"></div><div class="buf"></div><div class="cur"></div><div class="knob"></div>
+    </div>
+    <div class="times"><span><b>23:14</b> / 45:30</span><span class="r">片尾 44:50 自动跳过 · 播完接 <b>第 9 集</b></span></div>
+
+    <div class="btns fr">
+      <div class="fi"><div class="ob icon">❚❚</div></div>
+      <div class="fi"><div class="ob">下一集</div></div>
+      <div class="fi"><div class="ob">选集<span class="sub">8 / 12</span></div></div>
+      <div class="fi"><div class="ob">换源<span class="sub">非凡 · 快</span></div></div>
+      <div class="fi"><div class="ob">倍速<span class="sub">1.0x</span></div></div>
+      <div class="fi"><div class="ob">比例<span class="sub">自适应</span></div></div>
+      <div class="fi"><div class="ob">弹幕<span class="sub">开</span></div></div>
+      <div class="sp"></div>
+      <div class="fi"><div class="ob icon">⚙</div></div>
+    </div>
+
+    <div class="keyhint">
+      <span><kbd>OK</kbd>暂停 / 呼出</span>
+      <span><kbd>◀ ▶</kbd>快退 / 快进</span>
+      <span><kbd>▲</kbd>弹幕开关</span>
+      <span><kbd>▼</kbd>选集</span>
+      <span><kbd>菜单</kbd>播放设置</span>
+      <span class="r">本页可用键盘方向键体验遥控焦点</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  const stage=document.querySelector('.stage');
+  function fit(){const s=Math.min((innerWidth-24)/1600,(innerHeight-24)/900);stage.style.transform=`scale(${s})`;}
+  fit();addEventListener('resize',fit);
+
+  const rows=[...document.querySelectorAll('.fr')];
+  let r=0,c=0;
+  const cards=i=>[...rows[i].querySelectorAll('.fi')];
+  function go(nr,nc){
+    document.querySelector('.fi.focus')?.classList.remove('focus');
+    r=nr;c=nc;
+    cards(r)[c].classList.add('focus');
+  }
+  addEventListener('keydown',e=>{
+    const k=e.key;
+    if(!k.startsWith('Arrow'))return;
+    e.preventDefault();
+    if(k==='ArrowLeft') go(r,Math.max(0,c-1));
+    if(k==='ArrowRight')go(r,Math.min(cards(r).length-1,c+1));
+  });
+  go(0,0);
+</script>
+</body>
+</html>

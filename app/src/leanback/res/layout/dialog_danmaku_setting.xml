@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/shape_danmaku_setting_panel"
+    android:background="@drawable/mdl_g_setting_panel"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -20,9 +20,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/noto_serif_sc_bold"
             android:text="@string/danmaku_setting"
             android:textAppearance="?attr/textAppearanceHeadlineSmall"
-            android:textColor="@color/white" />
+            android:textColor="@color/md_paper"
+            android:textStyle="bold" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/reset"
@@ -33,7 +35,8 @@
             android:focusableInTouchMode="true"
             android:nextFocusDown="@id/tabAppearance"
             android:text="@string/danmaku_reset"
-            android:textColor="@color/white" />
+            android:textColor="@color/mdl_g_btn_soft_text"
+            app:backgroundTint="@color/mdl_g_btn_soft_bg" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -54,7 +57,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:focusable="true"
-            android:text="@string/danmaku_section_display" />
+            android:text="@string/danmaku_section_display"
+            android:textColor="@color/mdl_g_btn_soft_text"
+            app:backgroundTint="@color/mdl_g_btn_soft_bg"
+            app:strokeColor="@color/md_line_2" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tabTiming"
@@ -63,7 +69,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:focusable="true"
-            android:text="@string/danmaku_section_timing" />
+            android:text="@string/danmaku_section_timing"
+            android:textColor="@color/mdl_g_btn_soft_text"
+            app:backgroundTint="@color/mdl_g_btn_soft_bg"
+            app:strokeColor="@color/md_line_2" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 

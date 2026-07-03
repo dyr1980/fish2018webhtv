@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/selector_live"
+    android:background="@drawable/mdl_l_chan_bg"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
@@ -15,7 +15,7 @@
         android:duplicateParentState="true"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:textColor="@color/text"
+        android:textColor="@color/mdl_text"
         android:textSize="16sp"
         tools:text="七龍珠" />
 
@@ -25,8 +25,9 @@
         android:layout_height="wrap_content"
         android:duplicateParentState="true"
         android:ellipsize="marquee"
+        android:fontFeatureSettings="tnum"
         android:singleLine="true"
-        android:textColor="@color/text"
+        android:textColor="@color/mdl_l_epg_time"
         android:textSize="14sp"
         tools:text="18:00 ~ 19:00" />
 

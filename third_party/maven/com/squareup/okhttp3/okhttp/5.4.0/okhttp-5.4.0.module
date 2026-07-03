@@ -1,0 +1,183 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.squareup.okhttp3",
+    "module": "okhttp",
+    "version": "5.4.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.5.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "metadataApiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.21"
+          }
+        },
+        {
+          "group": "com.squareup.okio",
+          "module": "okio",
+          "version": {
+            "requires": "3.17.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.2.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "okhttp-metadata-5.4.0.jar",
+          "url": "okhttp-5.4.0.jar",
+          "size": 754,
+          "sha512": "2f781d52a71806d226aa5e070c4d0b71220217d341ae4b02fb47058becece2347e660eb263f96b49f49530ab4576fe7110f9b28472acc6b01e2890e02008c753",
+          "sha256": "aebaab3fe77633befcf69fd0ee3052083999a7eaa98d6f2f7c4b498e7bdbb732",
+          "sha1": "eb39f0d8a8bb9d0ad292551b830d662fea547d90",
+          "md5": "51ff6835e18758e9ec30bfbe29d42282"
+        }
+      ]
+    },
+    {
+      "name": "metadataSourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.platform.type": "common"
+      },
+      "files": [
+        {
+          "name": "okhttp-kotlin-5.4.0-sources.jar",
+          "url": "okhttp-5.4.0-sources.jar",
+          "size": 381368,
+          "sha512": "bebd077f5b122f96b12c0bf8f6e9817b9778319873f39e11cb90c4fb3ac6f299fb699525d7f7189d0b189b914cb2e18e80469bd44758360a399bc864ea4a1166",
+          "sha256": "18d3617897bcafa72609a6f92c88d60754a6c2029d7cc6b36a28b08a13049704",
+          "sha1": "67cc53dd14988ecf896af4568833af76620fa5cd",
+          "md5": "02a3abe85c6a8c4ddfd93f49faf506dd"
+        }
+      ]
+    },
+    {
+      "name": "androidApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "available-at": {
+        "url": "../../okhttp-android/5.4.0/okhttp-android-5.4.0.module",
+        "group": "com.squareup.okhttp3",
+        "module": "okhttp-android",
+        "version": "5.4.0"
+      }
+    },
+    {
+      "name": "androidRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "available-at": {
+        "url": "../../okhttp-android/5.4.0/okhttp-android-5.4.0.module",
+        "group": "com.squareup.okhttp3",
+        "module": "okhttp-android",
+        "version": "5.4.0"
+      }
+    },
+    {
+      "name": "androidSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "available-at": {
+        "url": "../../okhttp-android/5.4.0/okhttp-android-5.4.0.module",
+        "group": "com.squareup.okhttp3",
+        "module": "okhttp-android",
+        "version": "5.4.0"
+      }
+    },
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../okhttp-jvm/5.4.0/okhttp-jvm-5.4.0.module",
+        "group": "com.squareup.okhttp3",
+        "module": "okhttp-jvm",
+        "version": "5.4.0"
+      }
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../okhttp-jvm/5.4.0/okhttp-jvm-5.4.0.module",
+        "group": "com.squareup.okhttp3",
+        "module": "okhttp-jvm",
+        "version": "5.4.0"
+      }
+    },
+    {
+      "name": "jvmSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "available-at": {
+        "url": "../../okhttp-jvm/5.4.0/okhttp-jvm-5.4.0.module",
+        "group": "com.squareup.okhttp3",
+        "module": "okhttp-jvm",
+        "version": "5.4.0"
+      }
+    }
+  ]
+}

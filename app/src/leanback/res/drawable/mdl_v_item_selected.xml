@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 选集/条目 当前态：12% 琥珀淡染 + 琥珀描边（文字用 md_amber） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="@color/md_amber_12" />
+
+    <stroke
+        android:width="1dp"
+        android:color="@color/md_amber" />
+
+    <corners android:radius="10dp" />
+
+    <padding
+        android:bottom="8dp"
+        android:left="12dp"
+        android:right="12dp"
+        android:top="8dp" />
+
+</shape>

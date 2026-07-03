@@ -5,26 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="128dp"
     android:layout_margin="8dp"
-    android:background="@drawable/shape_vod_list"
-    android:foreground="@drawable/shape_vod">
+    android:background="@drawable/mdm_s_result_card"
+    android:foreground="@drawable/mdm_s_ripple_12">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/image"
         android:layout_width="96dp"
         android:layout_height="match_parent"
-        android:background="@color/black_10"
+        android:background="@color/md_panel_2"
         app:shapeAppearanceOverlay="@style/Vod.Grid.Large" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/site"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_vod_site"
+        android:background="@drawable/mdm_s_site_badge"
         android:ellipsize="end"
         android:maxWidth="90dp"
         android:singleLine="true"
-        android:textColor="@color/text_site"
-        android:textSize="12sp"
+        android:textColor="@color/md_paper"
+        android:textSize="11sp"
         android:visibility="gone"
         tools:text="泥巴"
         tools:visibility="visible" />
@@ -43,18 +43,24 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="3"
-            android:textColor="@color/white"
-            android:textSize="14sp"
+            android:textColor="@color/md_paper"
+            android:textSize="15sp"
+            android:textStyle="bold"
             tools:text="蜘蛛人" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/remark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/md_outline_pill"
+            android:paddingStart="9dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="9dp"
+            android:paddingBottom="3dp"
             android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="12sp"
+            android:textColor="@color/md_mist"
+            android:textSize="11sp"
             tools:text="1080p" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

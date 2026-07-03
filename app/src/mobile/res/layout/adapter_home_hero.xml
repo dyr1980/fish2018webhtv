@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 首页 Hero 单页：竖排宋体片名 + 首映印章 + 立即播放 -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/md_panel_2"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/Vod.Grid.Large" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/mdm_hero_mask" />
+
+    <!-- 竖排片名 + 首映印章（右上） -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="top"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/noto_serif_sc_bold"
+            android:gravity="center_horizontal"
+            android:lineSpacingExtra="4dp"
+            android:shadowColor="#A6000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="16"
+            android:textColor="@color/md_paper"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            tools:text="雾\n岛\n来\n客" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="26dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/md_seal_badge"
+            android:fontFamily="@font/noto_serif_sc_bold"
+            android:gravity="center"
+            android:lineSpacingExtra="2dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="首\n映"
+            android:textColor="@color/md_paper"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
+    <!-- 底部信息区 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="18dp"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/eyebrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:letterSpacing="0.22"
+            android:text="为你推荐"
+            android:textColor="@color/md_amber"
+            android:textSize="11sp"
+            tools:ignore="HardcodedText" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/meta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:singleLine="true"
+            android:textColor="@color/md_mist"
+            android:textSize="12.5sp"
+            tools:text="2026 · 更新至 12 集 · 悬疑" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/play"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:background="@drawable/mdm_hero_play"
+                android:gravity="center"
+                android:text="▶  立即播放"
+                android:textColor="@color/md_on_amber"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/keep"
+                android:layout_width="50dp"
+                android:layout_height="46dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/mdm_hero_ghost"
+                android:gravity="center"
+                android:text="＋"
+                android:textColor="@color/md_paper"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

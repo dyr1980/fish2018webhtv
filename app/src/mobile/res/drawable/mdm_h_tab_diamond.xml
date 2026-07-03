@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 分类 tab 选中态琥珀菱形指示 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="6dp"
+    android:height="6dp"
+    android:viewportWidth="10"
+    android:viewportHeight="10">
+
+    <path
+        android:fillColor="@color/md_amber"
+        android:pathData="M5,0 L10,5 L5,10 L0,5 Z" />
+
+</vector>

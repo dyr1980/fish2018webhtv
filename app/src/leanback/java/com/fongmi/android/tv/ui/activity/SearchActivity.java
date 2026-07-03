@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
@@ -162,7 +163,7 @@ public class SearchActivity extends BaseActivity implements WordAdapter.OnClickL
     private void setHotRecycler(RecyclerView recyclerView, HotWordAdapter adapter) {
         recyclerView.setItemAnimator(null);
         recyclerView.setHasFixedSize(false);
-        recyclerView.setLayoutManager(new FlexboxLayoutManager(this, FlexDirection.ROW));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }
 

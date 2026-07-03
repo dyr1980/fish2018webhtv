@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/text"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="34dp"
     android:layout_margin="8dp"
-    android:background="@drawable/shape_item_round"
+    android:background="@drawable/mdm_s_chip"
     android:ellipsize="marquee"
+    android:gravity="center"
     android:singleLine="true"
-    android:textColor="@color/white"
-    android:textSize="14sp"
-    tools:text="推薦" />
+    android:textColor="@color/mdm_s_text_chip"
+    android:textSize="13sp"
+    tools:text="歷史" />

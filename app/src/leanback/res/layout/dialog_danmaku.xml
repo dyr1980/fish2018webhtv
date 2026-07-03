@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape_danmaku_sheet_panel"
+    android:background="@drawable/mdl_g_sheet_panel"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -21,9 +21,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/noto_serif_sc_bold"
             android:text="@string/danmaku_select"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textColor="@color/md_paper"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/search"
@@ -33,7 +35,8 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:focusable="true"
             android:src="@drawable/ic_action_search"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:tint="@color/md_paper" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/choose"
@@ -41,7 +44,8 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:focusable="true"
-            android:src="@drawable/ic_action_choose" />
+            android:src="@drawable/ic_action_choose"
+            app:tint="@color/md_paper" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/setting"
@@ -50,7 +54,8 @@
             android:layout_marginStart="16dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:focusable="true"
-            android:src="@drawable/ic_danmaku_setting" />
+            android:src="@drawable/ic_danmaku_setting"
+            app:tint="@color/md_paper" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

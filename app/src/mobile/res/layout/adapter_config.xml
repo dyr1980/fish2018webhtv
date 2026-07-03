@@ -15,7 +15,7 @@
         android:layout_weight="1"
         android:ellipsize="middle"
         android:singleLine="true"
-        android:textColor="?attr/colorOnSurface"
+        android:textColor="@color/md_paper"
         android:textSize="14sp"
         app:backgroundTint="@color/selector_button"
         app:strokeColor="@color/selector_stroke"
@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_setting_delete" />
+        android:src="@drawable/ic_setting_delete"
+        app:tint="@color/md_mist" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

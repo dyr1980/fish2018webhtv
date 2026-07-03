@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>webHTV · 手机端首页 · 午夜首映</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body{display:flex;justify-content:center;padding:28px 0;
+    background:#060709 radial-gradient(900px 480px at 50% -8%,rgba(232,163,61,.07),transparent 65%);}
+  .phone{position:relative;width:390px;height:844px;overflow:hidden;
+    border-radius:48px;border:1px solid #23242C;background:var(--ink);box-shadow:var(--sh-3);}
+  .scroll{height:100%;overflow-y:auto;padding-bottom:110px;}
+
+  /* ── 顶栏 ─────────────────────────── */
+  .topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:10px;
+    padding:20px 20px 12px;background:linear-gradient(180deg,var(--ink) 60%,transparent);}
+  .logo{display:flex;align-items:center;gap:8px;}
+  .logo .seal{width:30px;height:30px;font-size:17px;}
+  .logo .name{font-family:var(--f-display);font-weight:900;font-size:20px;letter-spacing:.5px;}
+  .logo .name i{font-style:normal;color:var(--amber);}
+  .search{flex:1;height:36px;margin-left:6px;display:flex;align-items:center;gap:8px;
+    padding:0 14px;border-radius:var(--r-pill);background:var(--panel);
+    border:1px solid var(--line);color:var(--mist-dim);font-size:13px;}
+  .cast{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
+    background:var(--panel);border:1px solid var(--line);color:var(--mist);font-size:15px;}
+
+  /* ── 分类 + 站源 ──────────────────── */
+  .tabs{position:sticky;top:66px;z-index:25;display:flex;align-items:center;gap:22px;
+    padding:4px 20px 14px;overflow-x:auto;
+    background:linear-gradient(180deg,var(--ink) 74%,transparent);}
+  .tab{position:relative;flex-shrink:0;font-size:15px;color:var(--mist-dim);
+    padding-bottom:8px;letter-spacing:1px;}
+  .tab.on{font-family:var(--f-display);font-weight:900;font-size:16.5px;color:var(--paper);}
+  .tab.on::after{content:"";position:absolute;left:50%;bottom:0;width:5px;height:5px;
+    transform:translateX(-50%) rotate(45deg);background:var(--amber);}
+  .src{margin-left:auto;flex-shrink:0;font-size:11.5px;color:var(--mist);
+    padding:5px 11px;border-radius:var(--r-pill);border:1px solid var(--line-2);}
+  .src b{color:var(--amber);font-weight:600;}
+
+  /* ── 首映 Hero：竖排片名 + 印章 ────── */
+  .hero{padding:4px 20px 0;}
+  .hero-card{position:relative;height:472px;border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-2);}
+  .hero-mask{position:absolute;inset:0;z-index:1;
+    background:linear-gradient(180deg,transparent 42%,rgba(11,13,19,.55) 72%,var(--ink) 100%);}
+  .hero-title{position:absolute;z-index:2;top:22px;right:20px;display:flex;gap:12px;align-items:flex-start;}
+  .hero-title .chars{writing-mode:vertical-rl;font-family:var(--f-display);font-weight:900;
+    font-size:42px;line-height:1;letter-spacing:14px;color:var(--paper);
+    text-shadow:0 4px 28px rgba(0,0,0,.65);}
+  .hero-title .rule{width:1px;height:150px;margin-top:6px;background:linear-gradient(var(--line-2),transparent);}
+  .hero-title .seal{width:26px;height:44px;font-size:13px;writing-mode:vertical-rl;letter-spacing:4px;margin-top:8px;}
+  .hero-info{position:absolute;z-index:2;left:20px;right:20px;bottom:18px;}
+  .hero-eyebrow{font-size:11px;letter-spacing:3px;color:var(--amber);margin-bottom:8px;}
+  .hero-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-size:12.5px;color:var(--mist);margin-bottom:14px;}
+  .score{font-family:var(--f-display);font-weight:900;font-size:15px;color:var(--amber);}
+  .dot{width:3px;height:3px;border-radius:50%;background:var(--mist-dim);}
+  .chip{padding:2px 9px;border-radius:var(--r-pill);border:1px solid var(--line-2);font-size:11px;color:var(--mist);}
+  .hero-actions{display:flex;gap:10px;}
+  .btn-play{flex:1;height:46px;border:none;border-radius:var(--r-md);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    font-family:var(--f-body);font-size:15px;font-weight:700;color:#20150A;
+    background:linear-gradient(180deg,#F0B655 0%,var(--amber) 40%,var(--amber-deep) 100%);
+    box-shadow:0 8px 26px var(--amber-glow);}
+  .btn-ghost{width:50px;height:46px;border-radius:var(--r-md);display:grid;place-items:center;
+    background:rgba(21,26,36,.62);border:1px solid var(--line-2);color:var(--paper);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);font-size:17px;}
+  .dots{display:flex;justify-content:center;gap:6px;margin-top:14px;}
+  .dt{width:5px;height:5px;border-radius:50%;background:rgba(243,238,227,.2);}
+  .dt.on{width:18px;border-radius:3px;background:var(--amber);}
+
+  /* ── 通用段落 ─────────────────────── */
+  .section{margin-top:30px;}
+  .sec-head{display:flex;align-items:baseline;padding:0 20px 13px;}
+  .sec-title{font-family:var(--f-display);font-weight:900;font-size:19px;letter-spacing:1px;}
+  .sec-sub{margin-left:10px;font-size:11px;color:var(--mist-dim);letter-spacing:1px;}
+  .sec-more{margin-left:auto;font-size:12px;color:var(--mist-dim);}
+
+  /* ── 继续观看 ─────────────────────── */
+  .row{display:flex;gap:12px;padding:0 20px;overflow-x:auto;}
+  .wcard{flex:0 0 236px;}
+  .wcard .pic{position:relative;height:132px;border-radius:var(--r-md);overflow:hidden;box-shadow:var(--sh-1);}
+  .wcard .resume{position:absolute;z-index:2;left:10px;bottom:12px;display:flex;align-items:center;gap:7px;
+    font-size:11px;color:var(--paper);}
+  .wcard .resume .pl{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+    background:rgba(11,13,19,.6);border:1px solid rgba(243,238,227,.6);font-size:10px;padding-left:2px;
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+  .wcard .bar{position:absolute;z-index:2;left:0;right:0;bottom:0;height:3px;background:rgba(243,238,227,.18);}
+  .wcard .bar i{display:block;height:100%;background:var(--amber);}
+  .wcard .name{margin-top:9px;font-size:13.5px;font-weight:600;}
+  .wcard .sub{margin-top:3px;font-size:11.5px;color:var(--mist-dim);}
+
+  /* ── 热播榜：宋体大字序号 ──────────── */
+  .rank-row{display:flex;gap:6px;padding:0 20px;overflow-x:auto;}
+  .rk{flex:0 0 148px;display:flex;align-items:flex-end;}
+  .rk .num{font-family:var(--f-display);font-weight:900;font-size:58px;line-height:.78;
+    margin-right:-14px;margin-bottom:4px;position:relative;z-index:2;color:var(--mist-dim);opacity:.85;
+    text-shadow:2px 0 0 var(--ink),-2px 0 0 var(--ink),0 2px 0 var(--ink);}
+  .rk.top .num{color:var(--amber);opacity:1;}
+  .rk .pic{width:108px;height:152px;border-radius:var(--r-md);overflow:hidden;box-shadow:var(--sh-1);position:relative;}
+  .rk .pic .tag{position:absolute;z-index:2;top:8px;right:8px;}
+  .rk .pic .tag.seal{width:20px;height:20px;font-size:11px;}
+  .rk-meta{padding:0 20px;margin-top:10px;display:flex;gap:6px;font-size:11px;color:var(--mist-dim);}
+
+  /* ── 新片上架 ─────────────────────── */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px 12px;padding:0 20px;}
+  .gd .pic{position:relative;aspect-ratio:2/2.82;border-radius:var(--r-md);overflow:hidden;box-shadow:var(--sh-1);}
+  .gd .ep{position:absolute;z-index:2;right:0;left:0;bottom:0;padding:16px 8px 6px;text-align:right;
+    font-size:10.5px;color:var(--paper);background:linear-gradient(transparent,rgba(11,13,19,.88));}
+  .gd .name{margin-top:8px;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .gd .sub{margin-top:2px;font-size:11px;color:var(--mist-dim);}
+
+  /* ── 底部导航 ─────────────────────── */
+  .tabbar{position:absolute;z-index:40;left:16px;right:16px;bottom:16px;height:62px;
+    display:flex;align-items:center;justify-content:space-around;
+    border-radius:22px;background:rgba(21,26,36,.78);border:1px solid var(--line);
+    -webkit-backdrop-filter:blur(22px) saturate(1.3);backdrop-filter:blur(22px) saturate(1.3);
+    box-shadow:var(--sh-2);}
+  .nav{display:flex;flex-direction:column;align-items:center;gap:3px;
+    font-size:10px;color:var(--mist-dim);}
+  .nav .ic{font-size:19px;line-height:1;}
+  .nav.on{color:var(--paper);}
+  .nav.on .lb{font-family:var(--f-display);font-weight:900;}
+  .nav.on::before{content:"";width:4px;height:4px;transform:rotate(45deg);background:var(--amber);margin-bottom:1px;}
+  .nav::before{content:"";width:4px;height:4px;background:transparent;margin-bottom:1px;}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="scroll">
+
+    <div class="topbar">
+      <div class="logo"><span class="seal">映</span><span class="name">web<i>HTV</i></span></div>
+      <div class="search">🔍 搜索片名、演员</div>
+      <div class="cast">📺</div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab on">推荐</div><div class="tab">电影</div><div class="tab">剧集</div>
+      <div class="tab">综艺</div><div class="tab">动漫</div>
+      <div class="src">源 <b>非凡影视</b></div>
+    </div>
+
+    <div class="hero">
+      <div class="hero-card art art-mist">
+        <div class="hero-mask"></div>
+        <div class="hero-title">
+          <div class="rule"></div>
+          <div class="chars">雾岛来客</div>
+          <span class="seal">首映</span>
+        </div>
+        <div class="hero-info">
+          <div class="hero-eyebrow">今晚上新 · 全网热度第一</div>
+          <div class="hero-meta">
+            <span class="score">9.2</span><span class="dot"></span><span>2026</span>
+            <span class="dot"></span><span>更新至 12 集</span>
+            <span class="chip">悬疑</span><span class="chip">犯罪</span>
+          </div>
+          <div class="hero-actions">
+            <button class="btn-play">▶ 立即播放</button>
+            <div class="btn-ghost">＋</div>
+          </div>
+        </div>
+      </div>
+      <div class="dots"><span class="dt on"></span><span class="dt"></span><span class="dt"></span><span class="dt"></span></div>
+    </div>
+
+    <div class="section">
+      <div class="sec-head"><div class="sec-title">继续观看</div><div class="sec-more">全部记录 ›</div></div>
+      <div class="row">
+        <div class="wcard">
+          <div class="pic art art-cold">
+            <div class="resume"><span class="pl">▶</span>第 8 集 · 看到 23:14</div>
+            <div class="bar"><i style="width:62%"></i></div>
+          </div>
+          <div class="name">暗涌</div><div class="sub">还剩 4 集未看</div>
+        </div>
+        <div class="wcard">
+          <div class="pic art art-warm">
+            <div class="resume"><span class="pl">▶</span>第 3 集 · 看到 08:40</div>
+            <div class="bar"><i style="width:24%"></i></div>
+          </div>
+          <div class="name">春溪食堂</div><div class="sub">昨晚看过</div>
+        </div>
+        <div class="wcard">
+          <div class="pic art art-space">
+            <div class="resume"><span class="pl">▶</span>看到 01:12:30</div>
+            <div class="bar"><i style="width:81%"></i></div>
+          </div>
+          <div class="name">深空回响</div><div class="sub">还剩 26 分钟</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-head"><div class="sec-title">本周热播</div><div class="sec-sub">每日 06:00 更新</div><div class="sec-more">完整榜单 ›</div></div>
+      <div class="rank-row">
+        <div class="rk top"><div class="num">1</div><div class="pic art art-mist"><span class="tag seal">热</span></div></div>
+        <div class="rk"><div class="num">2</div><div class="pic art art-red"></div></div>
+        <div class="rk"><div class="num">3</div><div class="pic art art-wuxia"></div></div>
+        <div class="rk"><div class="num">4</div><div class="pic art art-sea"></div></div>
+        <div class="rk"><div class="num">5</div><div class="pic art art-neon"></div></div>
+      </div>
+      <div class="rk-meta">① 雾岛来客 · ② 铜雀台之夜 · ③ 山河入梦 · ④ 月落大江 · ⑤ 环形代码</div>
+    </div>
+
+    <div class="section">
+      <div class="sec-head"><div class="sec-title">新片上架</div><div class="sec-more">更多 ›</div></div>
+      <div class="grid">
+        <div class="gd"><div class="pic art art-green"><div class="ep">全 24 集</div></div><div class="name">南方有风</div><div class="sub">都市 · 8.5</div></div>
+        <div class="gd"><div class="pic art art-dusk"><div class="ep">HD 国语</div></div><div class="name">纸鸢</div><div class="sub">年代 · 8.9</div></div>
+        <div class="gd"><div class="pic art art-neon"><div class="ep">更新至 6 集</div></div><div class="name">环形代码</div><div class="sub">科幻 · 8.7</div></div>
+        <div class="gd"><div class="pic art art-sea"><div class="ep">HD 中字</div></div><div class="name">月落大江</div><div class="sub">剧情 · 9.0</div></div>
+        <div class="gd"><div class="pic art art-red"><div class="ep">更新至 18 集</div></div><div class="name">铜雀台之夜</div><div class="sub">古装 · 8.8</div></div>
+        <div class="gd"><div class="pic art art-wuxia"><div class="ep">全 36 集</div></div><div class="name">山河入梦</div><div class="sub">武侠 · 9.1</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tabbar">
+    <div class="nav on"><span class="ic">⌂</span><span class="lb">首页</span></div>
+    <div class="nav"><span class="ic">📡</span><span class="lb">直播</span></div>
+    <div class="nav"><span class="ic">⚙</span><span class="lb">设置</span></div>
+  </div>
+</div>
+</body>
+</html>

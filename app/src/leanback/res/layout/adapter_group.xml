@@ -12,12 +12,15 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_live"
+        android:background="@drawable/mdl_l_group_bg"
         android:duplicateParentState="true"
         android:ellipsize="marquee"
+        android:fontFamily="@font/noto_serif_sc_bold"
+        android:letterSpacing="0.08"
         android:singleLine="true"
-        android:textColor="@color/text"
+        android:textColor="@color/mdl_l_group_text"
         android:textSize="16sp"
+        android:textStyle="bold"
         tools:text="收藏" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

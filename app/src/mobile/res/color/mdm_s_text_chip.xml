@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · chip 文字色：选中琥珀，默认雾蓝 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/md_amber" android:state_selected="true" />
+    <item android:color="@color/md_amber" android:state_checked="true" />
+    <item android:color="@color/md_mist" />
+</selector>

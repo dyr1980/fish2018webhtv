@@ -1,8 +1,8 @@
 <resources>
 
     <style name="Theme.Base" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="colorPrimary">@color/white</item>
-        <item name="android:windowBackground">@color/black</item>
+        <item name="colorPrimary">@color/md_amber</item>
+        <item name="android:windowBackground">@color/md_ink</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
@@ -16,7 +16,7 @@
     <style name="Theme.App" parent="Theme.Base" />
 
     <style name="Theme.Crash" parent="Theme.Base">
-        <item name="android:windowBackground">@color/grey_800</item>
+        <item name="android:windowBackground">@color/md_panel</item>
         <item name="android:windowDisablePreview">true</item>
     </style>
 
@@ -41,7 +41,7 @@
         <item name="android:focusable">true</item>
         <item name="android:focusableInTouchMode">true</item>
         <item name="android:nextFocusDown">@id/timeBar</item>
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/mdl_text</item>
         <item name="android:textSize">14sp</item>
     </style>
 

@@ -1,0 +1,130 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../okhttp/5.4.0/okhttp-5.4.0.module",
+    "group": "com.squareup.okhttp3",
+    "module": "okhttp",
+    "version": "5.4.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.5.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.21"
+          }
+        },
+        {
+          "group": "com.squareup.okio",
+          "module": "okio",
+          "version": {
+            "requires": "3.17.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.2.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "okhttp-jvm-5.4.0.jar",
+          "url": "okhttp-jvm-5.4.0.jar",
+          "size": 863503,
+          "sha512": "2b5da32a14319d78ebb62067011dd0f4533ae95652d153e84f9803fab55cb1eedc8a3aaa189efa5ebacdc7e52b8618c08dd20e82e73e91305dc12038ca8e1e76",
+          "sha256": "b15e605ca0a4b12c62ea7f657dad413c236c947e875854767349cdbe20df473c",
+          "sha1": "e1fae6fccaae70e60b31153c6a7680306a86ed31",
+          "md5": "f79f61c92f5dc7fd399b7e36731b7b9e"
+        }
+      ]
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.21"
+          }
+        },
+        {
+          "group": "com.squareup.okio",
+          "module": "okio",
+          "version": {
+            "requires": "3.17.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.2.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "okhttp-jvm-5.4.0.jar",
+          "url": "okhttp-jvm-5.4.0.jar",
+          "size": 863503,
+          "sha512": "2b5da32a14319d78ebb62067011dd0f4533ae95652d153e84f9803fab55cb1eedc8a3aaa189efa5ebacdc7e52b8618c08dd20e82e73e91305dc12038ca8e1e76",
+          "sha256": "b15e605ca0a4b12c62ea7f657dad413c236c947e875854767349cdbe20df473c",
+          "sha1": "e1fae6fccaae70e60b31153c6a7680306a86ed31",
+          "md5": "f79f61c92f5dc7fd399b7e36731b7b9e"
+        }
+      ]
+    },
+    {
+      "name": "jvmSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "files": [
+        {
+          "name": "okhttp-jvm-5.4.0-sources.jar",
+          "url": "okhttp-jvm-5.4.0-sources.jar",
+          "size": 393376,
+          "sha512": "16108190dd14d3f915dea22bcbd47e53bbbd1371df33d7c5c4ed652dc6d79123bc185e02d4bcadb6f787764ed7e072ea0b0d829a4094975df4b55f826312711b",
+          "sha256": "52d1992759a1d0da8135b3a6819b881f44d949d2e07cfd3fb3007f804cf1909a",
+          "sha1": "9fec32fb73f6282c42cb2f470b3cc42e9d15aab4",
+          "md5": "4841103af1b6c6f79e7e1e5612de485d"
+        }
+      ]
+    }
+  ]
+}

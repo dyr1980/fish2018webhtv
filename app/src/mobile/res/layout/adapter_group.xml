@@ -1,24 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="4dp"
+    android:layout_marginEnd="6dp"
     android:layout_marginBottom="4dp"
-    android:gravity="center"
-    android:orientation="horizontal">
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_live"
+        android:background="@drawable/mdm_l_group_bg"
         android:duplicateParentState="true"
-        android:ellipsize="marquee"
+        android:fontFamily="@font/noto_serif_sc_bold"
         android:gravity="center"
+        android:paddingStart="14dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="14dp"
+        android:paddingBottom="6dp"
         android:singleLine="true"
-        android:textColor="@color/selector_live_text"
+        android:textColor="@color/mdm_l_text_group"
         android:textSize="14sp"
+        android:textStyle="bold"
         tools:text="收藏" />
+
+    <View
+        android:layout_width="5dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="-4dp"
+        android:background="@drawable/mdm_s_tab_diamond"
+        android:duplicateParentState="true"
+        android:rotation="45" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

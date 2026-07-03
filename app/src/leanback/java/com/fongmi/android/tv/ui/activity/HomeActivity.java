@@ -34,6 +34,7 @@ import com.fongmi.android.tv.bean.Cache;
 import com.fongmi.android.tv.bean.Class;
 import com.fongmi.android.tv.bean.Config;
 import com.fongmi.android.tv.bean.Func;
+import com.fongmi.android.tv.bean.Hero;
 import com.fongmi.android.tv.bean.History;
 import com.fongmi.android.tv.bean.Result;
 import com.fongmi.android.tv.bean.Site;
@@ -61,6 +62,7 @@ import com.fongmi.android.tv.ui.custom.CustomTitleView;
 import com.fongmi.android.tv.ui.dialog.SiteDialog;
 import com.fongmi.android.tv.ui.presenter.FuncPresenter;
 import com.fongmi.android.tv.ui.presenter.HeaderPresenter;
+import com.fongmi.android.tv.ui.presenter.HeroPresenter;
 import com.fongmi.android.tv.ui.presenter.HistoryPresenter;
 import com.fongmi.android.tv.ui.presenter.ProgressPresenter;
 import com.fongmi.android.tv.ui.presenter.VodPresenter;
@@ -89,7 +91,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-public class HomeActivity extends BaseActivity implements CustomTitleView.Listener, VodPresenter.OnClickListener, FuncPresenter.OnClickListener, HistoryPresenter.OnClickListener, TypeAdapter.OnClickListener, HomeWebController.Listener {
+public class HomeActivity extends BaseActivity implements CustomTitleView.Listener, VodPresenter.OnClickListener, FuncPresenter.OnClickListener, HistoryPresenter.OnClickListener, TypeAdapter.OnClickListener, HeroPresenter.OnClickListener, HomeWebController.Listener {
 
     private static final String TV_NORMAL = "tv-normal";
     private static final String TV_TOOLBAR_HIDDEN = "tv-toolbar-hidden";
@@ -103,6 +105,7 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
     private HistoryPresenter mPresenter;
     private SiteViewModel mViewModel;
     private TypeAdapter mTypeAdapter;
+    private boolean mInCategory;
     private HomeWebController mWeb;
     private WebView mHomeWeb;
     private Result mResult;
@@ -256,6 +259,7 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
         CustomSelector selector = new CustomSelector();
         selector.addPresenter(Integer.class, new HeaderPresenter());
         selector.addPresenter(String.class, new ProgressPresenter());
+        selector.addPresenter(Hero.class, new HeroPresenter(this));
         selector.addPresenter(Vod.class, new VodPresenter(this, Style.list()));
         selector.addPresenter(ListRow.class, new CustomRowPresenter(16), VodPresenter.class);
         selector.addPresenter(ListRow.class, new CustomRowPresenter(16), FuncPresenter.class);
@@ -308,7 +312,7 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
 
     private void setAdapter() {
         mHistoryAdapter = new ArrayObjectAdapter(mPresenter = new HistoryPresenter(this));
-        mAdapter.add(new ListRow(mFuncAdapter = new ArrayObjectAdapter(new FuncPresenter(this))));
+        mFuncAdapter = new ArrayObjectAdapter(new FuncPresenter(this));
         mAdapter.add(R.string.home_history);
         mAdapter.add(R.string.home_recommend);
     }
@@ -438,9 +442,24 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
             return;
         }
         loadingHomeCategory = false;
+        removeHero();
+        // 首页推荐位 Hero：非分类模式下把第一部作为顶部大卡（参考设计稿 tv-home），并定位到顶部让首屏可见
+        if (!mInCategory && !result.getList().isEmpty()) {
+            mAdapter.add(0, new Hero(result.getList().get(0)));
+            mBinding.recycler.setSelectedPosition(0);
+        }
         Style style = result.getStyle(getHome().getStyle());
         if (style.isList()) mAdapter.addAll(mAdapter.size(), result.getList());
         else addGrid(result.getList(), style);
+    }
+
+    private void removeHero() {
+        for (int i = 0; i < mAdapter.size(); i++) {
+            if (mAdapter.get(i) instanceof Hero) {
+                mAdapter.removeItems(i, 1);
+                return;
+            }
+        }
     }
 
     private void clearRecommendRows() {
@@ -468,6 +487,7 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
         items.add(Func.create(R.string.home_push));
         items.add(Func.create(R.string.home_setting));
         mFuncAdapter.setItems(items, new BaseDiffCallback<Func>());
+        if (mBinding.funcRecycler.getAdapter() == null) mBinding.funcRecycler.setAdapter(new ItemBridgeAdapter(mFuncAdapter));
     }
 
     private void getHistory() {
@@ -602,13 +622,51 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
 
     @Override
     public void onItemClick(Class item) {
-        Result result = mHomeResult == null || mHomeResult.getTypes().isEmpty() ? mResult : mHomeResult;
-        VodActivity.start(this, getHome().getKey(), result, mTypeAdapter.indexOf(item));
+        // 当页展示该分类内容（参考手机端首页 tab 切换），不再跳转到独立页面
+        getCategory(item);
+    }
+
+    private void getCategory(Class item) {
+        applyTvChrome(TV_NORMAL);
+        if (mWeb != null) mWeb.hide();
+        hideWebOverlay();
+        mBinding.recycler.setVisibility(View.VISIBLE);
+        mInCategory = true;
+        loadingHomeCategory = true;
+        // 纯分类视图：清掉首页的历史/推荐行，只显示该分类网格（参考手机端首页 tab 切换）
+        mAdapter.clear();
+        mAdapter.add("progress");
+        mViewModel.categoryContent(getHome().getKey(), item.getTypeId(), "1", true, new java.util.HashMap<>());
+        mBinding.recycler.setSelectedPosition(0);
+    }
+
+    private void exitCategory() {
+        mInCategory = false;
+        // 退出分类，重建首页骨架（历史 + 推荐）后重新加载
+        mAdapter.clear();
+        mAdapter.add(R.string.home_history);
+        mAdapter.add(R.string.home_recommend);
+        getHistory();
+        getVideo(true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mInCategory) {
+            exitCategory();
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override
     public void onRefresh(Class item) {
         onItemClick(item);
+    }
+
+    @Override
+    public void onItemClick(Hero item) {
+        onItemClick(item.getVod());
     }
 
     @Override

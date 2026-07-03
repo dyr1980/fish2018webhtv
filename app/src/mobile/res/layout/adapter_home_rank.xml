@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 首页本周热播卡：宋体大序号半压在海报左侧 -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_width="102dp"
+        android:layout_height="143dp"
+        android:layout_gravity="end|bottom">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/md_panel_2"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/Vod.Grid.Large" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tag"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="8dp"
+            android:background="@drawable/md_seal_badge"
+            android:fontFamily="@font/noto_serif_sc_bold"
+            android:gravity="center"
+            android:text="热"
+            android:textColor="@color/md_paper"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:ignore="HardcodedText"
+            tools:visibility="visible" />
+    </FrameLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="2dp"
+        android:fontFamily="@font/noto_serif_sc_bold"
+        android:includeFontPadding="false"
+        android:shadowColor="@color/md_ink"
+        android:shadowDx="2"
+        android:shadowDy="1"
+        android:shadowRadius="3"
+        android:textColor="@color/md_mist_dim"
+        android:textSize="56sp"
+        android:textStyle="bold"
+        android:translationZ="4dp"
+        tools:text="1" />
+</FrameLayout>

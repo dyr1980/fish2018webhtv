@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>webHTV · 手机端聚合搜索 · 午夜首映</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body{display:flex;justify-content:center;padding:28px 0;
+    background:#060709 radial-gradient(900px 480px at 50% -8%,rgba(232,163,61,.07),transparent 65%);}
+  .phone{position:relative;width:390px;height:844px;overflow:hidden;
+    border-radius:48px;border:1px solid #23242C;background:var(--ink);box-shadow:var(--sh-3);}
+  .scroll{height:100%;overflow-y:auto;padding-bottom:40px;}
+
+  .topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:10px;
+    padding:20px 20px 12px;background:linear-gradient(180deg,var(--ink) 70%,transparent);}
+  .back{flex-shrink:0;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:15px;
+    background:var(--panel);border:1px solid var(--line);color:var(--paper);}
+  .box{flex:1;height:40px;display:flex;align-items:center;gap:9px;padding:0 14px;
+    border-radius:var(--r-pill);background:var(--panel);border:1px solid var(--amber);
+    box-shadow:0 0 0 3px rgba(232,163,61,.12);}
+  .box .q{font-size:14px;font-weight:600;}
+  .box .cur{width:1.5px;height:16px;background:var(--amber);animation:blink 1.1s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0}}
+  .box .x{margin-left:auto;color:var(--mist-dim);font-size:13px;}
+  .cancel{flex-shrink:0;font-size:14px;color:var(--mist);}
+
+  /* 聚搜进度 */
+  .agg{display:flex;align-items:center;gap:10px;padding:4px 20px 12px;font-size:11.5px;color:var(--mist-dim);}
+  .agg .bar{flex:1;height:3px;border-radius:3px;background:var(--panel-2);overflow:hidden;}
+  .agg .bar i{display:block;width:75%;height:100%;border-radius:3px;background:var(--amber);}
+  .agg b{color:var(--amber);font-weight:600;}
+
+  /* 源筛选 */
+  .srcs{display:flex;gap:8px;padding:0 20px 14px;overflow-x:auto;}
+  .sc{flex-shrink:0;font-size:12px;color:var(--mist);padding:6px 13px;border-radius:var(--r-pill);
+    border:1px solid var(--line-2);}
+  .sc i{font-style:normal;color:var(--mist-dim);font-size:11px;margin-left:3px;}
+  .sc.on{background:rgba(232,163,61,.12);border-color:var(--amber);color:var(--amber);font-weight:600;}
+  .sc.on i{color:var(--amber);}
+
+  /* 结果 */
+  .rs{display:flex;gap:13px;padding:9px 20px;align-items:center;}
+  .rs .pic{position:relative;flex:0 0 86px;height:120px;border-radius:var(--r-md);overflow:hidden;box-shadow:var(--sh-1);}
+  .rs .hd{position:absolute;z-index:2;left:0;right:0;bottom:0;padding:14px 7px 5px;text-align:right;
+    font-size:10px;color:var(--paper);background:linear-gradient(transparent,rgba(11,13,19,.88));}
+  .rs .info{flex:1;min-width:0;}
+  .rs .name{font-size:15px;font-weight:700;}
+  .rs .name em{font-style:normal;color:var(--amber);}
+  .rs .meta{margin-top:5px;font-size:11.5px;color:var(--mist);}
+  .rs .tags{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;}
+  .rs .tg{font-size:10.5px;color:var(--mist);padding:3px 9px;border-radius:var(--r-pill);
+    border:1px solid var(--line);background:var(--panel);}
+  .rs .tg.best{border-color:var(--amber);color:var(--amber);}
+  .rs .go{color:var(--mist-dim);font-size:14px;}
+
+  .sec{padding:16px 20px 0;}
+  .sec-title{font-family:var(--f-display);font-weight:900;font-size:15px;letter-spacing:2px;color:var(--mist);}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="scroll">
+
+    <div class="topbar">
+      <div class="back">‹</div>
+      <div class="box">🔍 <span class="q">雾岛</span><span class="cur"></span><span class="x">✕</span></div>
+      <div class="cancel">取消</div>
+    </div>
+
+    <div class="agg">聚合搜索中<div class="bar"><i></i></div><b>18/24</b> 源 · 已找到 7 个结果</div>
+
+    <div class="srcs">
+      <div class="sc on">全部<i>7</i></div>
+      <div class="sc">非凡影视<i>2</i></div>
+      <div class="sc">量子资源<i>2</i></div>
+      <div class="sc">索尼资源<i>1</i></div>
+      <div class="sc">红牛资源<i>1</i></div>
+      <div class="sc">飞速资源<i>1</i></div>
+    </div>
+
+    <div class="rs">
+      <div class="pic art art-mist"><div class="hd">更新至 12 集</div></div>
+      <div class="info">
+        <div class="name"><em>雾岛</em>来客</div>
+        <div class="meta">2026 · 悬疑 / 犯罪 · 9.2 分</div>
+        <div class="tags"><span class="tg best">非凡 1080P · 快</span><span class="tg">量子 1080P</span><span class="tg">索尼 720P</span></div>
+      </div><div class="go">›</div>
+    </div>
+
+    <div class="rs">
+      <div class="pic art art-sea"><div class="hd">HD 中字</div></div>
+      <div class="info">
+        <div class="name"><em>雾岛</em>夜航</div>
+        <div class="meta">2024 · 剧情 · 电影 · 8.1 分</div>
+        <div class="tags"><span class="tg best">量子 4K</span><span class="tg">红牛 HD</span></div>
+      </div><div class="go">›</div>
+    </div>
+
+    <div class="rs">
+      <div class="pic art art-cold"><div class="hd">全 8 集</div></div>
+      <div class="info">
+        <div class="name">迷雾之<em>岛</em></div>
+        <div class="meta">2023 · 悬疑 · 剧集 · 7.8 分</div>
+        <div class="tags"><span class="tg best">非凡 1080P</span><span class="tg">飞速 720P</span></div>
+      </div><div class="go">›</div>
+    </div>
+
+    <div class="rs">
+      <div class="pic art art-green"><div class="hd">HD 国语</div></div>
+      <div class="info">
+        <div class="name"><em>雾</em>中风景</div>
+        <div class="meta">2019 · 文艺 · 电影 · 8.6 分</div>
+        <div class="tags"><span class="tg best">索尼 HD</span></div>
+      </div><div class="go">›</div>
+    </div>
+
+    <div class="sec"><div class="sec-title">大家还在搜</div></div>
+    <div class="srcs" style="padding-top:12px">
+      <div class="sc">雾岛来客 大结局</div><div class="sc">深空回响</div>
+      <div class="sc">暗涌 第八集</div><div class="sc">铜雀台</div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

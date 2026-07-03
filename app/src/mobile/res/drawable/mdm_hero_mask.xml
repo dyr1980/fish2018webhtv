@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · Hero 大卡遮罩：上方留亮，下方渐隐到影厅黑托起标题与按钮 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="90"
+        android:startColor="@color/md_ink"
+        android:centerColor="#B30B0D13"
+        android:endColor="#330B0D13"
+        android:centerY="0.45" />
+</shape>

@@ -2,6 +2,7 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/md_panel_18"
     android:fillViewport="true">
 
     <com.google.android.material.textview.MaterialTextView
@@ -11,7 +12,7 @@
         android:letterSpacing="0.05"
         android:lineSpacingExtra="8dp"
         android:padding="24dp"
-        android:textColor="@color/white"
+        android:textColor="@color/md_mist"
         android:textSize="16sp" />
 
 </androidx.core.widget.NestedScrollView>

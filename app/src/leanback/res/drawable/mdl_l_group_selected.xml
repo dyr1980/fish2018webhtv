@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 分组选中：左侧琥珀竖条 + 琥珀淡染向右渐隐 -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="10dp" />
+            <solid android:color="@color/md_amber" />
+        </shape>
+    </item>
+
+    <item android:left="3dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="10dp" />
+            <solid android:color="#F0151A24" />
+        </shape>
+    </item>
+
+    <item android:left="3dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="10dp" />
+            <gradient
+                android:angle="0"
+                android:endColor="#08E8A33D"
+                android:startColor="#33E8A33D"
+                android:type="linear" />
+            <padding
+                android:bottom="12dp"
+                android:left="12dp"
+                android:right="12dp"
+                android:top="12dp" />
+        </shape>
+    </item>
+
+</layer-list>

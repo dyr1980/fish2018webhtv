@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="58dp"
     android:layout_marginBottom="8dp"
-    android:background="@drawable/selector_control_sheet_button"
+    android:background="@drawable/mdm_l_sheet_btn"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingStart="14dp"
@@ -17,7 +17,7 @@
         android:duplicateParentState="true"
         android:gravity="center_vertical"
         android:singleLine="true"
-        android:textColor="@color/selector_control_sheet_text"
+        android:textColor="@color/mdm_l_text_tertiary"
         android:textSize="13sp"
         tools:text="20:00 ~ 21:00" />
 
@@ -31,7 +31,7 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="2"
-        android:textColor="@color/selector_control_sheet_text"
+        android:textColor="@color/mdm_l_text_sheet"
         android:textSize="14sp"
         tools:text="新闻联播" />
 
@@ -41,7 +41,7 @@
         android:layout_height="match_parent"
         android:duplicateParentState="true"
         android:gravity="center"
-        android:textColor="@color/selector_control_sheet_text"
+        android:textColor="@color/mdm_l_text_tertiary"
         android:textSize="12sp"
         tools:text="直播中" />
 

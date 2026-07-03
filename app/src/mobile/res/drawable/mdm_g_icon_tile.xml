@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 入口卡琥珀图标块底：12% 琥珀 + 10dp 圆角 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/md_amber_12" />
+    <corners android:radius="10dp" />
+</shape>

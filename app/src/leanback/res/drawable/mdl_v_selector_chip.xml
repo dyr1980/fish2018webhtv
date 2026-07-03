@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · chip 背景 selector：焦点琥珀实心 / 激活琥珀淡染 / 普通描边胶囊 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/mdl_v_chip_focused" android:state_focused="true" />
+    <item android:drawable="@drawable/mdl_v_chip_selected" android:state_selected="true" />
+    <item android:drawable="@drawable/mdl_v_chip_selected" android:state_activated="true" />
+    <item android:drawable="@drawable/mdl_v_chip_normal" />
+</selector>

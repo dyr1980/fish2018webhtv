@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 分组条目背景：焦点走全局琥珀卡，选中走琥珀竖条渐变 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/shape_live_focused" android:state_focused="true" />
+    <item android:drawable="@drawable/mdl_l_group_selected" android:state_selected="true" />
+</selector>

@@ -11,7 +11,9 @@
         style="@style/ControlSheetButton"
         android:layout_height="46dp"
         android:layout_marginEnd="0dp"
+        android:background="@drawable/mdm_l_sheet_btn"
         android:ellipsize="marquee"
+        android:textColor="@color/mdm_l_text_sheet"
         android:textSize="14sp"
         tools:text="develop202" />
 

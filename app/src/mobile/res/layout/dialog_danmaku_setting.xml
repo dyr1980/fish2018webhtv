@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/shape_danmaku_setting_panel"
+    android:background="@drawable/md_panel_18"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -20,8 +20,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/noto_serif_sc_bold"
             android:text="@string/danmaku_setting"
-            android:textColor="@color/white"
+            android:textColor="@color/md_paper"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -29,7 +30,7 @@
             android:id="@+id/reset"
             android:layout_width="86dp"
             android:layout_height="40dp"
-            android:background="@drawable/selector_control_sheet_button"
+            android:background="@drawable/mdm_g_chip"
             android:gravity="center"
             android:text="@string/danmaku_reset"
             android:textColor="@color/selector_control_sheet_text"
@@ -52,7 +53,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="7dp"
             android:layout_weight="1"
-            android:background="@drawable/selector_control_sheet_button"
+            android:background="@drawable/mdm_g_chip"
             android:gravity="center"
             android:text="@string/danmaku_section_display"
             android:textColor="@color/selector_control_sheet_text"
@@ -63,7 +64,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/selector_control_sheet_button"
+            android:background="@drawable/mdm_g_chip"
             android:gravity="center"
             android:text="@string/danmaku_section_timing"
             android:textColor="@color/selector_control_sheet_text"

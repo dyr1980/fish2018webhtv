@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 频道行底：去掉当前项整行底色块，当前态改由琥珀文字 + 左侧竖条指示表达 -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/md_amber_glow">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <corners android:radius="10dp" />
+            <padding
+                android:bottom="8dp"
+                android:left="12dp"
+                android:right="12dp"
+                android:top="8dp" />
+        </shape>
+    </item>
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/md_paper" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+</ripple>

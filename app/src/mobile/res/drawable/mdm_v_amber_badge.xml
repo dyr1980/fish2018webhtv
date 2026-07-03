@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 琥珀方章：详情页备注/评分小章（md_amber 底 + 6dp 圆角） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/md_amber" />
+    <corners android:radius="6dp" />
+</shape>

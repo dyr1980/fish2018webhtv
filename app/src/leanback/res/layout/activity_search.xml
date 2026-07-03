@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/md_ink"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:orientation="horizontal"
@@ -18,7 +19,12 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:background="@drawable/mdl_s_search_input"
+            android:orientation="horizontal"
+            android:paddingStart="14dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="8dp">
 
             <com.fongmi.android.tv.ui.custom.CustomMic
                 android:id="@+id/mic"
@@ -46,9 +52,9 @@
                 android:maxLength="255"
                 android:nextFocusDown="@id/keyboard"
                 android:singleLine="true"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:textCursorDrawable="@drawable/shape_cursor"
+                android:textColor="@color/md_paper"
+                android:textColorHint="@color/md_mist_dim"
+                android:textCursorDrawable="@drawable/mdl_s_cursor"
                 android:textSize="24sp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -96,9 +102,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="14dp"
+                    android:fontFamily="@font/noto_serif_sc_bold"
                     android:text="@string/search_record"
-                    android:textColor="@color/white"
-                    android:textSize="24sp" />
+                    android:textColor="@color/md_paper"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recordRecycler"
@@ -118,9 +126,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
+                android:fontFamily="@font/noto_serif_sc_bold"
                 android:text="@string/search_hot"
-                android:textColor="@color/white"
-                android:textSize="24sp" />
+                android:textColor="@color/md_paper"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/wordRecycler"
@@ -147,9 +157,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="14dp"
+                    android:fontFamily="@font/noto_serif_sc_bold"
                     android:text="@string/search_hot_tv"
-                    android:textColor="@color/white"
-                    android:textSize="24sp" />
+                    android:textColor="@color/md_paper"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/hotTvRecycler"
@@ -167,9 +179,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="14dp"
+                    android:fontFamily="@font/noto_serif_sc_bold"
                     android:text="@string/search_hot_movie"
-                    android:textColor="@color/white"
-                    android:textSize="24sp" />
+                    android:textColor="@color/md_paper"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/hotMovieRecycler"
@@ -187,9 +201,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="14dp"
+                    android:fontFamily="@font/noto_serif_sc_bold"
                     android:text="@string/search_hot_variety"
-                    android:textColor="@color/white"
-                    android:textSize="24sp" />
+                    android:textColor="@color/md_paper"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/hotVarietyRecycler"

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>webHTV · 「午夜首映」设计总览</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body{background:var(--ink) radial-gradient(1100px 520px at 78% -10%,rgba(232,163,61,.09),transparent 65%);
+    padding:64px 24px 90px;}
+  .page{max-width:960px;margin:0 auto;}
+
+  .head{display:flex;align-items:center;gap:14px;}
+  .head .seal{width:44px;height:44px;font-size:25px;}
+  h1{margin:0;font-family:var(--f-display);font-weight:900;font-size:40px;letter-spacing:4px;}
+  h1 i{font-style:normal;color:var(--amber);}
+  .lede{margin:18px 0 0;max-width:640px;font-size:15px;line-height:1.9;color:var(--mist);}
+
+  h2{margin:56px 0 18px;font-family:var(--f-display);font-weight:900;font-size:22px;letter-spacing:2px;
+    display:flex;align-items:center;gap:12px;}
+  h2::after{content:"";flex:1;height:1px;background:var(--line);}
+
+  /* 色板 */
+  .swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+  .sw{border-radius:var(--r-md);border:1px solid var(--line);overflow:hidden;}
+  .sw .c{height:74px;}
+  .sw .t{padding:9px 11px;font-size:12px;}
+  .sw .t b{display:block;font-weight:600;color:var(--paper);}
+  .sw .t span{color:var(--mist-dim);font-size:11px;}
+
+  /* 字体样张 */
+  .type{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .tcard{padding:22px 24px;border-radius:var(--r-lg);background:var(--panel);border:1px solid var(--line);}
+  .tcard .demo{font-size:34px;line-height:1.3;}
+  .tcard .demo.d{font-family:var(--f-display);font-weight:900;letter-spacing:4px;}
+  .tcard .note{margin-top:12px;font-size:12.5px;color:var(--mist-dim);line-height:1.7;}
+
+  /* 页面链接卡 */
+  .pages{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+  a.pcard{display:block;text-decoration:none;color:var(--paper);border-radius:var(--r-lg);overflow:hidden;
+    background:var(--panel);border:1px solid var(--line);transition:transform .2s,box-shadow .2s,border-color .2s;}
+  a.pcard:hover,a.pcard:focus-visible{transform:translateY(-3px);border-color:var(--amber);box-shadow:var(--sh-2);outline:none;}
+  .pcard .thumb{height:130px;position:relative;}
+  .pcard .thumb .tag{position:absolute;top:12px;left:12px;font-size:11px;letter-spacing:2px;
+    padding:4px 10px;border-radius:var(--r-pill);background:rgba(11,13,19,.6);color:var(--mist);
+    border:1px solid var(--line-2);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
+  .pcard .body{padding:16px 18px 18px;}
+  .pcard .body b{font-family:var(--f-display);font-weight:900;font-size:17px;letter-spacing:1px;}
+  .pcard .body p{margin:7px 0 0;font-size:12.5px;color:var(--mist-dim);line-height:1.7;}
+  .pcard .body p em{font-style:normal;color:var(--amber);}
+
+  /* 设计要点 */
+  ul.points{margin:0;padding:0;list-style:none;display:grid;gap:12px;}
+  ul.points li{padding:16px 20px;border-radius:var(--r-md);background:var(--panel);border:1px solid var(--line);
+    font-size:14px;line-height:1.8;color:var(--mist);}
+  ul.points li b{color:var(--paper);font-weight:600;}
+  .foot{margin-top:56px;font-size:12.5px;color:var(--mist-dim);line-height:1.9;}
+  @media (max-width:760px){.swatches{grid-template-columns:repeat(3,1fr);}.type,.pages{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="head">
+    <span class="seal">映</span>
+    <h1>web<i>HTV</i> · 午夜首映</h1>
+  </div>
+  <p class="lede">
+    一套为影视聚合应用重做的界面方案：影厅熄灯后的蓝黑底色，放映机琥珀光只给「可以按下去」的东西，
+    宋体海报字与朱红印章承担全部性格。手机端为触屏而设，电视端把「焦点」本身设计成放映灯。
+  </p>
+
+  <h2>手机端 · 八张</h2>
+  <div class="pages">
+    <a class="pcard" href="mobile-home.html">
+      <div class="thumb art art-mist"><span class="tag">首页 · 390×844</span></div>
+      <div class="body"><b>首页</b>
+        <p>竖排宋体片名 + <em>首映印章</em>的头图；继续观看、宋体大字热播榜、新片网格。底栏只留<em>首页 / 直播 / 设置</em>三项。</p></div>
+    </a>
+    <a class="pcard" href="mobile-detail.html">
+      <div class="thumb art art-cold"><span class="tag">详情 · 390×844</span></div>
+      <div class="body"><b>详情页</b>
+        <p>琥珀评分章、<em>线路优选</em>卡、选集网格（已看 / 在看 / 新集），底部悬浮续播条。</p></div>
+    </a>
+    <a class="pcard" href="mobile-player.html">
+      <div class="thumb art art-cold"><span class="tag">播放 · 390×844</span></div>
+      <div class="body"><b>播放页</b>
+        <p>顶部播放器带弹幕、<em>「检测到片头 · 跳过」</em>；下方功能胶囊、选集（当前集跳动音柱）、接着看，底部弹幕发送条。</p></div>
+    </a>
+    <a class="pcard" href="mobile-search.html">
+      <div class="thumb art art-sea"><span class="tag">搜索 · 390×844</span></div>
+      <div class="body"><b>聚合搜索</b>
+        <p>聚搜进度（18/24 源）、按源筛选、结果卡直接列出<em>各源清晰度</em>并标出最快线路。</p></div>
+    </a>
+    <a class="pcard" href="mobile-live.html">
+      <div class="thumb art art-space"><span class="tag">直播 · 390×844</span></div>
+      <div class="body"><b>直播</b>
+        <p>顶部小窗播放 + 分组频道列表，当前频道琥珀高亮带<em>跳动音柱</em>，条目内直接显示节目单。</p></div>
+    </a>
+    <a class="pcard" href="mobile-setting.html">
+      <div class="thumb art art-warm"><span class="tag">设置 · 390×844</span></div>
+      <div class="body"><b>设置</b>
+        <p><em>收藏与历史的入口在这里</em>——顶部两张大卡带海报缩影和更新角标；下方是数据源 / 播放 / 通用设置组。</p></div>
+    </a>
+    <a class="pcard" href="mobile-keep.html">
+      <div class="thumb art art-wuxia"><span class="tag">收藏 · 390×844</span></div>
+      <div class="body"><b>我的收藏</b>
+        <p>从设置页进入。类型筛选 + 海报网格，<em>「更新 X 集」红章</em>提示追剧进度落后。</p></div>
+    </a>
+    <a class="pcard" href="mobile-history.html">
+      <div class="thumb art art-dusk"><span class="tag">历史 · 390×844</span></div>
+      <div class="body"><b>观看历史</b>
+        <p>从设置页进入。按今天 / 昨天 / 更早分组，每条带进度条、集数时间点和<em>来源线路</em>。</p></div>
+    </a>
+  </div>
+
+  <h2>电视端 · 六张</h2>
+  <div class="pages">
+    <a class="pcard" href="tv-home.html">
+      <div class="thumb art art-space"><span class="tag">首页 · 1920×1080</span></div>
+      <div class="body"><b>首页</b>
+        <p>顶部导航 + 半屏推荐位，焦点卡片带琥珀描边与投光。<em>可用键盘方向键体验遥控焦点。</em></p></div>
+    </a>
+    <a class="pcard" href="tv-detail.html">
+      <div class="thumb art art-red"><span class="tag">详情 · 1920×1080</span></div>
+      <div class="body"><b>详情页</b>
+        <p>右侧全幅剧照左向渐隐，操作栏与选集两条焦点行，底部常驻按键提示。<em>方向键可体验。</em></p></div>
+    </a>
+    <a class="pcard" href="tv-player.html">
+      <div class="thumb art art-cold"><span class="tag">播放 · 1920×1080</span></div>
+      <div class="body"><b>播放 OSD</b>
+        <p>全屏画面呼出 OSD：<em>seek 缩略预览卡</em>、琥珀进度条、按钮焦点行（下一集 / 选集 / 换源 / 倍速），常驻按键提示。</p></div>
+    </a>
+    <a class="pcard" href="tv-search.html">
+      <div class="thumb art art-neon"><span class="tag">搜索 · 1920×1080</span></div>
+      <div class="body"><b>聚合搜索</b>
+        <p>左字母键盘（<em>首字母 WD 命中雾岛来客</em>）+ 中列热搜榜 + 右侧聚搜结果网格与进度。</p></div>
+    </a>
+    <a class="pcard" href="tv-live.html">
+      <div class="thumb art art-sea"><span class="tag">直播 · 1920×1080</span></div>
+      <div class="body"><b>直播</b>
+        <p>全屏画面上呼出左侧频道面板（分组 + 频道 + 节目单），底部台标、EPG 时间轴与线路信息。</p></div>
+    </a>
+    <a class="pcard" href="tv-setting.html">
+      <div class="thumb art art-green"><span class="tag">设置 · 1920×1080</span></div>
+      <div class="body"><b>设置</b>
+        <p>左分类右卡片，首组即<em>「我的内容」：收藏 / 历史 / 推送投屏</em>；数据源与播放设置显示当前值。</p></div>
+    </a>
+  </div>
+
+  <h2>色板</h2>
+  <div class="swatches">
+    <div class="sw"><div class="c" style="background:#0B0D13"></div><div class="t"><b>影厅黑</b><span>#0B0D13 · 底色</span></div></div>
+    <div class="sw"><div class="c" style="background:#151A24"></div><div class="t"><b>幕布深</b><span>#151A24 · 卡片</span></div></div>
+    <div class="sw"><div class="c" style="background:#E8A33D"></div><div class="t"><b>放映琥珀</b><span>#E8A33D · 主强调</span></div></div>
+    <div class="sw"><div class="c" style="background:#F3EEE3"></div><div class="t"><b>银幕暖白</b><span>#F3EEE3 · 主文字</span></div></div>
+    <div class="sw"><div class="c" style="background:#8FA3BC"></div><div class="t"><b>雾蓝</b><span>#8FA3BC · 次级信息</span></div></div>
+    <div class="sw"><div class="c" style="background:#C7443B"></div><div class="t"><b>胶片红</b><span>#C7443B · 仅印章</span></div></div>
+  </div>
+
+  <h2>字体</h2>
+  <div class="type">
+    <div class="tcard">
+      <div class="demo d">雾岛来客 · 9.2</div>
+      <div class="note">标题字 — Noto Serif SC / 宋体（Android 落地可用思源宋体）。用在片名、榜单序号、评分与栏目标题，是整套界面的「海报感」来源；正文绝不使用。</div>
+    </div>
+    <div class="tcard">
+      <div class="demo">更新至 12 集 · 还剩 26 分钟</div>
+      <div class="note">正文字 — PingFang SC / HarmonyOS Sans 系统栈。承担一切元数据与操作文案，保持克制，让宋体只在该发光的地方发光。</div>
+    </div>
+  </div>
+
+  <h2>设计要点</h2>
+  <ul class="points">
+    <li><b>琥珀 = 可交互。</b>整套界面只有一个亮色：播放按钮、当前集、焦点框、进度条。视线扫过页面时，亮的地方就是能按的地方。</li>
+    <li><b>电视端焦点即放映灯。</b>焦点卡片放大 9%、琥珀描边、底部向下投一片暖光——像放映机照亮了这张海报。遥控器上下左右，光走到哪里，哪里就是舞台。</li>
+    <li><b>印章只做三件事。</b>Logo「映」、榜首「热」、新集「新」。朱红面积被刻意压到最小，多一处都会俗。</li>
+    <li><b>底栏只做三件事。</b>首页 / 直播 / 设置。收藏与历史不占底栏——它们是"回访"动作，收进设置页顶部两张大卡，带海报缩影与更新角标，一眼能看到有没有新集。</li>
+    <li><b>真实词汇。</b>线路 / 换源 / 测速 / 选集 / 弹幕 / 按键提示，全部来自 TVBox 的真实概念，落地时文案可直接复用。</li>
+    <li><b>无障碍底线。</b>暖白 #F3EEE3 对影厅黑对比度约 15:1；已看集数只降亮度不缩字号；prefers-reduced-motion 下关闭全部动效。</li>
+  </ul>
+
+  <div class="foot">
+    预览方式：直接双击打开任意 HTML，或在 design-preview/redesign 目录起本地服务。字体走 Google Fonts，
+    离线时自动回退系统宋体（macOS: Songti SC / Windows: SimSun），版式不受影响。<br>
+    落地对应：手机端 → mobile flavor（VodFragment 首页 / VideoActivity 详情）；电视端 → leanback flavor（HomeActivity / VideoActivity），
+    焦点样式对应 leanback 的 FocusHighlight 与自定义 selector。
+  </div>
+
+</div>
+</body>
+</html>

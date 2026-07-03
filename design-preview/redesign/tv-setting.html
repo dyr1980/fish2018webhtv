@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>webHTV · 电视端设置 · 午夜首映</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body{min-height:100vh;display:flex;justify-content:center;align-items:center;overflow:hidden;background:#040507;}
+  .stage{position:relative;width:1600px;height:900px;flex-shrink:0;overflow:hidden;
+    background:var(--ink);transform-origin:center center;border-radius:8px;box-shadow:var(--sh-3);}
+  .beam{position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:linear-gradient(247deg,rgba(232,163,61,.08) 0%,transparent 32%);}
+
+  .wrap{position:relative;z-index:2;height:100%;display:flex;gap:52px;padding:52px 64px 74px;}
+
+  /* ── 左：分类 ─────────────────────── */
+  .side{width:230px;flex-shrink:0;}
+  .side h1{margin:0 0 26px;font-family:var(--f-display);font-weight:900;font-size:30px;letter-spacing:3px;}
+  .cat{display:flex;align-items:center;gap:12px;padding:14px 18px;margin-bottom:6px;
+    font-size:16px;color:var(--mist-dim);letter-spacing:2px;border-radius:var(--r-md);}
+  .cat .ic{font-size:17px;}
+  .cat.on{font-family:var(--f-display);font-weight:900;color:var(--paper);
+    background:linear-gradient(90deg,rgba(232,163,61,.14),rgba(232,163,61,.02));
+    border-left:3px solid var(--amber);}
+  .side .ver{margin-top:34px;padding:0 18px;font-size:12.5px;color:var(--mist-dim);line-height:2;}
+  .side .ver b{color:var(--mist);font-weight:500;}
+
+  /* ── 右：设置项 ───────────────────── */
+  .main{flex:1;min-width:0;}
+  .grp-title{font-family:var(--f-display);font-weight:900;font-size:19px;letter-spacing:2px;color:var(--mist);
+    margin:0 0 14px;display:flex;align-items:center;gap:10px;}
+  .grp-title::before{content:"";width:5px;height:5px;transform:rotate(45deg);background:var(--amber);}
+  .grp+.grp{margin-top:30px;}
+
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .fi{transition:transform .18s ease,box-shadow .18s ease;border-radius:var(--r-lg);cursor:pointer;}
+  .fi.focus{transform:scale(1.05);box-shadow:var(--sh-focus);position:relative;z-index:3;}
+  .sc{position:relative;padding:18px 20px;border-radius:var(--r-lg);min-height:104px;
+    background:var(--panel);border:1px solid var(--line);}
+  .fi.focus .sc{background:var(--panel-2);border-color:var(--amber);}
+  .sc .lb{font-size:16px;font-weight:600;display:flex;align-items:center;gap:9px;}
+  .sc .badge{width:19px;height:19px;font-size:10.5px;}
+  .sc .val{margin-top:9px;font-size:13.5px;color:var(--mist-dim);line-height:1.7;}
+  .sc .val b{color:var(--amber);font-weight:600;}
+  .sc .mini{position:absolute;right:16px;bottom:16px;display:flex;}
+  .sc .mini i{width:24px;height:34px;border-radius:4px;border:1.5px solid var(--panel);margin-left:-8px;}
+  .sc .sw{position:absolute;top:18px;right:18px;width:44px;height:25px;border-radius:999px;background:var(--amber);}
+  .sc .sw::after{content:"";position:absolute;top:3px;right:3px;width:19px;height:19px;border-radius:50%;background:#20150A;}
+  .sc .sw.off{background:var(--panel-2);border:1px solid var(--line-2);}
+  .sc .sw.off::after{left:3px;right:auto;background:var(--mist-dim);}
+
+  .hintbar{position:absolute;z-index:5;left:0;right:0;bottom:0;height:54px;
+    display:flex;align-items:center;gap:26px;padding:0 64px;
+    border-top:1px solid var(--line);background:rgba(11,13,19,.7);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    font-size:13.5px;color:var(--mist-dim);}
+  .hintbar kbd{font-family:var(--f-body);font-size:12px;color:var(--mist);border:1px solid var(--line-2);
+    border-radius:5px;padding:2px 8px;margin-right:7px;}
+  .hintbar .r{margin-left:auto;}
+  .hintbar .r b{color:var(--mist);font-weight:500;}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="beam"></div>
+
+  <div class="wrap">
+    <div class="side">
+      <h1>设置</h1>
+      <div class="cat on"><span class="ic">◈</span>常用</div>
+      <div class="cat"><span class="ic">▤</span>数据源</div>
+      <div class="cat"><span class="ic">▶</span>播放与解码</div>
+      <div class="cat"><span class="ic">弹</span>弹幕</div>
+      <div class="cat"><span class="ic">⚒</span>高级</div>
+      <div class="ver">webHTV <b>v5.5.5</b><br>配置更新于 今天 08:12<br>已是最新版本</div>
+    </div>
+
+    <div class="main">
+      <div class="grp">
+        <div class="grp-title">我的内容</div>
+        <div class="cards fr">
+          <div class="fi"><div class="sc">
+            <div class="lb">✦ 我的收藏<span class="seal badge">2</span></div>
+            <div class="val">18 部 · 2 部有更新</div>
+            <div class="mini"><i class="art art-mist"></i><i class="art art-red"></i><i class="art art-wuxia"></i></div>
+          </div></div>
+          <div class="fi"><div class="sc">
+            <div class="lb">◷ 观看历史</div>
+            <div class="val">26 条 · 昨晚看到《暗涌》第 8 集</div>
+            <div class="mini"><i class="art art-cold"></i><i class="art art-warm"></i><i class="art art-space"></i></div>
+          </div></div>
+          <div class="fi"><div class="sc">
+            <div class="lb">⇪ 推送与投屏</div>
+            <div class="val">接收手机推送的播放地址<br>DLNA 已开启</div>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="grp">
+        <div class="grp-title">数据源</div>
+        <div class="cards fr">
+          <div class="fi"><div class="sc">
+            <div class="lb">点播源</div>
+            <div class="val">当前 <b>非凡影视</b> · 486 部<br>长按 OK 测速优选</div>
+          </div></div>
+          <div class="fi"><div class="sc">
+            <div class="lb">直播源</div>
+            <div class="val">当前 <b>默认线路</b> · 128 频道</div>
+          </div></div>
+          <div class="fi"><div class="sc">
+            <div class="lb">配置地址</div>
+            <div class="val">已订阅 3 个 · 自动更新</div>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="grp">
+        <div class="grp-title">播放</div>
+        <div class="cards fr">
+          <div class="fi"><div class="sc">
+            <div class="lb">播放器</div>
+            <div class="val">当前 <b>EXO</b> · 硬解优先<br>失败自动切软解</div>
+          </div></div>
+          <div class="fi"><div class="sc">
+            <div class="lb">自动连播</div><span class="sw"></span>
+            <div class="val">播完当前集自动进入下一集</div>
+          </div></div>
+          <div class="fi"><div class="sc">
+            <div class="lb">弹幕</div><span class="sw off"></span>
+            <div class="val">默认关闭 · 播放中按 菜单 开启</div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hintbar">
+    <span><kbd>OK</kbd>进入 / 切换</span>
+    <span><kbd>长按 OK</kbd>更多操作</span>
+    <span><kbd>返回</kbd>回到首页</span>
+    <div class="r">本页可用键盘方向键体验遥控焦点</div>
+  </div>
+</div>
+
+<script>
+  const stage=document.querySelector('.stage');
+  function fit(){const s=Math.min((innerWidth-24)/1600,(innerHeight-24)/900);stage.style.transform=`scale(${s})`;}
+  fit();addEventListener('resize',fit);
+
+  const rows=[...document.querySelectorAll('.fr')];
+  let r=0,c=0;
+  const cards=i=>[...rows[i].querySelectorAll('.fi')];
+  function go(nr,nc){
+    document.querySelector('.fi.focus')?.classList.remove('focus');
+    r=nr;c=nc;
+    cards(r)[c].classList.add('focus');
+  }
+  addEventListener('keydown',e=>{
+    const k=e.key;
+    if(!k.startsWith('Arrow'))return;
+    e.preventDefault();
+    if(k==='ArrowLeft') go(r,Math.max(0,c-1));
+    if(k==='ArrowRight')go(r,Math.min(cards(r).length-1,c+1));
+    if(k==='ArrowUp'){const nr=Math.max(0,r-1);go(nr,Math.min(c,cards(nr).length-1));}
+    if(k==='ArrowDown'){const nr=Math.min(rows.length-1,r+1);go(nr,Math.min(c,cards(nr).length-1));}
+  });
+  go(0,0);
+</script>
+</body>
+</html>

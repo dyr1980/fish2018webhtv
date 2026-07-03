@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 琥珀主按钮文字：琥珀底上的深墨 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:alpha="0.42" android:color="@color/md_on_amber" android:state_enabled="false" />
+    <item android:color="@color/md_on_amber" />
+</selector>

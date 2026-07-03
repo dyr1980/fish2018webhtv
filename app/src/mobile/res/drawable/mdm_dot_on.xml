@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · Hero 分页圆点（选中，拉长成琥珀胶囊） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/md_amber" />
+    <corners android:radius="3dp" />
+</shape>

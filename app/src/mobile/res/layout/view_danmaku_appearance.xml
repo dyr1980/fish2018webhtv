@@ -18,14 +18,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/danmaku_display_rows"
-            android:textAppearance="?attr/textAppearanceBodyLarge" />
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="@color/md_paper" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lineCountValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="@color/md_amber" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -37,7 +38,11 @@
         android:stepSize="1"
         android:valueFrom="1"
         android:valueTo="5"
-        app:tickVisible="true" />
+        app:tickVisible="true"
+        app:haloColor="@color/md_amber_glow"
+        app:thumbColor="@color/md_amber"
+        app:trackColorActive="@color/md_amber"
+        app:trackColorInactive="@color/md_line_2" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -52,14 +57,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/danmaku_scroll_gap_ratio"
-            android:textAppearance="?attr/textAppearanceBodyLarge" />
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="@color/md_paper" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/scrollGapValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="@color/md_amber" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -71,7 +77,11 @@
         android:stepSize="0.1"
         android:valueFrom="0"
         android:valueTo="5.0"
-        app:tickVisible="false" />
+        app:tickVisible="false"
+        app:haloColor="@color/md_amber_glow"
+        app:thumbColor="@color/md_amber"
+        app:trackColorActive="@color/md_amber"
+        app:trackColorInactive="@color/md_line_2" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -86,14 +96,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/danmaku_line_spacing"
-            android:textAppearance="?attr/textAppearanceBodyLarge" />
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="@color/md_paper" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/lineSpacingValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="@color/md_amber" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -105,7 +116,11 @@
         android:stepSize="0.1"
         android:valueFrom="1.0"
         android:valueTo="2.0"
-        app:tickVisible="false" />
+        app:tickVisible="false"
+        app:haloColor="@color/md_amber_glow"
+        app:thumbColor="@color/md_amber"
+        app:trackColorActive="@color/md_amber"
+        app:trackColorInactive="@color/md_line_2" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -120,7 +135,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/danmaku_text_bold"
-            android:textAppearance="?attr/textAppearanceBodyLarge" />
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="@color/md_paper" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/textBoldSwitch"
@@ -142,14 +158,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/danmaku_text_size"
-            android:textAppearance="?attr/textAppearanceBodyLarge" />
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="@color/md_paper" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textSizeValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="@color/md_amber" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -161,7 +178,11 @@
         android:stepSize="0.1"
         android:valueFrom="0.5"
         android:valueTo="3.0"
-        app:tickVisible="false" />
+        app:tickVisible="false"
+        app:haloColor="@color/md_amber_glow"
+        app:thumbColor="@color/md_amber"
+        app:trackColorActive="@color/md_amber"
+        app:trackColorInactive="@color/md_line_2" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -176,14 +197,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/danmaku_transparency"
-            android:textAppearance="?attr/textAppearanceBodyLarge" />
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="@color/md_paper" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/alphaValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="@color/md_amber" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -195,7 +217,11 @@
         android:stepSize="0.05"
         android:valueFrom="0"
         android:valueTo="0.9"
-        app:tickVisible="false" />
+        app:tickVisible="false"
+        app:haloColor="@color/md_amber_glow"
+        app:thumbColor="@color/md_amber"
+        app:trackColorActive="@color/md_amber"
+        app:trackColorInactive="@color/md_line_2" />
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
@@ -203,7 +229,8 @@
         android:paddingHorizontal="24dp"
         android:paddingTop="4dp"
         android:text="@string/danmaku_style_mode"
-        android:textAppearance="?attr/textAppearanceBodyLarge" />
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="@color/md_paper" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/styleChipGroup"
@@ -219,7 +246,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:background="@drawable/selector_control_sheet_button"
+            android:background="@drawable/mdm_g_chip"
             android:gravity="center"
             android:text="@string/danmaku_style_none"
             android:textColor="@color/selector_control_sheet_text"
@@ -231,7 +258,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:background="@drawable/selector_control_sheet_button"
+            android:background="@drawable/mdm_g_chip"
             android:gravity="center"
             android:text="@string/danmaku_style_shadow"
             android:textColor="@color/selector_control_sheet_text"
@@ -243,7 +270,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:background="@drawable/selector_control_sheet_button"
+            android:background="@drawable/mdm_g_chip"
             android:gravity="center"
             android:text="@string/danmaku_style_stroke"
             android:textColor="@color/selector_control_sheet_text"
@@ -254,7 +281,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/selector_control_sheet_button"
+            android:background="@drawable/mdm_g_chip"
             android:gravity="center"
             android:text="@string/danmaku_style_projection"
             android:textColor="@color/selector_control_sheet_text"
@@ -277,14 +304,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/danmaku_shadow_transparency"
-            android:textAppearance="?attr/textAppearanceBodyLarge" />
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="@color/md_paper" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/shadowAlphaValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="@color/md_amber" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -297,7 +325,11 @@
         android:valueFrom="0"
         android:valueTo="0.9"
         android:visibility="gone"
-        app:tickVisible="false" />
+        app:tickVisible="false"
+        app:haloColor="@color/md_amber_glow"
+        app:thumbColor="@color/md_amber"
+        app:trackColorActive="@color/md_amber"
+        app:trackColorInactive="@color/md_line_2" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/strokeWidthRow"
@@ -314,14 +346,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/danmaku_stroke_width"
-            android:textAppearance="?attr/textAppearanceBodyLarge" />
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="@color/md_paper" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/strokeWidthValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="@color/md_amber" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -334,7 +367,11 @@
         android:valueFrom="0.05"
         android:valueTo="0.3"
         android:visibility="gone"
-        app:tickVisible="false" />
+        app:tickVisible="false"
+        app:haloColor="@color/md_amber_glow"
+        app:thumbColor="@color/md_amber"
+        app:trackColorActive="@color/md_amber"
+        app:trackColorInactive="@color/md_line_2" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/projectionOffsetXRow"
@@ -351,14 +388,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/danmaku_projection_offset_x"
-            android:textAppearance="?attr/textAppearanceBodyLarge" />
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="@color/md_paper" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/projectionOffsetXValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="@color/md_amber" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -371,7 +409,11 @@
         android:valueFrom="0.02"
         android:valueTo="0.15"
         android:visibility="gone"
-        app:tickVisible="false" />
+        app:tickVisible="false"
+        app:haloColor="@color/md_amber_glow"
+        app:thumbColor="@color/md_amber"
+        app:trackColorActive="@color/md_amber"
+        app:trackColorInactive="@color/md_line_2" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/projectionOffsetYRow"
@@ -388,14 +430,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/danmaku_projection_offset_y"
-            android:textAppearance="?attr/textAppearanceBodyLarge" />
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="@color/md_paper" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/projectionOffsetYValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="@color/md_amber" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -408,7 +451,11 @@
         android:valueFrom="0.02"
         android:valueTo="0.15"
         android:visibility="gone"
-        app:tickVisible="false" />
+        app:tickVisible="false"
+        app:haloColor="@color/md_amber_glow"
+        app:thumbColor="@color/md_amber"
+        app:trackColorActive="@color/md_amber"
+        app:trackColorInactive="@color/md_line_2" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/projectionAlphaRow"
@@ -425,14 +472,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/danmaku_projection_transparency"
-            android:textAppearance="?attr/textAppearanceBodyLarge" />
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="@color/md_paper" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/projectionAlphaValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="@color/md_amber" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -445,7 +493,11 @@
         android:valueFrom="0"
         android:valueTo="0.9"
         android:visibility="gone"
-        app:tickVisible="false" />
+        app:tickVisible="false"
+        app:haloColor="@color/md_amber_glow"
+        app:thumbColor="@color/md_amber"
+        app:trackColorActive="@color/md_amber"
+        app:trackColorInactive="@color/md_line_2" />
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
@@ -453,7 +505,8 @@
         android:paddingHorizontal="24dp"
         android:paddingTop="4dp"
         android:text="@string/danmaku_color_mode"
-        android:textAppearance="?attr/textAppearanceBodyLarge" />
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="@color/md_paper" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/colorChipGroup"
@@ -469,7 +522,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:background="@drawable/selector_control_sheet_button"
+            android:background="@drawable/mdm_g_chip"
             android:gravity="center"
             android:text="@string/danmaku_color_default"
             android:textColor="@color/selector_control_sheet_text"
@@ -481,7 +534,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:background="@drawable/selector_control_sheet_button"
+            android:background="@drawable/mdm_g_chip"
             android:gravity="center"
             android:text="@string/danmaku_color_colorful"
             android:textColor="@color/selector_control_sheet_text"
@@ -492,7 +545,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/selector_control_sheet_button"
+            android:background="@drawable/mdm_g_chip"
             android:gravity="center"
             android:text="@string/danmaku_color_gradient"
             android:textColor="@color/selector_control_sheet_text"
@@ -508,7 +561,7 @@
         android:paddingVertical="4dp"
         android:text="@string/danmaku_color_override_hint"
         android:textAppearance="?attr/textAppearanceBodySmall"
-        android:textColor="?attr/colorError"
+        android:textColor="@color/md_seal"
         android:visibility="gone" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

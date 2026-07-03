@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@drawable/shape_vod_list"
+    android:background="@drawable/md_panel_12"
     android:foreground="@drawable/shape_vod"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
-        android:textColor="@color/white"
+        android:textColor="@color/md_paper"
         android:textSize="14sp"
         tools:text="Download" />
 

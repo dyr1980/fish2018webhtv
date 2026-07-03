@@ -82,6 +82,7 @@ public class SettingActivity extends BaseActivity implements ConfigListener, Sit
         mBinding.liveUrl.setText(LiveConfig.getDesc());
         setWallText();
         mBinding.versionText.setText(AppVersion.fullName());
+        mBinding.navVer.setText("webHTV " + AppVersion.fullName());
         setCacheText();
         setOtherText();
     }
@@ -126,6 +127,14 @@ public class SettingActivity extends BaseActivity implements ConfigListener, Sit
         mBinding.wallDefault.setOnClickListener(this::setWallDefault);
         mBinding.wallRefresh.setOnClickListener(this::setWallRefresh);
         mBinding.wallRefresh.setOnLongClickListener(this::onWallHistory);
+        mBinding.navSource.setOnClickListener(v -> scrollToGroup(mBinding.grpSource));
+        mBinding.navPlay.setOnClickListener(v -> scrollToGroup(mBinding.grpPlay));
+        mBinding.navSystem.setOnClickListener(v -> scrollToGroup(mBinding.grpSystem));
+        mBinding.navAbout.setOnClickListener(v -> scrollToGroup(mBinding.grpAbout));
+    }
+
+    private void scrollToGroup(android.view.View group) {
+        mBinding.scroll.smoothScrollTo(0, group.getTop());
     }
 
     @Override

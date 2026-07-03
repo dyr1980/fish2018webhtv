@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/md_panel_18"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -20,8 +21,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/white"
+            android:fontFamily="@font/noto_serif_sc_bold"
+            android:textColor="@color/md_paper"
             android:textSize="16sp"
+            android:textStyle="bold"
             tools:text="選擇字幕" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -31,6 +34,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:focusable="true"
             android:src="@drawable/ic_action_choose"
+            app:tint="@color/md_paper"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -42,6 +46,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:focusable="true"
             android:src="@drawable/ic_action_subtitle"
+            app:tint="@color/md_paper"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -53,6 +58,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:focusable="true"
             android:src="@drawable/ic_action_offset"
+            app:tint="@color/md_paper"
             android:visibility="gone"
             tools:visibility="visible" />
 

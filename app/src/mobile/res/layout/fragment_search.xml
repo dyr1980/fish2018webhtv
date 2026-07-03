@@ -4,30 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/transparent"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:background="@color/md_ink"
         app:menu="@menu/menu_search"
-        app:navigationIconTint="@android:color/white">
+        app:navigationIcon="@drawable/mdm_s_back_btn"
+        app:navigationIconTint="@null">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/keyword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="44dp"
             android:layout_marginStart="4dp"
-            android:background="@null"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/mdm_s_search_box"
+            android:gravity="center_vertical"
             android:hint="@string/search_keyword"
             android:imeOptions="actionSearch"
             android:inputType="textCapWords|textAutoCorrect|textAutoComplete"
             android:maxLength="255"
+            android:paddingStart="14dp"
+            android:paddingTop="0dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="0dp"
             android:singleLine="true"
             android:textAppearance="@style/ToolbarTextAppearance"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textCursorDrawable="@drawable/shape_cursor" />
+            android:textColor="@color/md_paper"
+            android:textColorHint="@color/md_mist_dim"
+            android:textCursorDrawable="@drawable/mdm_s_cursor"
+            android:textSize="15sp" />
 
     </com.google.android.material.appbar.MaterialToolbar>
 
@@ -53,9 +63,14 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
+                android:drawableStart="@drawable/mdm_h_tab_diamond"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:fontFamily="@font/noto_serif_sc_bold"
                 android:text="@string/search_record"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textColor="@color/md_paper"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recordRecycler"
@@ -79,9 +94,14 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
+                android:drawableStart="@drawable/mdm_h_tab_diamond"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:fontFamily="@font/noto_serif_sc_bold"
                 android:text="@string/search_hot"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textColor="@color/md_paper"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/wordRecycler"
@@ -108,15 +128,31 @@
                 android:visibility="gone"
                 tools:visibility="visible">
 
-                <com.google.android.material.textview.MaterialTextView
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/search_hot_tv"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="5dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@color/md_amber"
+                        android:rotation="45" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/noto_serif_sc_bold"
+                        android:text="@string/search_hot_tv"
+                        android:textColor="@color/md_paper"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/hotTvRecycler"
@@ -133,16 +169,32 @@
                     tools:itemCount="10"
                     tools:listitem="@layout/adapter_search_hot_word" />
 
-                <com.google.android.material.textview.MaterialTextView
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/search_hot_movie"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="5dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@color/md_amber"
+                        android:rotation="45" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/noto_serif_sc_bold"
+                        android:text="@string/search_hot_movie"
+                        android:textColor="@color/md_paper"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/hotMovieRecycler"
@@ -159,16 +211,32 @@
                     tools:itemCount="10"
                     tools:listitem="@layout/adapter_search_hot_word" />
 
-                <com.google.android.material.textview.MaterialTextView
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/search_hot_variety"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="5dp"
+                        android:layout_height="5dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@color/md_amber"
+                        android:rotation="45" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/noto_serif_sc_bold"
+                        android:text="@string/search_hot_variety"
+                        android:textColor="@color/md_paper"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/hotVarietyRecycler"

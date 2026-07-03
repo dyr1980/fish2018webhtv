@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/md_ink_70"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -12,15 +13,18 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:contentInsetEnd="16dp"
-        app:navigationIconTint="@android:color/white">
+        app:navigationIconTint="@color/md_paper">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="start"
+            android:fontFamily="@font/noto_serif_sc_bold"
             android:singleLine="true"
-            android:textAppearance="@style/ToolbarTextAppearance" />
+            android:textAppearance="@style/ToolbarTextAppearance"
+            android:textColor="@color/md_paper"
+            android:textStyle="bold" />
 
     </com.google.android.material.appbar.MaterialToolbar>
 

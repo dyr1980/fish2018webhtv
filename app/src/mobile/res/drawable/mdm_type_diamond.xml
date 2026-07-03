@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 分类 tab 选中态琥珀菱形（作 drawableBottom 天然水平居中），未选占位透明保持位置一致 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true" android:drawable="@drawable/mdm_h_tab_diamond" />
+    <item android:state_checked="true" android:drawable="@drawable/mdm_h_tab_diamond" />
+    <item>
+        <shape android:shape="rectangle">
+            <size android:width="6dp" android:height="6dp" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+</selector>

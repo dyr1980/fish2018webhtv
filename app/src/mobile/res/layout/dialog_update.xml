@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape_shell_proxy_dialog"
+    android:background="@drawable/md_panel_18"
     android:orientation="vertical"
     android:paddingStart="24dp"
     android:paddingTop="22dp"
@@ -22,8 +22,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/noto_serif_sc_bold"
             android:text="@string/update_title"
-            android:textColor="#202124"
+            android:textColor="@color/md_paper"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -35,7 +36,7 @@
             android:contentDescription="@string/lut_close"
             android:padding="8dp"
             android:src="@drawable/ic_dialog_close"
-            app:tint="#5F6368" />
+            app:tint="@color/md_mist" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -45,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:text="@string/update_hint"
-        android:textColor="#5F6368"
+        android:textColor="@color/md_mist_dim"
         android:textSize="13sp" />
 
     <androidx.core.widget.NestedScrollView
@@ -67,7 +68,7 @@
                 android:id="@+id/stableItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_update_version_item"
+                android:background="@drawable/mdm_g_update_item"
                 android:clickable="true"
                 android:focusable="true"
                 android:orientation="vertical"
@@ -84,7 +85,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/update_channel_stable"
-                        android:textColor="#202124"
+                        android:textColor="@color/md_paper"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -93,13 +94,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:background="@drawable/shape_sync_direction"
+                        android:background="@drawable/md_amber_tint_pill"
                         android:includeFontPadding="false"
                         android:paddingStart="8dp"
                         android:paddingTop="4dp"
                         android:paddingEnd="8dp"
                         android:paddingBottom="4dp"
-                        android:textColor="#174EA6"
+                        android:textColor="@color/md_amber"
                         android:textSize="12sp"
                         tools:text="可更新" />
 
@@ -110,7 +111,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:textColor="#174EA6"
+                        android:textColor="@color/md_amber"
                         android:textSize="13sp"
                         tools:text="收起" />
 
@@ -122,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
                     android:maxLines="2"
-                    android:textColor="#5F6368"
+                    android:textColor="@color/md_mist_dim"
                     android:textSize="13sp"
                     tools:text="5.5.5-202606281200" />
 
@@ -139,7 +140,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:lineSpacingExtra="2dp"
-                        android:textColor="#303134"
+                        android:textColor="@color/md_paper_70"
                         android:textSize="14sp"
                         tools:text="### 更新内容&#10;&#10;- 稳定版更新说明" />
 
@@ -151,9 +152,9 @@
                         android:layout_marginTop="12dp"
                         android:minHeight="42dp"
                         android:text="@string/update_confirm"
-                        android:textColor="@color/dialog_primary_button_text"
+                        android:textColor="@color/md_on_amber"
                         android:textSize="14sp"
-                        app:backgroundTint="@color/dialog_primary_button_bg"
+                        app:backgroundTint="@color/md_amber"
                         app:cornerRadius="8dp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -165,7 +166,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/selector_update_version_item"
+                android:background="@drawable/mdm_g_update_item"
                 android:clickable="true"
                 android:focusable="true"
                 android:orientation="vertical"
@@ -182,7 +183,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/update_channel_beta"
-                        android:textColor="#202124"
+                        android:textColor="@color/md_paper"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -191,13 +192,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:background="@drawable/shape_sync_direction"
+                        android:background="@drawable/md_amber_tint_pill"
                         android:includeFontPadding="false"
                         android:paddingStart="8dp"
                         android:paddingTop="4dp"
                         android:paddingEnd="8dp"
                         android:paddingBottom="4dp"
-                        android:textColor="#174EA6"
+                        android:textColor="@color/md_amber"
                         android:textSize="12sp"
                         tools:text="可更新" />
 
@@ -208,7 +209,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:textColor="#174EA6"
+                        android:textColor="@color/md_amber"
                         android:textSize="13sp"
                         tools:text="展开" />
 
@@ -220,7 +221,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
                     android:maxLines="2"
-                    android:textColor="#5F6368"
+                    android:textColor="@color/md_mist_dim"
                     android:textSize="13sp"
                     tools:text="5.5.5-beta-202606281200" />
 
@@ -237,7 +238,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:lineSpacingExtra="2dp"
-                        android:textColor="#303134"
+                        android:textColor="@color/md_paper_70"
                         android:textSize="14sp"
                         tools:text="### 更新内容&#10;&#10;- 测试版更新说明" />
 
@@ -249,9 +250,9 @@
                         android:layout_marginTop="12dp"
                         android:minHeight="42dp"
                         android:text="@string/update_confirm"
-                        android:textColor="@color/dialog_primary_button_text"
+                        android:textColor="@color/md_on_amber"
                         android:textSize="14sp"
-                        app:backgroundTint="@color/dialog_primary_button_bg"
+                        app:backgroundTint="@color/md_amber"
                         app:cornerRadius="8dp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -275,7 +276,7 @@
             android:id="@+id/progressText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#5F6368"
+            android:textColor="@color/md_mist_dim"
             android:textSize="13sp"
             tools:text="正在下载 46% · 3.2 MB/s · 已用 00:12" />
 
@@ -286,6 +287,8 @@
             android:layout_height="6dp"
             android:layout_marginTop="8dp"
             android:indeterminate="false"
+            android:progressBackgroundTint="@color/md_line_2"
+            android:progressTint="@color/md_amber"
             android:max="100"
             android:progress="0" />
 
@@ -299,9 +302,9 @@
         android:layout_marginTop="18dp"
         android:minHeight="44dp"
         android:text="@string/about_acknowledge"
-        android:textColor="@color/dialog_primary_button_text"
+        android:textColor="@color/md_on_amber"
         android:textSize="14sp"
-        app:backgroundTint="@color/dialog_primary_button_bg"
+        app:backgroundTint="@color/md_amber"
         app:cornerRadius="8dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

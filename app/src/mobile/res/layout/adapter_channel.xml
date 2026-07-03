@@ -1,42 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 直播频道项（全宽）：竖条 + 台号 + 台标 + 台名/节目单 + 线路数 -->
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp"
-    android:background="@drawable/shape_live"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
+    android:background="@drawable/mdm_l_channel_bg"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingTop="11dp"
+    android:paddingBottom="11dp">
+
+    <View
+        android:layout_width="3dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="9dp"
+        android:background="@drawable/mdm_s_channel_indicator"
+        android:duplicateParentState="true" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/number"
-        android:layout_width="wrap_content"
+        android:layout_width="34dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
+        android:layout_marginEnd="10dp"
         android:duplicateParentState="true"
+        android:fontFamily="@font/noto_serif_sc_bold"
         android:fontFeatureSettings="tnum"
-        android:textColor="@color/selector_live_text"
-        android:textSize="14sp"
+        android:gravity="center"
+        android:textColor="@color/mdm_l_text_tertiary"
+        android:textSize="15sp"
+        android:textStyle="bold"
         tools:text="01" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/logo"
-        android:layout_width="44dp"
-        android:layout_height="33dp"
+        android:layout_width="46dp"
+        android:layout_height="35dp"
         android:layout_marginEnd="12dp"
-        android:visibility="gone" />
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/name"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:duplicateParentState="true"
-        android:ellipsize="marquee"
-        android:singleLine="true"
-        android:textColor="@color/selector_live_text"
-        android:textSize="14sp"
-        tools:text="CNN" />
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:textColor="@color/mdm_l_text_primary"
+            android:textSize="15sp"
+            tools:text="CCTV-1 综合" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/program"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/md_mist_dim"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="新闻联播 · 19:00–19:38"
+            tools:visibility="visible" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/lines"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/md_outline_pill"
+        android:paddingStart="10dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="4dp"
+        android:textColor="@color/md_mist_dim"
+        android:textSize="10.5sp"
+        android:visibility="gone"
+        tools:ignore="HardcodedText"
+        tools:text="3 线路"
+        tools:visibility="visible" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

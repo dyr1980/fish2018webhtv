@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/md_ink_70"
     android:tag="port">
 
     <com.fongmi.android.tv.ui.custom.ContextWallImageView
@@ -104,9 +105,10 @@
                     android:clipChildren="false"
                     android:clipToPadding="false"
                     android:orientation="vertical"
-                    android:paddingTop="14dp"
+                    android:paddingTop="16dp"
                     android:paddingBottom="8dp">
 
+                    <!-- ── 片名行：宋体海报字 + 琥珀方章 ── -->
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -122,9 +124,11 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:ellipsize="end"
+                            android:fontFamily="@font/noto_serif_sc_bold"
                             android:maxLines="1"
-                            android:textColor="@color/white"
-                            android:textSize="19sp"
+                            android:textColor="@color/md_paper"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
                             tools:text="慶餘年第二季" />
 
                         <com.google.android.material.textview.MaterialTextView
@@ -133,14 +137,34 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
+                            android:background="@drawable/mdm_v_amber_badge"
                             android:ellipsize="end"
                             android:maxWidth="112dp"
+                            android:paddingStart="8dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="3dp"
                             android:singleLine="true"
-                            android:textColor="@color/white_80"
-                            android:textSize="13sp"
+                            android:textColor="@color/md_on_amber"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
                             tools:text="更新至第30集" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- ── 元数据区：年份/地区/类型 与 站源/导演/演员 ── -->
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/other"
+                        style="@style/Video.ContextText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:singleLine="true"
+                        android:textColor="@color/md_mist"
+                        android:textSize="12sp"
+                        tools:text="年份：2022 地區：台灣 類型：科幻" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/site"
@@ -148,25 +172,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="4dp"
                         android:layout_marginEnd="16dp"
                         android:singleLine="true"
-                        android:textColor="@color/white_80"
-                        android:textSize="13sp"
+                        android:textColor="@color/md_mist"
+                        android:textSize="12sp"
                         tools:text="站源：泥巴" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/other"
-                        style="@style/Video.ContextText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginEnd="16dp"
-                        android:singleLine="true"
-                        android:textColor="@color/white_90"
-                        android:textSize="13sp"
-                        tools:text="年份：2022 地區：台灣 類型：科幻" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/director"
@@ -174,11 +185,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="4dp"
                         android:layout_marginEnd="16dp"
                         android:singleLine="true"
-                        android:textColor="@color/white_80"
-                        android:textSize="13sp"
+                        android:textColor="@color/md_mist"
+                        android:textSize="12sp"
                         tools:text="導演：FongMi" />
 
                     <com.google.android.material.textview.MaterialTextView
@@ -187,20 +198,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="4dp"
                         android:layout_marginEnd="16dp"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textColor="@color/white_80"
-                        android:textSize="13sp"
+                        android:textColor="@color/md_mist"
+                        android:textSize="12sp"
                         tools:text="演員：FongMi" />
 
+                    <!-- ── 简介：2 行收起，点击展开 ── -->
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/content_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="7dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="16dp"
                         android:gravity="top"
                         android:orientation="horizontal">
@@ -210,7 +222,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/detail_content"
-                            android:textColor="@color/white_70"
+                            android:textColor="@color/md_mist_dim"
                             android:textSize="13sp" />
 
                         <com.google.android.material.textview.MaterialTextView
@@ -221,58 +233,20 @@
                             android:layout_marginStart="4dp"
                             android:layout_weight="1"
                             android:ellipsize="end"
-                            android:lineSpacingExtra="3dp"
+                            android:lineSpacingExtra="4dp"
                             android:maxLines="2"
-                            android:textColor="@color/white_90"
+                            android:textColor="@color/md_mist"
                             android:textSize="13sp"
                             tools:text="一個身世神秘的少年范閒，因對自身身世的好奇而離開故鄉澹州，前赴南慶京都。" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:id="@+id/actionRow"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="16dp"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/shortDisplay"
-                            style="@style/VideoActionButton"
-                            android:layout_marginEnd="8dp"
-                            android:text="@string/play_short_display"
-                            app:drawableTopCompat="@drawable/ic_action_short_display_shadow" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/search"
-                            style="@style/VideoActionButton"
-                            android:layout_marginEnd="8dp"
-                            android:text="@string/play_search"
-                            app:drawableTopCompat="@drawable/ic_action_search_shadow" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/castAction"
-                            style="@style/VideoActionButton"
-                            android:layout_marginEnd="8dp"
-                            android:text="@string/play_cast"
-                            app:drawableTopCompat="@drawable/ic_control_cast_shadow" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/settingAction"
-                            style="@style/VideoActionButton"
-                            android:text="@string/nav_setting"
-                            app:drawableTopCompat="@drawable/ic_control_setting_shadow" />
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
+                    <!-- ── 「线路」栏目 ── -->
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="22dp"
                         android:layout_marginEnd="12dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
@@ -281,9 +255,11 @@
                             style="@style/Video.ContextText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/noto_serif_sc_bold"
                             android:text="@string/detail_flag"
-                            android:textColor="@color/white"
-                            android:textSize="16sp" />
+                            android:textColor="@color/md_paper"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
 
                         <View
                             android:layout_width="0dp"
@@ -296,7 +272,7 @@
                         android:id="@+id/flag"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="10dp"
                         android:clipChildren="false"
                         android:clipToPadding="false"
                         android:orientation="horizontal"
@@ -310,11 +286,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="18dp"
                         android:layout_marginEnd="16dp"
+                        android:fontFamily="@font/noto_serif_sc_bold"
                         android:text="@string/detail_quality"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
+                        android:textColor="@color/md_paper"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
                         android:visibility="gone"
                         tools:visibility="visible" />
 
@@ -322,7 +300,7 @@
                         android:id="@+id/quality"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="10dp"
                         android:clipChildren="false"
                         android:clipToPadding="false"
                         android:orientation="horizontal"
@@ -332,11 +310,12 @@
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:visibility="visible" />
 
+                    <!-- ── 「选集」栏目 ── -->
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="22dp"
                         android:layout_marginEnd="12dp"
                         android:gravity="center_vertical">
 
@@ -344,9 +323,11 @@
                             style="@style/Video.ContextText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/noto_serif_sc_bold"
                             android:text="@string/detail_episode"
-                            android:textColor="@color/white"
-                            android:textSize="16sp" />
+                            android:textColor="@color/md_paper"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/reverse"
@@ -355,6 +336,7 @@
                             android:layout_marginStart="8dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:src="@drawable/ic_action_reverse"
+                            app:tint="@color/md_mist"
                             android:visibility="gone"
                             tools:visibility="visible" />
 
@@ -369,6 +351,7 @@
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:src="@drawable/ic_action_more"
+                            app:tint="@color/md_mist"
                             android:visibility="gone"
                             tools:visibility="visible" />
 
@@ -378,7 +361,7 @@
                         android:id="@+id/episodeGroup"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="10dp"
                         android:clipChildren="false"
                         android:clipToPadding="false"
                         android:orientation="horizontal"
@@ -394,7 +377,7 @@
                         android:id="@+id/episode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="6dp"
                         android:layout_marginBottom="8dp"
                         android:clipChildren="true"
                         android:clipToPadding="true"
@@ -408,10 +391,71 @@
                         tools:itemCount="28"
                         tools:listitem="@layout/adapter_episode_grid" />
 
+                    <!-- ── 功能行：胶囊化排列 ── -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/actionRow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="16dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/shortDisplay"
+                            style="@style/VideoActionButton"
+                            android:layout_height="40dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/md_outline_pill"
+                            android:drawablePadding="6dp"
+                            android:text="@string/play_short_display"
+                            android:textColor="@color/md_mist"
+                            android:textSize="12sp"
+                            app:drawableStartCompat="@drawable/ic_action_short_display_shadow" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/search"
+                            style="@style/VideoActionButton"
+                            android:layout_height="40dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/md_outline_pill"
+                            android:drawablePadding="6dp"
+                            android:text="@string/play_search"
+                            android:textColor="@color/md_mist"
+                            android:textSize="12sp"
+                            app:drawableStartCompat="@drawable/ic_action_search_shadow" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/castAction"
+                            style="@style/VideoActionButton"
+                            android:layout_height="40dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/md_outline_pill"
+                            android:drawablePadding="6dp"
+                            android:text="@string/play_cast"
+                            android:textColor="@color/md_mist"
+                            android:textSize="12sp"
+                            app:drawableStartCompat="@drawable/ic_control_cast_shadow" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/settingAction"
+                            style="@style/VideoActionButton"
+                            android:layout_height="40dp"
+                            android:background="@drawable/md_outline_pill"
+                            android:drawablePadding="6dp"
+                            android:text="@string/nav_setting"
+                            android:textColor="@color/md_mist"
+                            android:textSize="12sp"
+                            app:drawableStartCompat="@drawable/ic_control_setting_shadow" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/quick"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
                         android:clipChildren="false"
                         android:clipToPadding="false"
                         android:nestedScrollingEnabled="false"

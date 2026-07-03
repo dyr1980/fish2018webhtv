@@ -10,6 +10,6 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:singleLine="true"
-    android:textColor="@color/text"
+    android:textColor="@color/mdl_g_pill_text"
     android:textSize="14sp"
     tools:text="愛奇異彈幕" />

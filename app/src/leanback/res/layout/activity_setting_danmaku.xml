@@ -13,6 +13,31 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="3dp"
+                android:layout_height="26dp"
+                android:background="@color/md_amber" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:fontFamily="@font/noto_serif_sc_bold"
+                android:letterSpacing="0.1"
+                android:text="@string/setting_danmaku"
+                android:textColor="@color/md_paper"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/danmakuLoad"
             android:layout_width="match_parent"
@@ -27,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/danmaku_load"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -35,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="關" />
 
@@ -58,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/danmaku_api"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -68,7 +93,7 @@
                 android:ellipsize="middle"
                 android:gravity="end"
                 android:singleLine="true"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="https://" />
 
@@ -91,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/danmaku_auto_load"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -99,7 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="關" />
 
@@ -122,7 +147,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/danmaku_spider_first"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -130,7 +155,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="關" />
 

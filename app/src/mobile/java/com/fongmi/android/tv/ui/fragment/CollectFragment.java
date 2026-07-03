@@ -18,6 +18,7 @@ import androidx.core.view.MenuProvider;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewbinding.ViewBinding;
 
 import com.fongmi.android.tv.R;
@@ -129,6 +130,7 @@ public class CollectFragment extends BaseFragment implements MenuProvider, Colle
     private void setRecyclerView() {
         mBinding.collect.setItemAnimator(null);
         mBinding.collect.setHasFixedSize(true);
+        mBinding.collect.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         mBinding.collect.setAdapter(mCollectAdapter = new CollectAdapter(this));
         mBinding.recycler.setHasFixedSize(true);
         mBinding.recycler.addOnScrollListener(mScroller);
@@ -155,17 +157,8 @@ public class CollectFragment extends BaseFragment implements MenuProvider, Colle
     }
 
     private void setWidth() {
-        int width = 0;
-        int space = ResUtil.dp2px(48);
-        int maxWidth = ResUtil.getScreenWidth() / 2 - ResUtil.dp2px(40);
-        for (Site site : mSites) width = Math.max(width, ResUtil.getTextWidth(site.getName(), 14));
-        int contentWidth = width + space;
-        int minWidth = ResUtil.dp2px(120);
-        int finalWidth = Math.max(minWidth, Math.min(contentWidth, maxWidth));
-        collectWidth = finalWidth;
-        ViewGroup.LayoutParams params = mBinding.collect.getLayoutParams();
-        params.width = finalWidth;
-        mBinding.collect.setLayoutParams(params);
+        // 横向源筛选：结果列表占满全宽，源不再占据左侧宽度
+        collectWidth = 0;
     }
 
     private void search() {

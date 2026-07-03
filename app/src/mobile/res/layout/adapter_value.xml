@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="4dp"
-    android:background="@drawable/shape_accent"
-    android:textColor="@color/selector_control"
+    android:background="@drawable/mdm_g_chip_pad"
+    android:textColor="@color/md_paper"
     android:textSize="14sp"
     tools:text="全部" />

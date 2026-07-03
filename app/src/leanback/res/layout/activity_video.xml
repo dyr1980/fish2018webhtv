@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/progressLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/md_ink">
 
     <com.fongmi.android.tv.ui.custom.ContextWallImageView
         android:id="@+id/contextWall"
@@ -68,30 +69,56 @@
     </FrameLayout>
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/crumb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="24dp"
+        android:layout_toEndOf="@+id/video"
+        android:letterSpacing="0.06"
+        android:singleLine="true"
+        android:textColor="@color/md_mist_dim"
+        android:textSize="14sp"
+        android:visibility="gone"
+        tools:text="推荐 / 剧集"
+        tools:visibility="visible" />
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
         style="@style/Video.ContextText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_below="@+id/crumb"
+        android:layout_marginTop="6dp"
         android:layout_marginEnd="24dp"
         android:layout_toEndOf="@+id/video"
+        android:ellipsize="end"
+        android:fontFamily="@font/noto_serif_sc_bold"
+        android:letterSpacing="0.08"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textColor="@color/md_paper"
+        android:textSize="40sp"
+        android:textStyle="bold"
         tools:text="慶餘年第二季" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/remark"
-        style="@style/Video.ContextText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/name"
         android:layout_alignStart="@+id/name"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
+        android:background="@drawable/mdl_v_seal_amber"
+        android:fontFamily="@font/noto_serif_sc_bold"
+        android:paddingStart="7dp"
+        android:paddingTop="3dp"
+        android:paddingEnd="7dp"
+        android:paddingBottom="3dp"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textColor="@color/md_on_amber"
+        android:textSize="12sp"
+        android:textStyle="bold"
         tools:text="更新到第二季" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -111,7 +138,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:singleLine="true"
-            android:textColor="@color/white"
+            android:textColor="@color/md_mist"
             android:textSize="16sp"
             tools:text="站源：泥巴" />
 
@@ -122,7 +149,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:singleLine="true"
-            android:textColor="@color/white"
+            android:textColor="@color/md_mist"
             android:textSize="16sp"
             tools:text="年份：2022" />
 
@@ -133,7 +160,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:singleLine="true"
-            android:textColor="@color/white"
+            android:textColor="@color/md_mist"
             android:textSize="16sp"
             tools:text="地區：台灣" />
 
@@ -143,7 +170,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textColor="@color/white"
+            android:textColor="@color/md_mist"
             android:textSize="16sp"
             tools:text="類型：科幻" />
 
@@ -160,7 +187,7 @@
         android:layout_marginEnd="24dp"
         android:nextFocusDown="@id/actor"
         android:singleLine="true"
-        android:textColor="@color/white"
+        android:textColor="@color/md_mist"
         android:textSize="16sp"
         tools:text="導演：FongMi" />
 
@@ -174,9 +201,9 @@
         android:layout_marginTop="6dp"
         android:layout_marginEnd="24dp"
         android:ellipsize="end"
-        android:maxLines="2"
+        android:maxLines="1"
         android:nextFocusDown="@id/content"
-        android:textColor="@color/white"
+        android:textColor="@color/md_mist"
         android:textSize="16sp"
         tools:text="演員：FongMi" />
 
@@ -184,8 +211,9 @@
         android:id="@+id/row2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/actor"
         android:layout_alignStart="@+id/name"
-        android:layout_alignBottom="@+id/video"
+        android:layout_marginTop="14dp"
         android:orientation="horizontal">
 
         <com.google.android.material.textview.MaterialTextView
@@ -202,7 +230,7 @@
             android:nextFocusDown="@id/flag"
             android:singleLine="true"
             android:text="@string/detail_desc"
-            android:textColor="@color/white"
+            android:textColor="@color/mdl_v_text_action"
             android:textSize="16sp"
             app:drawableStartCompat="@drawable/ic_detail_desc" />
 
@@ -220,7 +248,7 @@
             android:nextFocusDown="@id/flag"
             android:singleLine="true"
             android:text="@string/play_short_display"
-            android:textColor="@color/white"
+            android:textColor="@color/mdl_v_text_action"
             android:textSize="16sp"
             app:drawableStartCompat="@drawable/ic_detail_short_display" />
 
@@ -238,7 +266,7 @@
             android:nextFocusDown="@id/flag"
             android:singleLine="true"
             android:text="@string/play_search"
-            android:textColor="@color/white"
+            android:textColor="@color/mdl_v_text_action"
             android:textSize="16sp"
             app:drawableStartCompat="@drawable/ic_action_search" />
 
@@ -256,7 +284,7 @@
             android:nextFocusDown="@id/flag"
             android:singleLine="true"
             android:text="@string/keep"
-            android:textColor="@color/white"
+            android:textColor="@color/mdl_v_text_action"
             android:textSize="16sp"
             app:drawableStartCompat="@drawable/ic_detail_keep_off" />
 
@@ -274,7 +302,7 @@
             android:nextFocusDown="@id/flag"
             android:singleLine="true"
             android:text="@string/play_change"
-            android:textColor="@color/white"
+            android:textColor="@color/mdl_v_text_action"
             android:textSize="16sp"
             app:drawableStartCompat="@drawable/ic_detail_change" />
 
@@ -290,6 +318,32 @@
         android:clipToPadding="true"
         android:orientation="vertical"
         android:paddingBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <View
+                android:layout_width="3dp"
+                android:layout_height="18dp"
+                android:background="@color/md_amber" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/noto_serif_sc_bold"
+                android:text="@string/play_episodes"
+                android:textColor="@color/md_paper"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <androidx.leanback.widget.HorizontalGridView
             android:id="@+id/flag"

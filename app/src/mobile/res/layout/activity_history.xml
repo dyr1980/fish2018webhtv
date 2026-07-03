@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/md_ink_70"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -12,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:menu="@menu/menu_history"
-        app:navigationIconTint="@android:color/white"
+        app:navigationIconTint="@color/md_paper"
+        app:titleTextColor="@color/md_paper"
         app:title="@string/app_history"
         app:titleTextAppearance="@style/ToolbarTextAppearance" />
 

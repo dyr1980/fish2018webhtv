@@ -21,14 +21,22 @@
             android:orientation="horizontal"
             android:paddingBottom="12dp">
 
+            <View
+                android:layout_width="3dp"
+                android:layout_height="26dp"
+                android:layout_marginEnd="12dp"
+                android:background="@color/md_amber" />
+
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_weight="1"
+                android:fontFamily="@font/noto_serif_sc_bold"
+                android:letterSpacing="0.1"
                 android:text="@string/setting_enhance"
-                android:textColor="@color/white"
-                android:textSize="24sp"
+                android:textColor="@color/md_paper"
+                android:textSize="30sp"
                 android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -40,7 +48,7 @@
                 android:focusable="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_repo_github"
-                app:tint="@color/white" />
+                app:tint="@color/md_paper" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/cnbRepo"
@@ -52,7 +60,7 @@
                 android:focusable="true"
                 android:padding="10dp"
                 android:src="@drawable/ic_repo_cnb"
-                app:tint="@color/white" />
+                app:tint="@color/md_paper" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -71,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_drive_check"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -79,7 +87,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="开" />
 
@@ -100,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_debug_log"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -108,7 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="关" />
 
@@ -129,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_manage_page"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -137,7 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="浏览器" />
 
@@ -158,7 +166,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_remote_trust"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -168,7 +176,7 @@
                 android:ellipsize="middle"
                 android:gravity="end"
                 android:singleLine="true"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="未绑定" />
 
@@ -189,7 +197,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_git_cloud"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -199,7 +207,7 @@
                 android:ellipsize="middle"
                 android:gravity="end"
                 android:singleLine="true"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="0 accounts" />
 
@@ -220,7 +228,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_site_health_sort"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -228,7 +236,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="开" />
 
@@ -249,7 +257,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_shell_proxy"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -257,7 +265,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="关" />
 
@@ -279,7 +287,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_shell_proxy_config"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -289,7 +297,7 @@
                 android:ellipsize="middle"
                 android:gravity="end"
                 android:singleLine="true"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="http://127.0.0.1:7890" />
 
@@ -310,7 +318,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_custom_csp"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -320,7 +328,7 @@
                 android:ellipsize="middle"
                 android:gravity="end"
                 android:singleLine="true"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="开 · 2" />
 
@@ -341,7 +349,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_web_home_extension"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -349,7 +357,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="开" />
 
@@ -370,7 +378,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_web_home_fullscreen"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -378,7 +386,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="开" />
 
@@ -399,7 +407,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_csp_warmup"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -407,7 +415,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="开" />
 
@@ -428,7 +436,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_playback_artwork_wall"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -436,7 +444,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="开" />
 
@@ -457,7 +465,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_viewing_record_sync"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -465,7 +473,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="开 · 1/2" />
 
@@ -486,7 +494,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_login_state"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -496,7 +504,7 @@
                 android:ellipsize="middle"
                 android:gravity="end"
                 android:singleLine="true"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp"
                 tools:text="已选 2 · 待确认 1" />
 
@@ -517,7 +525,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="@string/setting_one_key_sync"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="18sp" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -525,7 +533,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:text="@string/device_select"
-                android:textColor="@color/white"
+                android:textColor="@color/md_amber"
                 android:textSize="18sp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

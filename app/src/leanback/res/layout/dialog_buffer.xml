@@ -12,6 +12,10 @@
         android:stepSize="1"
         android:valueFrom="1"
         android:valueTo="10"
-        app:tickVisible="false" />
+        app:haloColor="@color/md_amber_glow"
+        app:thumbColor="@color/md_amber"
+        app:tickVisible="false"
+        app:trackColorActive="@color/md_amber"
+        app:trackColorInactive="@color/md_line_2" />
 
 </FrameLayout>

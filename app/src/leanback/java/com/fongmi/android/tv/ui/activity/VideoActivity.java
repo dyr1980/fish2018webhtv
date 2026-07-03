@@ -710,13 +710,30 @@ public class VideoActivity extends PlaybackActivity implements CustomKeyDownVod.
 
     private void setText(Vod item) {
         mBinding.content.setTag(item.getContent());
-        setText(mBinding.year, R.string.detail_year, item.getYear());
-        setText(mBinding.area, R.string.detail_area, item.getArea());
-        setText(mBinding.type, R.string.detail_type, item.getTypeName());
-        setText(mBinding.site, R.string.detail_site, getSite().getName());
+        setCrumb(getSite().getName());
+        setMeta(item.getYear(), item.getArea(), item.getTypeName());
         setText(mBinding.director, R.string.detail_director, item.getDirector());
         setText(mBinding.actor, R.string.detail_actor, item.getActor());
         setText(mBinding.remark, 0, item.getRemarks());
+    }
+
+    private void setCrumb(String site) {
+        mBinding.site.setVisibility(View.GONE);
+        mBinding.crumb.setText(TextUtils.isEmpty(site) ? "" : site.trim());
+        mBinding.crumb.setVisibility(TextUtils.isEmpty(site) ? View.GONE : View.VISIBLE);
+    }
+
+    private void setMeta(String... parts) {
+        StringBuilder sb = new StringBuilder();
+        for (String part : parts) {
+            if (TextUtils.isEmpty(part)) continue;
+            if (sb.length() > 0) sb.append("  ·  ");
+            sb.append(part.trim());
+        }
+        mBinding.year.setText(sb.toString());
+        mBinding.year.setVisibility(sb.length() == 0 ? View.GONE : View.VISIBLE);
+        mBinding.area.setVisibility(View.GONE);
+        mBinding.type.setVisibility(View.GONE);
     }
 
     private void setText(TextView view, int resId, String text) {

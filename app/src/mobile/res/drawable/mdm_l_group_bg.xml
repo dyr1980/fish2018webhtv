@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 直播分组 tab 底：去胶囊底色，选中态改由文字色 + 底部琥珀菱形表达（同首页 tab 体系） -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/md_amber_glow">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <corners android:radius="999dp" />
+            <padding
+                android:bottom="8dp"
+                android:left="12dp"
+                android:right="12dp"
+                android:top="8dp" />
+        </shape>
+    </item>
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/md_paper" />
+            <corners android:radius="999dp" />
+        </shape>
+    </item>
+</ripple>

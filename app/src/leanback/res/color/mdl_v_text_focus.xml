@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 条目/chip 文字色：焦点深墨 / 当前琥珀 / 普通雾蓝 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/md_on_amber" android:state_focused="true" />
+    <item android:color="@color/md_amber" android:state_selected="true" />
+    <item android:color="@color/md_amber" android:state_activated="true" />
+    <item android:color="@color/md_amber" android:state_checked="true" />
+    <item android:color="@color/md_mist" />
+</selector>

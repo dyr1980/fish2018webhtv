@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 胶囊 chip（带内边距版，供列表项/筛选值使用）：默认描边，选中琥珀淡染 -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/md_amber_glow">
+    <item>
+        <selector>
+            <item android:state_selected="true">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/md_amber_12" />
+                    <stroke
+                        android:width="1dp"
+                        android:color="@color/md_amber" />
+                    <corners android:radius="999dp" />
+                    <padding
+                        android:bottom="8dp"
+                        android:left="12dp"
+                        android:right="12dp"
+                        android:top="8dp" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/md_panel_2" />
+                    <stroke
+                        android:width="1dp"
+                        android:color="@color/md_line_2" />
+                    <corners android:radius="999dp" />
+                    <padding
+                        android:bottom="8dp"
+                        android:left="12dp"
+                        android:right="12dp"
+                        android:top="8dp" />
+                </shape>
+            </item>
+        </selector>
+    </item>
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/md_paper" />
+            <corners android:radius="999dp" />
+        </shape>
+    </item>
+</ripple>

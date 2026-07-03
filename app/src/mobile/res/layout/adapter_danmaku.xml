@@ -4,7 +4,7 @@
     android:id="@+id/text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/selector_player_child_sheet_button"
+    android:background="@drawable/mdm_g_chip_pad"
     android:clickable="true"
     android:ellipsize="marquee"
     android:focusable="true"

@@ -12,16 +12,16 @@
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/black_20"
+        android:background="@color/md_panel"
         app:shapeAppearanceOverlay="@style/Vod.Grid" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_vod_year"
+        android:background="@drawable/mdl_vod_year"
         android:singleLine="true"
-        android:textColor="@color/white"
+        android:textColor="@color/md_paper_70"
         android:textSize="14sp"
         android:visibility="gone"
         tools:text="2022"
@@ -31,9 +31,9 @@
         android:id="@+id/site"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_vod_site"
+        android:background="@drawable/mdl_vod_site"
         android:singleLine="true"
-        android:textColor="@color/white"
+        android:textColor="@color/md_paper"
         android:textSize="14sp"
         android:visibility="gone"
         tools:text="泥巴"
@@ -44,11 +44,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/name"
-        android:background="@drawable/shape_vod_remark"
+        android:background="@drawable/mdl_vod_remark"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textSize="14sp"
+        android:textColor="@color/md_amber"
+        android:textSize="12sp"
         tools:text="1080p" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -58,12 +58,12 @@
         android:layout_below="@+id/image"
         android:layout_alignStart="@+id/image"
         android:layout_alignEnd="@+id/image"
-        android:background="@drawable/shape_vod_name"
+        android:background="@drawable/mdl_vod_name"
         android:ellipsize="marquee"
         android:gravity="center"
         android:padding="6dp"
         android:singleLine="true"
-        android:textColor="@color/white"
+        android:textColor="@color/md_paper"
         android:textSize="16sp"
         tools:text="蜘蛛人" />
 

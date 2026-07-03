@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 选集文字：当前集琥珀底上的深色字，普通集雾蓝 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/md_on_amber" android:state_activated="true" />
+    <item android:color="@color/md_on_amber" android:state_checked="true" />
+    <item android:color="@color/md_on_amber" android:state_selected="true" />
+    <item android:color="@color/md_paper" android:state_focused="true" />
+    <item android:color="@color/md_mist" />
+</selector>

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fongmi.android.tv.api.config.VodConfig;
 import com.fongmi.android.tv.bean.History;
-import com.fongmi.android.tv.databinding.AdapterVodBinding;
+import com.fongmi.android.tv.databinding.AdapterHistoryBinding;
 import com.fongmi.android.tv.utils.ImgUtil;
 
 public class HistoryAdapter extends BaseDiffAdapter<History, HistoryAdapter.ViewHolder> {
@@ -58,10 +58,7 @@ public class HistoryAdapter extends BaseDiffAdapter<History, HistoryAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ViewHolder holder = new ViewHolder(AdapterVodBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
-        holder.binding.getRoot().getLayoutParams().width = width;
-        holder.binding.image.getLayoutParams().height = height;
-        return holder;
+        return new ViewHolder(AdapterHistoryBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
@@ -71,7 +68,7 @@ public class HistoryAdapter extends BaseDiffAdapter<History, HistoryAdapter.View
         holder.binding.name.setText(item.getVodName());
         holder.binding.site.setText(item.getSiteName());
         holder.binding.remark.setText(item.getVodRemarks());
-        holder.binding.site.setVisibility(item.getSiteVisible());
+        holder.binding.site.setVisibility(item.getSiteName().isEmpty() ? View.GONE : View.VISIBLE);
         int duration = (int) Math.min(Integer.MAX_VALUE, Math.max(0, item.getDuration()));
         int progress = (int) Math.min(Integer.MAX_VALUE, Math.max(0, item.getPosition()));
         holder.binding.progress.setMax(duration > 0 ? duration : 1);
@@ -92,9 +89,9 @@ public class HistoryAdapter extends BaseDiffAdapter<History, HistoryAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final AdapterVodBinding binding;
+        private final AdapterHistoryBinding binding;
 
-        ViewHolder(@NonNull AdapterVodBinding binding) {
+        ViewHolder(@NonNull AdapterHistoryBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

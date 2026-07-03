@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>webHTV · 手机端首页</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body{display:flex;justify-content:center;align-items:flex-start;background:radial-gradient(1200px 600px at 50% -10%,#241546,#000 60%);padding:26px 0;font-family:var(--f-text);}
+  .phone{position:relative;width:390px;height:844px;background:var(--bg-1);overflow:hidden;border-radius:46px;box-shadow:0 40px 100px rgba(0,0,0,.75);border:1px solid #1e1e26;}
+  .scroll{height:100%;overflow-y:auto;padding-bottom:112px;}
+
+  .topbar{position:sticky;top:0;z-index:30;padding:18px 20px 10px;display:flex;align-items:center;gap:12px;background:linear-gradient(180deg,var(--bg-1) 62%,transparent);}
+  .logo{font-family:var(--f-display);font-size:22px;font-weight:800;letter-spacing:-.5px;}
+  .logo b{background:var(--grad-brand);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .spacer{flex:1;}
+  .icon-btn{width:40px;height:40px;border-radius:999px;display:grid;place-items:center;background:var(--bg-2);border:1px solid var(--line);color:var(--tx-2);font-size:18px;}
+
+  .tabs{position:sticky;top:64px;z-index:25;display:flex;gap:24px;padding:2px 20px 14px;overflow-x:auto;background:linear-gradient(180deg,var(--bg-1) 78%,transparent);}
+  .tab{font-size:15px;color:var(--tx-3);font-weight:500;white-space:nowrap;padding-bottom:7px;position:relative;letter-spacing:.3px;}
+  .tab.on{color:var(--tx-1);font-weight:700;}
+  .tab.on::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;border-radius:3px;background:var(--grad-brand);box-shadow:0 2px 10px var(--brand-glow);}
+
+  .hero{padding:2px 20px 6px;}
+  .hero-card{position:relative;height:456px;border-radius:24px;overflow:hidden;box-shadow:var(--sh-3);}
+  .hero-mask{position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,7,9,.15) 0%,transparent 30%,rgba(7,7,9,.35) 58%,var(--bg-1) 99%);}
+  .hero-top{position:absolute;top:16px;left:16px;right:16px;display:flex;}
+  .hero-badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.4);color:#fff;backdrop-filter:blur(10px);border:1px solid var(--line-2);}
+  .hero-info{position:absolute;left:20px;right:20px;bottom:20px;}
+  .hero-title{font-family:var(--f-display);font-size:32px;font-weight:800;letter-spacing:-.5px;line-height:1.02;margin:0 0 10px;text-shadow:0 4px 24px rgba(0,0,0,.7);}
+  .hero-meta{font-size:13px;color:var(--tx-2);display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:16px;}
+  .score{color:var(--gold);font-weight:700;display:inline-flex;align-items:center;gap:3px;}
+  .dot-s{width:3px;height:3px;border-radius:50%;background:var(--tx-3);}
+  .genre{padding:3px 9px;border-radius:999px;border:1px solid var(--line-2);color:var(--tx-2);font-size:11px;}
+  .hero-actions{display:flex;gap:10px;}
+  .btn-play{flex:1;height:48px;border:none;border-radius:14px;font-size:15px;font-weight:700;color:#fff;background:var(--grad-brand);box-shadow:var(--sh-brand);display:flex;align-items:center;justify-content:center;gap:7px;font-family:var(--f-text);}
+  .btn-ghost{width:52px;height:48px;border-radius:14px;background:var(--glass);border:1px solid var(--line-2);color:var(--tx-1);backdrop-filter:blur(14px);display:grid;place-items:center;font-size:18px;}
+  .dots{display:flex;justify-content:center;gap:6px;margin-top:14px;}
+  .dt{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.22);transition:.3s;}
+  .dt.on{width:20px;background:var(--grad-brand);}
+
+  .section{margin-top:28px;}
+  .sec-head{display:flex;align-items:center;padding:0 20px 14px;}
+  .sec-title{font-family:var(--f-display);font-size:19px;font-weight:700;letter-spacing:-.3px;}
+  .sec-more{margin-left:auto;font-size:12.5px;color:var(--tx-3);display:inline-flex;align-items:center;gap:2px;}
+  .row{display:flex;gap:13px;padding:0 20px;overflow-x:auto;}
+
+  .poster{flex:0 0 122px;}
+  .poster .pic{position:relative;height:174px;border-radius:16px;overflow:hidden;box-shadow:var(--sh-2);}
+  .poster .rank{position:absolute;top:8px;left:8px;font-family:var(--f-display);font-size:13px;font-weight:800;width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);color:#fff;}
+  .poster .rank.g{color:var(--gold);}
+  .poster .tag{position:absolute;top:8px;left:8px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:7px;background:var(--brand);color:#fff;box-shadow:var(--sh-1);}
+  .poster .ep{position:absolute;bottom:0;left:0;right:0;font-size:11px;padding:18px 9px 7px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.9));text-align:right;font-weight:500;}
+  .poster .name{font-size:13.5px;margin-top:9px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.2px;}
+  .poster .sub{font-size:11.5px;color:var(--tx-3);margin-top:3px;}
+
+  .rowL{display:flex;gap:14px;padding:0 20px;overflow-x:auto;}
+  .wcard{flex:0 0 268px;}
+  .wcard .pic{position:relative;height:150px;border-radius:16px;overflow:hidden;box-shadow:var(--sh-2);}
+  .wcard .play-o{position:absolute;inset:0;display:grid;place-items:center;}
+  .wcard .play-o span{width:50px;height:50px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);display:grid;place-items:center;font-size:17px;border:1.5px solid rgba(255,255,255,.8);color:#fff;padding-left:3px;}
+  .wcard .prog-bg{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.22);}
+  .wcard .prog{position:absolute;left:0;bottom:0;height:4px;background:var(--grad-brand);}
+  .wcard .name{font-size:14px;margin-top:10px;font-weight:600;}
+  .wcard .sub{font-size:12px;color:var(--tx-3);margin-top:3px;}
+
+  .tabbar{position:absolute;left:14px;right:14px;bottom:16px;height:66px;border-radius:26px;display:flex;align-items:center;justify-content:space-around;z-index:40;box-shadow:var(--sh-3);}
+  .nav{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--tx-3);font-size:10px;font-weight:500;}
+  .nav .ic{font-size:21px;}
+  .nav.on{color:var(--tx-1);}
+  .nav.center .ic{width:52px;height:52px;margin-top:-26px;border-radius:50%;display:grid;place-items:center;font-size:23px;color:#fff;background:var(--grad-brand);box-shadow:var(--sh-brand);border:4px solid var(--bg-1);}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="scroll">
+    <div class="topbar">
+      <div class="logo">web<b>HTV</b></div>
+      <div class="spacer"></div>
+      <div class="icon-btn">🔍</div>
+      <div class="icon-btn">⚙</div>
+    </div>
+    <div class="tabs">
+      <div class="tab on">推荐</div><div class="tab">电影</div><div class="tab">剧集</div>
+      <div class="tab">综艺</div><div class="tab">动漫</div><div class="tab">纪录片</div>
+    </div>
+    <div class="hero">
+      <div class="hero-card art a1">
+        <div class="hero-mask"></div>
+        <div class="hero-top"><span class="hero-badge">🔥 热播榜 No.1</span></div>
+        <div class="hero-info">
+          <div class="hero-title">星际迷航<br>新纪元</div>
+          <div class="hero-meta">
+            <span class="score">★ 9.2</span><span class="dot-s"></span><span>2026</span>
+            <span class="dot-s"></span><span>更新至 12 集</span>
+            <span class="genre">科幻</span><span class="genre">冒险</span>
+          </div>
+          <div class="hero-actions">
+            <button class="btn-play">▶ 立即播放</button>
+            <div class="btn-ghost">＋</div><div class="btn-ghost">ⓘ</div>
+          </div>
+        </div>
+      </div>
+      <div class="dots"><span class="dt on"></span><span class="dt"></span><span class="dt"></span><span class="dt"></span></div>
+    </div>
+    <div class="section">
+      <div class="sec-head"><span class="sec-title">继续观看</span><span class="sec-more">全部 ›</span></div>
+      <div class="rowL">
+        <div class="wcard"><div class="pic art a2"><div class="play-o"><span>▶</span></div><div class="prog-bg"></div><div class="prog" style="width:64%"></div></div><div class="name">沙丘：第二部</div><div class="sub">看到 01:12:30 · 剩 38 分钟</div></div>
+        <div class="wcard"><div class="pic art a5"><div class="play-o"><span>▶</span></div><div class="prog-bg"></div><div class="prog" style="width:22%"></div></div><div class="name">繁花</div><div class="sub">第 8 集 · 看到 09:40</div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="sec-head"><span class="sec-title">为你推荐</span><span class="sec-more">换一批 ↻</span></div>
+      <div class="row">
+        <div class="poster"><div class="pic art a3"><span class="tag">独播</span><div class="ep">更新至 24 集</div></div><div class="name">与凤行</div><div class="sub">古装 · 仙侠</div></div>
+        <div class="poster"><div class="pic art a4"><div class="ep">全 40 集</div></div><div class="name">庆余年 第二季</div><div class="sub">古装 · 剧情</div></div>
+        <div class="poster"><div class="pic art a7"><span class="tag">HD</span><div class="ep">正片</div></div><div class="name">奥本海默</div><div class="sub">传记 · 历史</div></div>
+        <div class="poster"><div class="pic art a8"><div class="ep">更新至 6 集</div></div><div class="name">怒潮</div><div class="sub">犯罪 · 动作</div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="sec-head"><span class="sec-title">🔥 本周热播榜</span><span class="sec-more">全部 ›</span></div>
+      <div class="row">
+        <div class="poster"><div class="pic art a6"><span class="rank g">1</span><div class="ep">更新至 12 集</div></div><div class="name">三体</div><div class="sub">科幻 · 9.4</div></div>
+        <div class="poster"><div class="pic art a1"><span class="rank g">2</span><div class="ep">全 36 集</div></div><div class="name">狂飙</div><div class="sub">犯罪 · 9.1</div></div>
+        <div class="poster"><div class="pic art a2"><span class="rank">3</span><div class="ep">正片</div></div><div class="name">流浪地球2</div><div class="sub">科幻 · 8.8</div></div>
+        <div class="poster"><div class="pic art a5"><span class="rank">4</span><div class="ep">更新至 30 集</div></div><div class="name">大江大河</div><div class="sub">剧情 · 8.9</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="tabbar glass">
+    <div class="nav on"><span class="ic">🏠</span>首页</div>
+    <div class="nav"><span class="ic">🧭</span>发现</div>
+    <div class="nav center"><span class="ic">🔍</span></div>
+    <div class="nav"><span class="ic">📺</span>直播</div>
+    <div class="nav"><span class="ic">👤</span>我的</div>
+  </div>
+</div>
+</body>
+</html>

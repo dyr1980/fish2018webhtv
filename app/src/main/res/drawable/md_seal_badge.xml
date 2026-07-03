@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 朱红印章徽标底（热/新/更新提示，极小面积使用） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/md_seal" />
+    <corners android:radius="4dp" />
+</shape>

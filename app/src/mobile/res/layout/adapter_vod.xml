@@ -11,8 +11,8 @@
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/black_20"
-        app:shapeAppearanceOverlay="@style/Vod.Grid" />
+        android:background="@color/md_panel_2"
+        app:shapeAppearanceOverlay="@style/Vod.Grid.Large" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/delete"
@@ -33,10 +33,10 @@
         android:id="@+id/site"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_vod_site"
+        android:background="@drawable/mdm_vod_site"
         android:singleLine="true"
-        android:textColor="@color/text_site"
-        android:textSize="12sp"
+        android:textColor="@color/md_paper"
+        android:textSize="10sp"
         android:visibility="gone"
         tools:text="泥巴"
         tools:visibility="visible" />
@@ -45,12 +45,18 @@
         android:id="@+id/remark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/progress"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/shape_vod_remark"
+        android:layout_alignStart="@+id/image"
+        android:layout_alignEnd="@+id/image"
+        android:layout_alignBottom="@+id/image"
+        android:background="@drawable/mdm_h_vod_ep"
+        android:gravity="end"
+        android:paddingStart="8dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="5dp"
         android:singleLine="true"
-        android:textColor="@color/text_remark"
-        android:textSize="12sp"
+        android:textColor="@color/md_paper"
+        android:textSize="10sp"
         tools:text="1080p" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -60,8 +66,8 @@
         android:layout_below="@+id/image"
         android:layout_alignStart="@+id/image"
         android:layout_alignEnd="@+id/image"
-        android:background="@color/black_20"
-        app:indicatorColor="@color/white"
+        android:background="@color/transparent"
+        app:indicatorColor="@color/md_amber"
         app:trackColor="@color/transparent"
         app:trackStopIndicatorSize="0dp" />
 
@@ -72,15 +78,14 @@
         android:layout_below="@+id/progress"
         android:layout_alignStart="@+id/image"
         android:layout_alignEnd="@+id/image"
-        android:background="@drawable/shape_vod_name"
         android:ellipsize="end"
-        android:gravity="center"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="start"
         android:maxLines="1"
-        android:textColor="@color/white"
-        app:autoSizeMaxTextSize="14sp"
-        app:autoSizeMinTextSize="12sp"
-        app:autoSizeStepGranularity="1sp"
-        app:autoSizeTextType="uniform"
+        android:paddingTop="7dp"
+        android:paddingBottom="2dp"
+        android:textColor="@color/md_paper"
+        android:textSize="13sp"
         tools:text="蜘蛛人" />
 
 </RelativeLayout>

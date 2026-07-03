@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/transparent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
@@ -21,22 +22,79 @@
             app:menu="@menu/menu_vod"
             app:popupTheme="@style/ToolbarPopupTheme">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/logo"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="12dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_logo" />
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:singleLine="true"
-                android:text="@string/app_name"
-                android:textAppearance="@style/ToolbarTextAppearance" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/md_seal_badge"
+                    android:fontFamily="@font/noto_serif_sc_bold"
+                    android:includeFontPadding="false"
+                    android:padding="4dp"
+                    android:text="映"
+                    android:textColor="@color/md_paper"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/logo"
+                    android:layout_width="0dp"
+                    android:layout_height="28dp"
+                    android:alpha="0.85"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_logo"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/noto_serif_sc_bold"
+                    android:maxWidth="96dp"
+                    android:singleLine="true"
+                    android:text="@string/app_name"
+                    android:textAppearance="@style/ToolbarTextAppearance"
+                    android:textColor="@color/md_paper"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/mdm_h_search_pill"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        app:srcCompat="@drawable/ic_action_search"
+                        app:tint="@color/md_mist_dim" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:singleLine="true"
+                        android:text="搜索片名、演员"
+                        android:textColor="@color/md_mist_dim"
+                        android:textSize="12sp"
+                        tools:ignore="HardcodedText" />
+
+                </LinearLayout>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
         </com.google.android.material.appbar.MaterialToolbar>
 
@@ -110,12 +168,14 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:visibility="gone"
-        app:backgroundTint="?attr/colorSecondaryContainer"
+        app:backgroundTint="@color/md_amber"
+        app:fabCustomSize="44dp"
         app:layout_anchor="@id/pager"
         app:layout_anchorGravity="end|bottom"
         app:layout_behavior="com.fongmi.android.tv.ui.custom.CustomFabBehavior"
+        app:maxImageSize="20dp"
         app:srcCompat="@drawable/ic_fab_filter"
-        app:tint="?attr/colorOnSecondaryContainer"
+        app:tint="@color/md_on_amber"
         tools:visibility="visible" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -123,12 +183,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:backgroundTint="?attr/colorSecondaryContainer"
+        app:backgroundTint="@color/md_panel_2"
+        app:fabCustomSize="44dp"
         app:layout_anchor="@id/pager"
         app:layout_anchorGravity="end|bottom"
         app:layout_behavior="com.fongmi.android.tv.ui.custom.CustomFabBehavior"
+        app:maxImageSize="20dp"
         app:srcCompat="@drawable/ic_fab_link"
-        app:tint="?attr/colorOnSecondaryContainer"
+        app:tint="@color/md_amber"
         tools:visibility="visible" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -138,12 +200,14 @@
         android:layout_margin="16dp"
         android:tag="top"
         android:visibility="invisible"
-        app:backgroundTint="?attr/colorSecondaryContainer"
+        app:backgroundTint="@color/md_panel_2"
+        app:fabCustomSize="44dp"
         app:layout_anchor="@id/pager"
         app:layout_anchorGravity="end|bottom"
         app:layout_behavior="com.fongmi.android.tv.ui.custom.CustomFabBehavior"
+        app:maxImageSize="20dp"
         app:srcCompat="@drawable/ic_fab_top"
-        app:tint="?attr/colorOnSecondaryContainer"
+        app:tint="@color/md_amber"
         tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

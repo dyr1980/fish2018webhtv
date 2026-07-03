@@ -3,10 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/md_panel_18"
     android:orientation="vertical"
     android:paddingStart="12dp"
     android:paddingTop="16dp"
-    android:paddingEnd="12dp">
+    android:paddingEnd="12dp"
+    android:paddingBottom="8dp">
 
     <com.google.android.material.slider.Slider
         android:id="@+id/slider"
@@ -15,6 +17,10 @@
         android:stepSize="1"
         android:valueFrom="1"
         android:valueTo="10"
-        app:tickVisible="false" />
+        app:haloColor="@color/md_amber_glow"
+        app:thumbColor="@color/md_amber"
+        app:tickVisible="false"
+        app:trackColorActive="@color/md_amber"
+        app:trackColorInactive="@color/md_line_2" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="46dp"
     android:layout_marginBottom="8dp"
-    android:background="@drawable/selector_control_sheet_button"
+    android:background="@drawable/mdm_l_sheet_btn"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingStart="14dp"
@@ -19,7 +19,7 @@
         android:ellipsize="middle"
         android:gravity="center_vertical"
         android:singleLine="true"
-        android:textColor="@color/selector_control_sheet_text"
+        android:textColor="@color/mdm_l_text_sheet"
         android:textSize="13sp"
         tools:text="http://diyp5.112114.xyz/?ch={name}&amp;date={date}" />
 
@@ -30,7 +30,7 @@
         android:duplicateParentState="true"
         android:gravity="center"
         android:text="@string/live_epg_edit"
-        android:textColor="@color/selector_control_sheet_text"
+        android:textColor="@color/mdm_l_text_sheet"
         android:textSize="12sp" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -40,7 +40,7 @@
         android:duplicateParentState="true"
         android:gravity="center"
         android:text="@string/live_epg_delete"
-        android:textColor="@color/selector_control_sheet_text"
+        android:textColor="@color/mdm_l_text_sheet"
         android:textSize="12sp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

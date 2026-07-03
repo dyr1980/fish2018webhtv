@@ -11,9 +11,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|center"
         android:layout_marginTop="24dp"
-        android:background="@drawable/shape_widget"
+        android:background="@drawable/mdm_l_widget_bg"
         android:gravity="center"
-        android:textColor="@color/white"
+        android:textColor="@color/md_paper"
         android:textSize="14sp"
         android:visibility="gone"
         tools:text="@string/error_play_url"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|center"
         android:layout_marginTop="24dp"
-        android:background="@drawable/shape_widget"
+        android:background="@drawable/mdm_l_widget_bg"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone"
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
-            android:textColor="@color/white"
+            android:textColor="@color/md_paper"
             android:textSize="14sp"
             tools:text="00:00:00" />
 
@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|center"
         android:layout_marginTop="24dp"
-        android:background="@drawable/shape_widget"
+        android:background="@drawable/mdm_l_widget_bg"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone"
@@ -81,8 +81,8 @@
             android:id="@+id/brightProgress"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            app:indicatorColor="@color/white"
-            app:trackColor="@color/grey_500" />
+            app:indicatorColor="@color/md_amber"
+            app:trackColor="@color/md_line_2" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -92,7 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|center"
         android:layout_marginTop="24dp"
-        android:background="@drawable/shape_widget"
+        android:background="@drawable/mdm_l_widget_bg"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone"
@@ -109,8 +109,8 @@
             android:id="@+id/volumeProgress"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            app:indicatorColor="@color/white"
-            app:trackColor="@color/grey_500" />
+            app:indicatorColor="@color/md_amber"
+            app:trackColor="@color/md_line_2" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -119,7 +119,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
-        android:background="@drawable/shape_live_info"
+        android:background="@drawable/mdm_l_live_info_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="16dp"
@@ -132,8 +132,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:textColor="@color/white"
+            android:fontFamily="@font/noto_serif_sc_bold"
+            android:textColor="@color/md_amber"
             android:textSize="14sp"
+            android:textStyle="bold"
             tools:text="005" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -148,10 +150,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
+            android:fontFamily="@font/noto_serif_sc_bold"
             android:maxEms="48"
             android:singleLine="true"
-            android:textColor="@color/white"
+            android:textColor="@color/md_paper"
             android:textSize="14sp"
+            android:textStyle="bold"
             tools:text="民視" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -161,7 +165,7 @@
             android:layout_marginEnd="12dp"
             android:layout_weight="1"
             android:singleLine="true"
-            android:textColor="@color/white"
+            android:textColor="@color/md_paper_70"
             android:textSize="14sp"
             tools:text="正在播放：食神" />
 
@@ -169,7 +173,7 @@
             android:id="@+id/line"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="@color/md_mist"
             android:textSize="14sp"
             tools:text="來源 1" />
 
@@ -180,7 +184,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@drawable/shape_live_info"
+        android:background="@drawable/mdm_l_live_info_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="12dp"
@@ -195,7 +199,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:textColor="@color/white"
+            android:textColor="@color/md_amber"
             android:textSize="12sp"
             tools:text="005" />
 
@@ -204,7 +208,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textColor="@color/white"
+            android:textColor="@color/md_paper"
             android:textSize="12sp"
             tools:text="民視" />
 

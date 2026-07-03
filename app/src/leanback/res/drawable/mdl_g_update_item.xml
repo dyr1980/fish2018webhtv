@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 更新通道卡片：焦点琥珀描边，普通面板亮阶 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/md_amber_12" />
+            <stroke android:width="2dp" android:color="@color/md_amber" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/md_amber_12" />
+            <stroke android:width="2dp" android:color="@color/md_amber" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/md_panel_2" />
+            <stroke android:width="1dp" android:color="@color/md_line" />
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+
+</selector>

@@ -10,7 +10,7 @@
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/black_20"
+        android:background="@color/md_panel"
         android:scaleType="centerCrop" />
 
     <TextView
@@ -19,12 +19,12 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/image"
         android:layout_alignTop="@+id/image"
-        android:background="@drawable/shape_vod_site"
+        android:background="@drawable/mdl_s_vod_site"
         android:ellipsize="end"
         android:maxWidth="96dp"
         android:singleLine="true"
-        android:textColor="@color/white"
-        android:textSize="13sp"
+        android:textColor="@color/md_paper"
+        android:textSize="12sp"
         android:visibility="gone" />
 
     <TextView
@@ -34,10 +34,10 @@
         android:layout_above="@+id/name"
         android:layout_alignStart="@+id/image"
         android:layout_alignEnd="@+id/image"
-        android:background="@drawable/shape_vod_remark"
+        android:background="@drawable/mdl_s_vod_remark"
         android:ellipsize="end"
         android:singleLine="true"
-        android:textColor="@color/white"
+        android:textColor="@color/md_paper"
         android:textSize="14sp" />
 
     <TextView
@@ -47,12 +47,12 @@
         android:layout_below="@+id/image"
         android:layout_alignStart="@+id/image"
         android:layout_alignEnd="@+id/image"
-        android:background="@drawable/shape_vod_name"
+        android:background="@drawable/mdl_s_vod_name"
         android:ellipsize="end"
         android:gravity="center"
         android:padding="6dp"
         android:singleLine="true"
-        android:textColor="@color/white"
+        android:textColor="@color/md_paper"
         android:textSize="16sp" />
 
 </RelativeLayout>

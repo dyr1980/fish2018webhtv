@@ -16,26 +16,31 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/config"
             style="@style/Control"
+            android:textColor="@color/mdm_l_text_control"
             android:text="@string/play_config" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/source"
             style="@style/Control"
+            android:textColor="@color/mdm_l_text_control"
             android:text="@string/live_control_source" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/player"
             style="@style/Control"
+            android:textColor="@color/mdm_l_text_control"
             android:text="@string/play_exo" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/decode"
             style="@style/Control"
+            android:textColor="@color/mdm_l_text_control"
             android:text="@string/play_decode" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/speed"
             style="@style/Control"
+            android:textColor="@color/mdm_l_text_control"
             android:fontFeatureSettings="tnum"
             android:text="@string/play_speed"
             android:visibility="gone"
@@ -44,11 +49,13 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/scale"
             style="@style/Control"
+            android:textColor="@color/mdm_l_text_control"
             android:text="@string/play_scale" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/line"
             style="@style/Control"
+            android:textColor="@color/mdm_l_text_control"
             tools:text="來源 1" />
 
         <View
@@ -59,6 +66,7 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text"
             style="@style/Control"
+            android:textColor="@color/mdm_l_text_control"
             android:tag="3"
             android:text="@string/play_track_text"
             android:visibility="gone"
@@ -67,28 +75,33 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/audio"
             style="@style/Control"
+            android:textColor="@color/mdm_l_text_control"
             android:tag="1"
             android:text="@string/play_track_audio" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/video"
             style="@style/Control"
+            android:textColor="@color/mdm_l_text_control"
             android:tag="2"
             android:text="@string/play_track_video" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/invert"
             style="@style/Control"
+            android:textColor="@color/mdm_l_text_control"
             android:text="@string/play_invert" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/across"
             style="@style/Control"
+            android:textColor="@color/mdm_l_text_control"
             android:text="@string/play_across" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/change"
             style="@style/Control"
+            android:textColor="@color/mdm_l_text_control"
             android:text="@string/play_change" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

@@ -2,6 +2,7 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/md_panel_18"
     android:fillViewport="true"
     android:padding="24dp">
 
@@ -15,16 +16,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="middle"
+            android:fontFamily="@font/noto_serif_sc_bold"
             android:linksClickable="false"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="20sp" />
+            android:textColor="@color/md_paper"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="?attr/colorOnSurface"
+            android:textColor="@color/md_mist"
             android:textSize="14sp" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -34,7 +37,7 @@
             android:layout_marginTop="8dp"
             android:autoLink="all"
             android:linksClickable="false"
-            android:textColor="?attr/colorOnSurface"
+            android:textColor="@color/md_amber"
             android:textSize="14sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

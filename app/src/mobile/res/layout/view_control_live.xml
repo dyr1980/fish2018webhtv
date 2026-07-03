@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_20">
+    android:background="@color/md_ink_50">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/top"
@@ -37,9 +37,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"
+                android:fontFamily="@font/noto_serif_sc_bold"
                 android:singleLine="true"
-                android:textColor="@color/white"
+                android:textColor="@color/md_paper"
                 android:textSize="16sp"
+                android:textStyle="bold"
                 tools:text="CCTV-4K" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -47,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textColor="@color/white_80"
+                android:textColor="@color/md_mist"
                 android:textSize="11sp"
                 android:visibility="gone"
                 tools:text="3840 x 2160"
@@ -91,7 +93,7 @@
             android:id="@+id/prev"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/shape_control"
+            android:background="@drawable/mdm_l_control_btn"
             android:src="@drawable/exo_icon_previous" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -100,14 +102,14 @@
             android:layout_height="48dp"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
-            android:background="@drawable/shape_control"
+            android:background="@drawable/mdm_l_control_btn"
             android:src="@drawable/exo_icon_play" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/next"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/shape_control"
+            android:background="@drawable/mdm_l_control_btn"
             android:src="@drawable/exo_icon_next" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

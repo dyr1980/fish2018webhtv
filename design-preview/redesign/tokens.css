@@ -1,0 +1,65 @@
+/* ============================================================
+   webHTV · 「午夜首映」设计令牌
+   影厅黑 + 放映琥珀 + 银幕暖白 / 宋体海报字 + 朱红印章
+   ============================================================ */
+:root{
+  /* 色板 */
+  --ink:#0B0D13;          /* 影厅黑：熄灯后的蓝黑 */
+  --panel:#151A24;        /* 幕布深：卡片与面板 */
+  --panel-2:#1D2432;      /* 面板亮阶 */
+  --amber:#E8A33D;        /* 放映琥珀：主强调 */
+  --amber-deep:#C9832A;
+  --amber-glow:rgba(232,163,61,.38);
+  --paper:#F3EEE3;        /* 银幕暖白：主文字 */
+  --mist:#8FA3BC;         /* 雾蓝：次级文字与元数据 */
+  --mist-dim:#5B6A80;     /* 三级文字 */
+  --seal:#C7443B;         /* 胶片红：印章与徽标，极小面积 */
+  --line:rgba(243,238,227,.09);
+  --line-2:rgba(243,238,227,.18);
+
+  /* 字体 */
+  --f-display:"Noto Serif SC","Songti SC","STSong","SimSun",serif;
+  --f-body:-apple-system,"PingFang SC","HarmonyOS Sans","Microsoft YaHei",Roboto,system-ui,sans-serif;
+
+  /* 圆角 / 阴影 */
+  --r-sm:6px; --r-md:12px; --r-lg:18px; --r-pill:999px;
+  --sh-1:0 4px 14px rgba(0,0,0,.4);
+  --sh-2:0 10px 30px rgba(0,0,0,.5);
+  --sh-3:0 24px 64px rgba(0,0,0,.6);
+  --sh-focus:0 0 0 3px var(--amber),0 18px 44px var(--amber-glow);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{font-family:var(--f-body);color:var(--paper);background:var(--ink);}
+img{display:block;max-width:100%;}
+::-webkit-scrollbar{width:0;height:0;}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+
+/* ---- 印章：本套设计的记忆点 ---- */
+.seal{
+  display:inline-grid;place-items:center;
+  background:var(--seal);color:var(--paper);
+  font-family:var(--f-display);font-weight:900;
+  border-radius:4px;line-height:1;
+  box-shadow:inset 0 0 0 1px rgba(243,238,227,.28),0 2px 8px rgba(0,0,0,.4);
+}
+.seal.amber{background:var(--amber);color:#20150A;}
+
+/* ---- 海报底纹（设计稿占位画面）---- */
+.art{position:relative;background-size:cover;background-position:center;}
+.art::after{ /* 胶片颗粒 */
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.016) 0 1px,transparent 1px 3px),
+    radial-gradient(120% 55% at 18% 0%,rgba(255,255,255,.10),transparent 55%);
+}
+.art-mist {background-image:linear-gradient(158deg,#33555E 0%,#1C333C 42%,#0E1A20 100%);}   /* 雾岛来客 · 悬疑 */
+.art-space{background-image:radial-gradient(90% 70% at 70% 22%,#4A55B8 0%,#242A5C 38%,#0A0C1A 100%);} /* 深空回响 · 科幻 */
+.art-wuxia{background-image:linear-gradient(165deg,#4C6B50 0%,#26402B 45%,#0F1710 100%);}   /* 山河入梦 · 武侠 */
+.art-neon {background-image:linear-gradient(150deg,#4A2470 0%,#2A1440 45%,#0D0916 100%),radial-gradient(60% 40% at 85% 15%,#B44FA0,transparent);} /* 环形代码 */
+.art-warm {background-image:linear-gradient(160deg,#B5713F 0%,#6E3D22 48%,#291710 100%);}   /* 春溪食堂 · 治愈 */
+.art-sea  {background-image:radial-gradient(80% 55% at 72% 18%,#4E7BA6 0%,#23405C 40%,#0B111C 100%);} /* 月落大江 */
+.art-dusk {background-image:linear-gradient(155deg,#8C5C33 0%,#4A2E1C 50%,#1C1108 100%);}   /* 纸鸢 · 年代 */
+.art-cold {background-image:linear-gradient(165deg,#2E4050 0%,#1A2734 48%,#0B0F14 100%);}   /* 暗涌 · 犯罪 */
+.art-red  {background-image:linear-gradient(160deg,#6E2E2E 0%,#3C1616 50%,#160B0B 100%);}   /* 铜雀台之夜 */
+.art-green{background-image:linear-gradient(160deg,#55794F 0%,#2C4229 50%,#121A0F 100%);}   /* 南方有风 */

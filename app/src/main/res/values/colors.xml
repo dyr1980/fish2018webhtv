@@ -27,4 +27,26 @@
     <color name="white_80">#CCFFFFFF</color>
     <color name="white_90">#E6FFFFFF</color>
 
+    <!-- ── Midnight Premiere 午夜首映设计令牌 ─────────────────
+         琥珀=唯一交互强调色；ink=底色；panel=卡片；paper=主文字；
+         mist=次级信息；seal=胶片红，仅用于印章/徽标/更新提示 -->
+    <color name="md_ink">#0B0D13</color>
+    <color name="md_ink_50">#800B0D13</color>
+    <color name="md_ink_70">#B30B0D13</color>
+    <color name="md_ink_90">#E60B0D13</color>
+    <color name="md_panel">#151A24</color>
+    <color name="md_panel_2">#1D2432</color>
+    <color name="md_amber">#E8A33D</color>
+    <color name="md_amber_deep">#C9832A</color>
+    <color name="md_amber_glow">#61E8A33D</color>
+    <color name="md_amber_12">#1FE8A33D</color>
+    <color name="md_on_amber">#20150A</color>
+    <color name="md_paper">#F3EEE3</color>
+    <color name="md_paper_70">#B3F3EEE3</color>
+    <color name="md_mist">#8FA3BC</color>
+    <color name="md_mist_dim">#5B6A80</color>
+    <color name="md_seal">#C7443B</color>
+    <color name="md_line">#17F3EEE3</color>
+    <color name="md_line_2">#2EF3EEE3</color>
+
 </resources>

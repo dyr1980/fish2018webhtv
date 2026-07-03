@@ -211,9 +211,20 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ChannelAdapter.ViewHolder holder, int position) {
         Channel item = mItems.get(visibleStart + position);
-        item.loadLogo(holder.binding.logo);
+        if (item.getLogo().isEmpty()) {
+            holder.binding.logo.setVisibility(View.GONE);
+        } else {
+            holder.binding.logo.setVisibility(View.VISIBLE);
+            Glide.with(holder.binding.logo).load(item.getLogo()).into(holder.binding.logo);
+        }
         holder.binding.name.setText(item.getShow());
         holder.binding.number.setText(item.getNumber());
+        String program = item.getData().getEpgData().getTitle();
+        holder.binding.program.setText(program);
+        holder.binding.program.setVisibility(program.isEmpty() ? View.GONE : View.VISIBLE);
+        int lines = item.getUrls().size();
+        holder.binding.lines.setText(lines + " 线路");
+        holder.binding.lines.setVisibility(lines > 1 ? View.VISIBLE : View.GONE);
         holder.binding.getRoot().setSelected(item.isSelected());
         holder.binding.getRoot().setOnClickListener(view -> listener.onItemClick(item));
         holder.binding.getRoot().setOnLongClickListener(view -> listener.onLongClick(item));

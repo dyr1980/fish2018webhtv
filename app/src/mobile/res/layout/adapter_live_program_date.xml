@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="42dp"
     android:layout_marginBottom="8dp"
-    android:background="@drawable/selector_control_sheet_button"
+    android:background="@drawable/mdm_l_sheet_btn"
     android:ellipsize="end"
     android:gravity="center"
     android:singleLine="true"
-    android:textColor="@color/selector_control_sheet_text"
+    android:textColor="@color/mdm_l_text_sheet"
     android:textSize="13sp"
     tools:text="今天" />

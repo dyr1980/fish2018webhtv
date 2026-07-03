@@ -64,7 +64,12 @@ public class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Channel item = mItems.get(position);
-        item.loadLogo(holder.binding.logo);
+        if (item.getLogo().isEmpty()) {
+            holder.binding.logo.setVisibility(android.view.View.GONE);
+        } else {
+            holder.binding.logo.setVisibility(android.view.View.VISIBLE);
+            Glide.with(holder.binding.logo).load(item.getLogo()).into(holder.binding.logo);
+        }
         holder.binding.name.setText(item.getShow());
         holder.binding.number.setText(item.getNumber());
         holder.binding.getRoot().setSelected(item.isSelected());

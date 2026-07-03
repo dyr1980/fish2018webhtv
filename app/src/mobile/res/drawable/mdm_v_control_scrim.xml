@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 午夜首映 · 播放控制层遮罩：顶部与底部压暗保证文字可读，中部透出画面 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:startColor="@color/md_ink_50"
+        android:centerColor="@android:color/transparent"
+        android:endColor="@color/md_ink_70"
+        android:type="linear" />
+</shape>

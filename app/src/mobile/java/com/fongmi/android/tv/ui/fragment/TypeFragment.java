@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -14,6 +15,7 @@ import androidx.viewbinding.ViewBinding;
 
 import com.fongmi.android.tv.Product;
 import com.fongmi.android.tv.api.config.VodConfig;
+import com.fongmi.android.tv.bean.History;
 import com.fongmi.android.tv.bean.Result;
 import com.fongmi.android.tv.bean.Site;
 import com.fongmi.android.tv.bean.Style;
@@ -21,30 +23,40 @@ import com.fongmi.android.tv.bean.Value;
 import com.fongmi.android.tv.bean.Vod;
 import com.fongmi.android.tv.databinding.FragmentTypeBinding;
 import com.fongmi.android.tv.model.SiteViewModel;
+import com.fongmi.android.tv.ui.activity.HistoryActivity;
 import com.fongmi.android.tv.ui.activity.SearchActivity;
 import com.fongmi.android.tv.ui.activity.VideoActivity;
+import com.fongmi.android.tv.ui.adapter.HomeHeaderAdapter;
 import com.fongmi.android.tv.ui.adapter.VodAdapter;
 import com.fongmi.android.tv.ui.base.BaseFragment;
 import com.fongmi.android.tv.ui.custom.CustomScroller;
 import com.fongmi.android.tv.utils.Notify;
 import com.fongmi.android.tv.utils.ResUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class TypeFragment extends BaseFragment implements CustomScroller.Callback, VodAdapter.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class TypeFragment extends BaseFragment implements CustomScroller.Callback, VodAdapter.OnClickListener, SwipeRefreshLayout.OnRefreshListener, HomeHeaderAdapter.Callback {
 
     private HashMap<String, String> mExtends;
     private FragmentTypeBinding mBinding;
+    private HomeHeaderAdapter mHeader;
     private CustomScroller mScroller;
     private SiteViewModel mViewModel;
     private VodAdapter mAdapter;
 
     public static TypeFragment newInstance(String key, String typeId, Style style, HashMap<String, String> extend, boolean folder, int y) {
+        return newInstance(key, typeId, style, extend, folder, y, false);
+    }
+
+    public static TypeFragment newInstance(String key, String typeId, Style style, HashMap<String, String> extend, boolean folder, int y, boolean header) {
         Bundle args = new Bundle();
         args.putInt("y", y);
         args.putString("key", key);
         args.putString("typeId", typeId);
         args.putBoolean("folder", folder);
+        args.putBoolean("header", header);
         args.putParcelable("style", style);
         args.putSerializable("extend", extend);
         TypeFragment fragment = new TypeFragment();
@@ -78,6 +90,10 @@ public class TypeFragment extends BaseFragment implements CustomScroller.Callbac
 
     private boolean isHome() {
         return "home".equals(getTypeId());
+    }
+
+    private boolean isShowHeader() {
+        return getArguments().getBoolean("header");
     }
 
     private Site getSite() {
@@ -116,8 +132,23 @@ public class TypeFragment extends BaseFragment implements CustomScroller.Callbac
     }
 
     private void setStyle(Style style) {
-        mBinding.recycler.setAdapter(mAdapter = new VodAdapter(this, style, Product.getSpec(requireActivity(), style)));
-        mBinding.recycler.setLayoutManager(style.isList() ? new LinearLayoutManager(requireActivity()) : new GridLayoutManager(getContext(), Product.getColumn(requireActivity(), style)));
+        mAdapter = new VodAdapter(this, style, Product.getSpec(requireActivity(), style));
+        if (isShowHeader() && !style.isList()) {
+            int column = Product.getColumn(requireActivity(), style);
+            if (mHeader == null) mHeader = new HomeHeaderAdapter(this);
+            GridLayoutManager manager = new GridLayoutManager(getContext(), column);
+            manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    return (mHeader != null && position < mHeader.getItemCount()) ? column : 1;
+                }
+            });
+            mBinding.recycler.setLayoutManager(manager);
+            mBinding.recycler.setAdapter(new ConcatAdapter(mHeader, mAdapter));
+        } else {
+            mBinding.recycler.setLayoutManager(style.isList() ? new LinearLayoutManager(requireActivity()) : new GridLayoutManager(getContext(), Product.getColumn(requireActivity(), style)));
+            mBinding.recycler.setAdapter(mAdapter);
+        }
     }
 
     private void setViewModel() {
@@ -150,6 +181,17 @@ public class TypeFragment extends BaseFragment implements CustomScroller.Callbac
         mBinding.swipeLayout.setRefreshing(false);
         mScroller.endLoading(result);
         if (size > 0) addVideo(result);
+        if (isShowHeader() && first) fillHeader(result);
+    }
+
+    private void fillHeader(Result result) {
+        if (mHeader == null) return;
+        List<Vod> list = result.getList();
+        List<Vod> hero = new ArrayList<>(list.subList(0, Math.min(5, list.size())));
+        List<Vod> rank = list.size() > 5 ? new ArrayList<>(list.subList(5, Math.min(13, list.size()))) : new ArrayList<>();
+        List<History> keep = History.get();
+        if (keep.size() > 10) keep = new ArrayList<>(keep.subList(0, 10));
+        mHeader.setData(hero, keep, rank);
     }
 
     private void addVideo(Result result) {
@@ -205,5 +247,30 @@ public class TypeFragment extends BaseFragment implements CustomScroller.Callbac
         if (item.isAction() || item.isFolder()) return false;
         SearchActivity.start(requireActivity(), item.getName());
         return true;
+    }
+
+    @Override
+    public void onHeroPlay(Vod item) {
+        onItemClick(item);
+    }
+
+    @Override
+    public void onHeroKeep(Vod item) {
+        onItemClick(item);
+    }
+
+    @Override
+    public void onKeepClick(History item) {
+        VideoActivity.start(requireActivity(), item.getSiteKey(), item.getVodId(), item.getVodName(), item.getVodPic());
+    }
+
+    @Override
+    public void onRankClick(Vod item) {
+        onItemClick(item);
+    }
+
+    @Override
+    public void onMoreHistory() {
+        HistoryActivity.start(requireActivity());
     }
 }
