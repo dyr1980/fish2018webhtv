@@ -19,6 +19,8 @@ import com.fongmi.android.tv.utils.Github;
 import com.fongmi.android.tv.utils.Notify;
 import com.fongmi.android.tv.utils.ResUtil;
 import com.fongmi.android.tv.utils.Task;
+import com.fongmi.android.tv.utils.UpdateApkSource;
+import com.fongmi.android.tv.utils.UpdateDownloadQueue;
 import com.github.catvod.net.OkHttp;
 import com.github.catvod.utils.Path;
 
@@ -66,7 +68,7 @@ public class Updater implements Download.Callback, UpdateListener {
     private long lastTotal;
     private long lastSpeed;
     private long lastElapsed;
-    private boolean fallbackAttempted;
+    private UpdateDownloadQueue downloadQueue;
 
     private Updater() {
     }
@@ -331,11 +333,11 @@ public class Updater implements Download.Callback, UpdateListener {
         view.setEnabled(false);
         downloading = true;
         canceled = false;
-        fallbackAttempted = false;
+        downloadQueue = new UpdateDownloadQueue(UpdateApkSource.buildCandidates(selected.apkUrl, selected.fallbackApkUrl, Setting.getUpdateApkSource(), Setting.getUpdateApkCustomPrefix()));
         resetProgress();
         Path.clear(getFile());
         setDialogProgress(0, 0, selected.size, 0, 0);
-        startDownload(selected.apkUrl);
+        if (!startNextDownload()) finishDownloadError(ResUtil.getString(R.string.update_download_invalid));
     }
 
     private void startDownload(String url) {
@@ -343,14 +345,26 @@ public class Updater implements Download.Callback, UpdateListener {
         download.start(this);
     }
 
-    private boolean retryFallback() {
-        if (canceled || selected == null || fallbackAttempted || TextUtils.isEmpty(selected.fallbackApkUrl)) return false;
-        fallbackAttempted = true;
+    private boolean retryDownload() {
+        if (canceled || selected == null || downloadQueue == null) return false;
         Path.clear(getFile());
         resetProgress();
         setDialogProgress(0, 0, selected.size, 0, 0);
-        startDownload(selected.fallbackApkUrl);
+        return startNextDownload();
+    }
+
+    private boolean startNextDownload() {
+        String url = downloadQueue == null ? null : downloadQueue.next();
+        if (TextUtils.isEmpty(url)) return false;
+        startDownload(url);
         return true;
+    }
+
+    private void finishDownloadError(String message) {
+        downloading = false;
+        resetProgress();
+        Notify.show(message);
+        dismiss();
     }
 
     @Override
@@ -358,6 +372,7 @@ public class Updater implements Download.Callback, UpdateListener {
         if (downloading) {
             canceled = true;
             downloading = false;
+            if (downloadQueue != null) downloadQueue.cancel();
             if (download != null) download.cancel();
             download = null;
             resetProgress();
@@ -418,11 +433,8 @@ public class Updater implements Download.Callback, UpdateListener {
     public void error(String msg) {
         if (canceled) return;
         download = null;
-        if (retryFallback()) return;
-        downloading = false;
-        resetProgress();
-        Notify.show(msg);
-        dismiss();
+        if (retryDownload()) return;
+        finishDownloadError(msg);
     }
 
     @Override
@@ -439,10 +451,8 @@ public class Updater implements Download.Callback, UpdateListener {
                 if (!TextUtils.isEmpty(error)) {
                     Path.clear(file);
                     downloading = true;
-                    if (retryFallback()) return;
-                    downloading = false;
-                    Notify.show(error);
-                    dismiss();
+                    if (retryDownload()) return;
+                    finishDownloadError(error);
                     return;
                 }
                 FileUtil.openFile(file);

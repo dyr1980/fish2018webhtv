@@ -28,6 +28,8 @@ public final class AboutDialog {
         configureContentHeight(activity, binding);
 
         Dialog dialog = LightDialog.create(activity, null, binding.getRoot());
+        binding.updateSource.setText(UpdateApkSourceDialog.summary(activity));
+        binding.updateSource.setOnClickListener(v -> UpdateApkSourceDialog.show(activity, () -> binding.updateSource.setText(UpdateApkSourceDialog.summary(activity))));
         binding.confirm.setOnClickListener(v -> dialog.dismiss());
         binding.checkUpdate.setOnClickListener(v -> {
             dialog.dismiss();
