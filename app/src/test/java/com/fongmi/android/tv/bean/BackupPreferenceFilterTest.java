@@ -46,4 +46,15 @@ public class BackupPreferenceFilterTest {
         assertEquals(3, backup.getWebHomeExtensionPreferenceCount());
         assertEquals(2, backup.getWebHomeExtensionSourceCount());
     }
+
+    @Test
+    public void updateDownloadSourcePreferencesAreAppSettings() {
+        SyncOptions settingsOnly = new SyncOptions().config(false).spider(false).webHome(false).settings(true);
+        SyncOptions spiderOnly = new SyncOptions().config(false).spider(true).webHome(false).settings(false);
+
+        assertTrue(Backup.include("update_apk_source", settingsOnly));
+        assertTrue(Backup.include("update_apk_custom_prefix", settingsOnly));
+        assertFalse(Backup.include("update_apk_source", spiderOnly));
+        assertFalse(Backup.include("update_apk_custom_prefix", spiderOnly));
+    }
 }

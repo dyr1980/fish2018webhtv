@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import com.fongmi.android.tv.App;
 import com.fongmi.android.tv.BuildConfig;
 import com.fongmi.android.tv.bean.Update;
+import com.fongmi.android.tv.utils.UpdateApkSource;
 import com.fongmi.android.tv.utils.WebViewUtil;
 import com.github.catvod.crawler.DebugLogStore;
 import com.github.catvod.crawler.SpiderDebug;
@@ -659,6 +660,22 @@ public class Setting {
 
     public static void putUpdateChannel(String channel) {
         Prefers.put("update_channel", Update.CHANNEL_BETA.equals(channel) ? Update.CHANNEL_BETA : Update.CHANNEL_STABLE);
+    }
+
+    public static String getUpdateApkSource() {
+        return UpdateApkSource.normalizeSource(Prefers.getString("update_apk_source", UpdateApkSource.GH_PROXY));
+    }
+
+    public static void putUpdateApkSource(String source) {
+        Prefers.put("update_apk_source", UpdateApkSource.normalizeSource(source));
+    }
+
+    public static String getUpdateApkCustomPrefix() {
+        return UpdateApkSource.normalizeCustomPrefix(Prefers.getString("update_apk_custom_prefix"));
+    }
+
+    public static void putUpdateApkCustomPrefix(String prefix) {
+        Prefers.put("update_apk_custom_prefix", UpdateApkSource.normalizeCustomPrefix(prefix));
     }
 
     public static boolean isAdblock() {
