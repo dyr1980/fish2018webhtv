@@ -18,13 +18,18 @@ import com.fongmi.android.tv.event.ConfigEvent;
 import com.fongmi.android.tv.impl.Callback;
 import com.fongmi.android.tv.setting.CustomCspSetting;
 import com.fongmi.android.tv.setting.LiveSetting;
+import com.fongmi.android.tv.setting.Setting;
 import com.fongmi.android.tv.utils.UrlUtil;
 import com.github.catvod.bean.Header;
 import com.github.catvod.bean.Proxy;
+import com.github.catvod.crawler.SpiderDebug;
 import com.github.catvod.utils.Json;
+import com.github.catvod.utils.Path;
 import com.google.gson.JsonObject;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -197,8 +202,54 @@ public class LiveConfig extends BaseConfig {
     private void initLive(Config config, JsonObject object) {
         String spider = Json.safeString(object, "spider");
         BaseLoader.get().parseJar(spider, false);
-        setLives(Json.safeListElement(object, "lives").stream().map(e -> Live.objectFrom(e, spider)).distinct().collect(Collectors.toCollection(ArrayList::new)));
+        List<Live> lives = Json.safeListElement(object, "lives").stream().map(e -> Live.objectFrom(e, spider)).distinct().collect(Collectors.toCollection(ArrayList::new));
+        lives.addAll(0, loadFileLives());
+        setLives(lives);
         finishLive(config, spider);
+    }
+
+    // ==================== 文件直播源加载器 ====================
+
+    private static final String CLAN_LIVE_ROOT = Path.root() + "/tvbox/lives/";
+
+    private List<Live> loadFileLives() {
+        List<Live> result = new ArrayList<>();
+        SpiderDebug.log("live-config", "file-lives entry enabled=%s root=%s exists=%s", Setting.isFileSites(), new File(CLAN_LIVE_ROOT).getAbsolutePath(), new File(CLAN_LIVE_ROOT).exists());
+        if (!Setting.isFileSites()) return result;
+        File dir = new File(CLAN_LIVE_ROOT);
+        if (!dir.exists() || !dir.isDirectory()) {
+            SpiderDebug.log("live-config", "file-lives dir missing path=%s exists=%s isDir=%s", dir.getPath(), dir.exists(), dir.isDirectory());
+            return result;
+        }
+        File[] files = dir.listFiles(f -> f.isFile() && !f.getName().startsWith("."));
+        if (files == null || files.length == 0) {
+            SpiderDebug.log("live-config", "file-lives dir empty path=%s", dir.getPath());
+            return result;
+        }
+        Arrays.sort(files, (a, b) -> a.getName().compareToIgnoreCase(b.getName()));
+        SpiderDebug.log("live-config", "file-lives dir path=%s fileCount=%d", dir.getPath(), files.length);
+        for (File file : files) {
+            try {
+                String content = Path.read(file);
+                if (content.isEmpty()) continue;
+                String name = file.getName();
+                int dot = name.lastIndexOf('.');
+                if (dot > 0) name = name.substring(0, dot);
+                if (name.isEmpty()) continue;
+                Live live = new Live(name, "");
+                LiveParser.text(live, content);
+                if (!live.getGroups().isEmpty()) {
+                    result.add(live);
+                    SpiderDebug.log("live-config", "file-lives loaded name=%s groups=%d", name, live.getGroups().size());
+                } else {
+                    SpiderDebug.log("live-config", "file-lives skip empty groups name=%s", name);
+                }
+            } catch (Throwable e) {
+                SpiderDebug.log("live-config", "file-lives skip %s err=%s", file.getName(), e.getMessage());
+            }
+        }
+        SpiderDebug.log("live-config", "file-lives total=%d", result.size());
+        return result;
     }
 
     private void finishLive(Config config, String spider) {
