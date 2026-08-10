@@ -177,7 +177,6 @@ jobs:
           rm -rf Release/apk
           ./gradlew \
             :app:assembleMobileArm64_v8aRelease \
-            -PfastRelease=true \
             --no-daemon
 
       - name: Collect artifacts
