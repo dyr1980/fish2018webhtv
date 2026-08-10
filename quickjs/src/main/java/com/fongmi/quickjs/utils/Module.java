@@ -28,7 +28,7 @@ public class Module {
         if (name.startsWith("http")) cache.put(name, content = OkHttp.string(name));
         else if (name.startsWith("assets")) cache.put(name, content = Asset.read(name));
         else if (name.startsWith("lib/")) cache.put(name, content = Asset.read("js/" + name));
-        else if (name.startsWith("clan://")) cache.put(name, content = Path.read(new File("/tvbox/" + name.substring(7))));
+        else if (name.startsWith("clan://")) cache.put(name, content = Path.read(new File(com.github.catvod.utils.Path.root(), "tvbox/" + name.substring(7))));
         else if (name.startsWith("/")) cache.put(name, content = Path.read(new File(name)));
         else if (name.startsWith("file")) cache.put(name, content = Path.read(Path.local(name)));
         else if (looksLikeSource(name)) content = name;
