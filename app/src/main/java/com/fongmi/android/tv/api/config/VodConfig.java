@@ -379,10 +379,16 @@ public class VodConfig extends BaseConfig {
         List<File> files = listSorted(dir);
         SpiderDebug.log("vod-config", "XBPQ dir path=%s fileCount=%d", dir.getPath(), files.size());
         if (files.isEmpty()) return result;
-        boolean globalIsXbpq = globalSpider.toLowerCase().contains("xbpq") && globalSpider.toLowerCase().endsWith(".jar");
-        if (!globalIsXbpq) {
-            BaseLoader.get().parseJar(XBPQ_JAR, true);
-            SpiderDebug.log("vod-config", "XBPQ jar preloaded from %s", XBPQ_JAR);
+        // 判断全局 spider 是否是 XBPQ jar — 只要文件名包含 xbpq 即可 (大小写不敏感)
+        boolean globalIsXbpq = globalSpider.toLowerCase().contains("xbpq");
+        String jar;
+        if (globalIsXbpq) {
+            jar = globalSpider;
+            SpiderDebug.log("vod-config", "XBPQ reusing global spider jar=%s md5Key=%s", jar, com.github.catvod.utils.Util.md5(jar));
+        } else {
+            jar = XBPQ_JAR;
+            BaseLoader.get().parseJar(jar, true);
+            SpiderDebug.log("vod-config", "XBPQ jar preloaded from %s md5Key=%s", jar, com.github.catvod.utils.Util.md5(jar));
         }
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
@@ -392,8 +398,10 @@ public class VodConfig extends BaseConfig {
             Site site = Site.get("XBPQ_" + meta.name, meta.name);
             site.setApi("csp_XBPQ");
             site.setExt(content);
-            site.setJar(XBPQ_JAR);
+            site.setJar(jar);
+            site.setName(meta.name + " | PQ");
             meta.apply(site);
+            SpiderDebug.log("vod-config", "XBPQ file-site key=%s name=%s jarMd5=%s extLen=%d", site.getKey(), site.getName(), com.github.catvod.utils.Util.md5(jar), content.length());
             result.add(site);
         }
         return result;
@@ -417,9 +425,13 @@ public class VodConfig extends BaseConfig {
             if (meta.name.isEmpty()) continue;
             String content = Path.read(file);
             if (content.isEmpty()) continue;
+            // 加 //file-site.js 注释后缀 — 让 BaseLoader.isJs(api) 能正确路由
+            // JS 源码里多一个注释完全不影响执行
             Site site = Site.get("JS_" + meta.name, meta.name);
-            site.setApi(content);
+            site.setApi(content + "\n//file-site.js");
+            site.setName(meta.name + " | JS");
             meta.apply(site);
+            SpiderDebug.log("vod-config", "JS file-site key=%s name=%s apiLen=%d", site.getKey(), site.getName(), content.length());
             result.add(site);
         }
         return result;
@@ -443,9 +455,13 @@ public class VodConfig extends BaseConfig {
             if (meta.name.isEmpty()) continue;
             String content = Path.read(file);
             if (content.isEmpty()) continue;
+            // 加 #file-site.py 注释后缀 — 让 BaseLoader.isPy(api) 能正确路由
+            // Python 源码里多一个注释完全不影响执行
             Site site = Site.get("PY_" + meta.name, meta.name);
-            site.setApi(content);
+            site.setApi(content + "\n#file-site.py");
+            site.setName(meta.name + " | PY");
             meta.apply(site);
+            SpiderDebug.log("vod-config", "PY file-site key=%s name=%s apiLen=%d", site.getKey(), site.getName(), content.length());
             result.add(site);
         }
         return result;
