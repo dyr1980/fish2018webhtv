@@ -210,6 +210,7 @@ public class JarLoader {
     private String source(String jar) {
         if (jar.startsWith("http")) return "http:" + Util.md5(jar);
         if (jar.startsWith("file")) return "file:" + jar.length();
+        if (jar.startsWith("clan")) return "clan:" + UrlUtil.clanToPath(jar);
         return jar;
     }
 
