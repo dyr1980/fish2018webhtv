@@ -114,7 +114,6 @@ public class JarLoader {
                 SpiderDebug.log("youtube-iframe", cause);
             }
         } catch (ClassNotFoundException | NoSuchMethodException ignored) {
-            // Optional compatibility hook used only by jars which expose it.
         } catch (Throwable e) {
             SpiderDebug.log("jar-loader", "network client inject failed key=%s error=%s", key, error(e));
         }
@@ -165,6 +164,9 @@ public class JarLoader {
                 load(key, Download.create(jar, Path.jar(jar)).get());
             } else if (jar.startsWith("file")) {
                 load(key, Path.local(jar));
+            } else {
+                File local = UrlUtil.toLocalFile(jar);
+                if (local != null) load(key, local);
             }
         }
     }
@@ -211,6 +213,7 @@ public class JarLoader {
         if (jar.startsWith("http")) return "http:" + Util.md5(jar);
         if (jar.startsWith("file")) return "file:" + jar.length();
         if (jar.startsWith("clan")) return "clan:" + UrlUtil.clanToPath(jar);
+        if (jar.startsWith("/")) return "local:" + jar;
         return jar;
     }
 
