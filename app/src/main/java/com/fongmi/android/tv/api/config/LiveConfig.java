@@ -230,17 +230,16 @@ public class LiveConfig extends BaseConfig {
         SpiderDebug.log("live-config", "file-lives dir path=%s fileCount=%d", dir.getPath(), files.length);
         for (File file : files) {
             try {
-                String content = Path.read(file);
-                if (content.isEmpty()) continue;
                 String name = file.getName();
                 int dot = name.lastIndexOf('.');
                 if (dot > 0) name = name.substring(0, dot);
                 if (name.isEmpty()) continue;
-                Live live = new Live(name, "");
-                LiveParser.text(live, content);
+                // 用 clan:// 链接，让 LiveParser.start 自己走 UrlUtil.convert → OkHttp.string 读文件
+                Live live = new Live(name, UrlUtil.convert("clan://lives/" + file.getName()));
+                LiveParser.start(live);
                 if (!live.getGroups().isEmpty()) {
                     result.add(live);
-                    SpiderDebug.log("live-config", "file-lives loaded name=%s groups=%d", name, live.getGroups().size());
+                    SpiderDebug.log("live-config", "file-lives loaded name=%s url=%s groups=%d", name, live.getUrl(), live.getGroups().size());
                 } else {
                     SpiderDebug.log("live-config", "file-lives skip empty groups name=%s", name);
                 }
