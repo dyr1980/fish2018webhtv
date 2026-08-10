@@ -22,7 +22,6 @@ import com.fongmi.android.tv.web.ext.WebHomeExtensionRegistry;
 import com.github.catvod.bean.Doh;
 import com.github.catvod.bean.Header;
 import com.github.catvod.bean.Proxy;
-import com.github.catvod.crawler.SpiderDebug;
 import com.github.catvod.utils.Json;
 import com.github.catvod.utils.Path;
 import com.github.catvod.utils.Util;
@@ -130,21 +129,14 @@ public class VodConfig extends BaseConfig {
             String json = Decoder.getJson(UrlUtil.convert(config.getUrl()), TAG);
             JsonObject object = Json.parse(json).getAsJsonObject();
             globalSpider = Json.safeString(object, "spider");
-            SpiderDebug.log("vod-config", "remote config loaded spider=%s", globalSpider.isEmpty() ? "(empty)" : globalSpider.substring(0, Math.min(globalSpider.length(), 60)));
             checkJson(config, object);
-        } catch (Throwable e) {
-            SpiderDebug.log("vod-config", "remote config failed: %s, loading file sites as fallback", e.getMessage());
-            List<Site> fileSites = new ArrayList<>();
-            try {
-                fileSites = loadFileSites(globalSpider);
-                SpiderDebug.log("vod-config", "file-only sites count=%d", fileSites.size());
-            } catch (Throwable ex) {
-                SpiderDebug.log("vod-config", "file sites load failed: %s", ex.getMessage());
-            }
+            return;
+        } catch (Throwable ignored) {}
+        try {
+            List<Site> fileSites = loadFileSites(globalSpider);
             setSites(fileSites);
             setHome(config, fileSites.isEmpty() ? new Site() : fileSites.get(0), false);
-            throw e;
-        }
+        } catch (Throwable ignored) {}
     }
 
     @Override
@@ -182,7 +174,6 @@ public class VodConfig extends BaseConfig {
     }
 
     private void parseConfig(Config config, JsonObject object) {
-        SpiderDebug.log("vod-config", "parseConfig enter url=%s", config.getUrl());
         CustomCspSetting.inject(object);
         initList(object);
         initLive(config, object);
@@ -222,9 +213,7 @@ public class VodConfig extends BaseConfig {
 
     private void initSite(Config config, JsonObject object) {
         String spider = Json.safeString(object, "spider");
-        SpiderDebug.log("vod-config", "initSite enter spider=%s sites=%d", spider.isEmpty() ? "(empty)" : spider.substring(0, Math.min(spider.length(), 60)), Json.safeListElement(object, "sites").size());
         BaseLoader.get().parseJar(spider, true);
-        SpiderDebug.log("vod-config", "initSite parseJar done, loading file sites next");
         List<Site> sites = Json.safeListElement(object, "sites").stream().map(e -> Site.objectFrom(e, spider)).distinct().collect(Collectors.toCollection(ArrayList::new));
         List<Site> fileSites = loadFileSites(spider);
         fileSites.addAll(sites);
@@ -350,63 +339,35 @@ public class VodConfig extends BaseConfig {
 
     private List<Site> loadFileSites(String globalSpider) {
         List<Site> result = new ArrayList<>();
-        SpiderDebug.log("vod-config", "file-sites entry enabled=%s root=%s exists=%s", Setting.isFileSites(), new File(CLAN_ROOT).getAbsolutePath(), new File(CLAN_ROOT).exists());
         if (!Setting.isFileSites()) return result;
         try {
-            List<Site> r = loadXbpqSites(globalSpider);
-            SpiderDebug.log("vod-config", "file-sites XBPQ count=%d", r.size());
-            result.addAll(r);
-        } catch (Throwable e) {
-            SpiderDebug.log("vod-config", "XBPQ file sites load failed: %s", e.getMessage());
-        }
+            result.addAll(loadXbpqSites(globalSpider));
+        } catch (Throwable ignored) {}
         try {
-            List<Site> r = loadJsSites(globalSpider);
-            SpiderDebug.log("vod-config", "file-sites JS count=%d", r.size());
-            result.addAll(r);
-        } catch (Throwable e) {
-            SpiderDebug.log("vod-config", "JS file sites load failed: %s", e.getMessage());
-        }
+            result.addAll(loadJsSites(globalSpider));
+        } catch (Throwable ignored) {}
         try {
-            List<Site> r = loadPySites(globalSpider);
-            SpiderDebug.log("vod-config", "file-sites PY count=%d", r.size());
-            result.addAll(r);
-        } catch (Throwable e) {
-            SpiderDebug.log("vod-config", "PY file sites load failed: %s", e.getMessage());
-        }
+            result.addAll(loadPySites(globalSpider));
+        } catch (Throwable ignored) {}
         try {
-            List<Site> r = loadRawSites(globalSpider);
-            SpiderDebug.log("vod-config", "file-sites RAW count=%d", r.size());
-            result.addAll(r);
-        } catch (Throwable e) {
-            SpiderDebug.log("vod-config", "Raw file sites load failed: %s", e.getMessage());
-        }
-        SpiderDebug.log("vod-config", "file-sites total=%d", result.size());
+            result.addAll(loadRawSites(globalSpider));
+        } catch (Throwable ignored) {}
         return result;
     }
 
-    /**
-     * /tvbox/sites-json/ 目录: 每个文件内容作为 XBPQ 站点的 ext。
-     * key = "XBPQ_" + 文件名, api = "csp_XBPQ", jar = XBPQ_JAR
-     */
     private List<Site> loadXbpqSites(String globalSpider) {
         File dir = new File(CLAN_ROOT + "sites-json");
         List<Site> result = new ArrayList<>();
-        if (!dir.exists() || !dir.isDirectory()) {
-            SpiderDebug.log("vod-config", "XBPQ dir missing path=%s exists=%s isDir=%s", dir.getPath(), dir.exists(), dir.isDirectory());
-            return result;
-        }
+        if (!dir.exists() || !dir.isDirectory()) return result;
         List<File> files = listSorted(dir);
-        SpiderDebug.log("vod-config", "XBPQ dir path=%s fileCount=%d", dir.getPath(), files.size());
         if (files.isEmpty()) return result;
         boolean globalIsXbpq = globalSpider.toLowerCase().contains("xbpq");
         String jar;
         if (globalIsXbpq) {
             jar = globalSpider;
-            SpiderDebug.log("vod-config", "XBPQ reusing global spider jar=%s md5Key=%s", jar, Util.md5(jar));
         } else {
             jar = XBPQ_JAR;
             BaseLoader.get().parseJar(jar, true);
-            SpiderDebug.log("vod-config", "XBPQ jar preloaded from %s md5Key=%s", jar, Util.md5(jar));
         }
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
@@ -418,25 +379,16 @@ public class VodConfig extends BaseConfig {
             site.setJar(jar);
             site.setName(meta.name + " | PQ");
             meta.apply(site);
-            SpiderDebug.log("vod-config", "XBPQ file-site key=%s name=%s jarMd5=%s ext=%s", site.getKey(), site.getName(), Util.md5(jar), site.getExt());
             result.add(site);
         }
         return result;
     }
 
-    /**
-     * /tvbox/sites-js/api/ 目录: 每个文件内容作为 JS Spider 的 api (脚本源码)。
-     * key = "JS_" + 文件名, api = 文件内容, ext 不设置 (保持默认)
-     */
     private List<Site> loadJsSites(String globalSpider) {
         File dir = new File(CLAN_ROOT + "sites-js", "api");
         List<Site> result = new ArrayList<>();
-        if (!dir.exists() || !dir.isDirectory()) {
-            SpiderDebug.log("vod-config", "JS dir missing path=%s exists=%s isDir=%s", dir.getPath(), dir.exists(), dir.isDirectory());
-            return result;
-        }
+        if (!dir.exists() || !dir.isDirectory()) return result;
         List<File> files = listSorted(dir);
-        SpiderDebug.log("vod-config", "JS dir path=%s fileCount=%d", dir.getPath(), files.size());
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
@@ -446,25 +398,16 @@ public class VodConfig extends BaseConfig {
             site.setJar(globalSpider);
             site.setName(meta.name + " | JS");
             meta.apply(site);
-            SpiderDebug.log("vod-config", "JS file-site key=%s name=%s api=%s jarSet=%s", site.getKey(), site.getName(), site.getApi(), !site.getJar().isEmpty());
             result.add(site);
         }
         return result;
     }
 
-    /**
-     * /tvbox/sites-py/ 目录: 每个文件内容作为 Python Spider 的 api (脚本源码)。
-     * key = "PY_" + 文件名, api = 文件内容, ext 不设置 (保持默认)
-     */
     private List<Site> loadPySites(String globalSpider) {
         File dir = new File(CLAN_ROOT + "sites-py");
         List<Site> result = new ArrayList<>();
-        if (!dir.exists() || !dir.isDirectory()) {
-            SpiderDebug.log("vod-config", "PY dir missing path=%s exists=%s isDir=%s", dir.getPath(), dir.exists(), dir.isDirectory());
-            return result;
-        }
+        if (!dir.exists() || !dir.isDirectory()) return result;
         List<File> files = listSorted(dir);
-        SpiderDebug.log("vod-config", "PY dir path=%s fileCount=%d", dir.getPath(), files.size());
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
@@ -474,26 +417,16 @@ public class VodConfig extends BaseConfig {
             site.setJar(globalSpider);
             site.setName(meta.name + " | PY");
             meta.apply(site);
-            SpiderDebug.log("vod-config", "PY file-site key=%s name=%s api=%s jarSet=%s", site.getKey(), site.getName(), site.getApi(), !site.getJar().isEmpty());
             result.add(site);
         }
         return result;
     }
 
-    /**
-     * /tvbox/sites/ 目录: 每个文件是完整的站点 JSON, 包含 key/name/api/ext/jar 等所有字段。
-     * 未指定的字段使用默认值 (由 Site.objectFrom 处理)。
-     * 文件名解析的标记也会覆盖到已解析的站点上 (searchable/hide/style)。
-     */
     private List<Site> loadRawSites(String globalSpider) {
         File dir = new File(CLAN_ROOT + "sites");
         List<Site> result = new ArrayList<>();
-        if (!dir.exists() || !dir.isDirectory()) {
-            SpiderDebug.log("vod-config", "RAW dir missing path=%s exists=%s isDir=%s", dir.getPath(), dir.exists(), dir.isDirectory());
-            return result;
-        }
+        if (!dir.exists() || !dir.isDirectory()) return result;
         List<File> files = listSorted(dir);
-        SpiderDebug.log("vod-config", "RAW dir path=%s fileCount=%d", dir.getPath(), files.size());
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             String content = Path.read(file);
@@ -508,9 +441,7 @@ public class VodConfig extends BaseConfig {
                         result.add(site);
                     }
                 }
-            } catch (Throwable e) {
-                SpiderDebug.log("vod-config", "skip malformed raw site file: %s err=%s", file.getName(), e.getMessage());
-            }
+            } catch (Throwable ignored) {}
         }
         return result;
     }
@@ -528,35 +459,6 @@ public class VodConfig extends BaseConfig {
         return Arrays.asList(files);
     }
 
-    /**
-     * 文件名解析器 — 严格结构: [order_]name [sourceId] [.N | .S] [-H | -S | -ratio] .ext
-     *
-     *   排序前缀: ^\d+_ — 参与排序, 不进入 name
-     *   源序号:   \d+-\d+ — 自动清理, 不影响任何标记
-     *   点号标记: .N 或 .S — 互斥, 只认最后出现的那一个, 其余全部清除
-     *              .N → searchable=0, quickSearch=0 (不参与搜索)
-     *              .S → hide=1 (只用于搜索)
-     *   横线标记: -H / -S / -<非0数字> — 互斥, 只认尾部那一个 (紧接扩展名前)
-     *              -H → style rect 1.33 (横图)
-     *              -S → style rect 1.0 (正方形)
-     *              -<数字> → style rect ratio=数字 (如 -0.8 -1 -1.78)
-     *
-     * 解析顺序 (从右向左剥):
-     *   1. 去掉扩展名
-     *   2. 从尾部提取 style 横线标记 (严格锚定 $, 只取一个)
-     *   3. 遍历所有点号标记 .N/.S, 只保留最后一个生效, 其余从 stem 中删除
-     *   4. 从头部提取排序前缀
-     *   5. cleanName 清理源序号、孤立数字等
-     *
-     * 示例:
-     *   0_酷6网.N0-0-H.js     → order=0,   name=酷6网,  searchable=0, quickSearch=0, ratio=1.33
-     *   10_优酷.S-1.78.js     → order=10,  name=优酷,   hide=1, ratio=1.78
-     *   5_搜狐.N.js           → order=5,   name=搜狐,   searchable=0, quickSearch=0
-     *   0_老源-S.json         → order=0,   name=老源,   ratio=1.0
-     *   优酷.js                → order=MAX, name=优酷,   默认
-     *   酷6网.N.S.js           → 只认最后 .S, hide=1 (.N 被清除)
-     *   酷6网.S.N.js           → 只认最后 .N, searchable=0 (.S 被清除)
-     */
     private FileMeta parseFileMeta(String fileName) {
         FileMeta meta = new FileMeta();
         if (fileName == null) return meta;
@@ -565,7 +467,6 @@ public class VodConfig extends BaseConfig {
         int lastDot = fileName.lastIndexOf('.');
         if (lastDot > 0) stem = fileName.substring(0, lastDot);
 
-        // 1. 尾部 style 标记: -H / -S / -<非0数字> (严格从 stem 尾部取, 互斥只一个)
         Matcher tailStyle = Pattern.compile("(?i)(-H|-S|-\\d+(?:\\.\\d+)?)\\s*$").matcher(stem);
         if (tailStyle.find()) {
             String mark = tailStyle.group(1);
@@ -580,7 +481,6 @@ public class VodConfig extends BaseConfig {
             stem = stem.substring(0, tailStyle.start());
         }
 
-        // 2. 点号标记: .N 与 .S 互斥 — 遍历所有出现位置, 只保留最后一个生效, 其余全部清除
         Pattern dotPattern = Pattern.compile("\\.(N|S)", Pattern.CASE_INSENSITIVE);
         Matcher dotMatcher = dotPattern.matcher(stem);
         String lastDotMarkType = null;
@@ -593,7 +493,6 @@ public class VodConfig extends BaseConfig {
             else if ("S".equals(lastDotMarkType)) { meta.hide = 1; }
         }
 
-        // 3. 排序前缀 ^\d+_
         if (stem.matches("^\\d+_.*")) {
             int sep = stem.indexOf('_');
             meta.order = Integer.parseInt(stem.substring(0, sep));
@@ -604,14 +503,11 @@ public class VodConfig extends BaseConfig {
         return meta;
     }
 
-    /**
-     * 清洗站点名: 清理剩余的源序号、孤立数字、多余连字符。
-     */
     private String cleanName(String raw) {
         if (raw == null) return "";
         String s = raw.trim();
-        s = s.replaceAll("\\d+-\\d+", "");              // 源序号整段 0-0 / 1-2
-        s = s.replaceAll("(?:^|[.\\s-])\\d+(?![\\p{L}])", "-"); // 分隔符后的纯数字串
+        s = s.replaceAll("\\d+-\\d+", "");
+        s = s.replaceAll("(?:^|[.\\s-])\\d+(?![\\p{L}])", "-");
         s = s.replaceAll("[-\\s.]+", "-");
         s = s.replaceAll("^-+|-+$", "");
         return s.trim();
@@ -620,10 +516,10 @@ public class VodConfig extends BaseConfig {
     private static class FileMeta {
         int order = Integer.MAX_VALUE;
         String name = "";
-        Integer searchable;   // null=不覆盖, 0=禁搜索
-        Integer quickSearch;  // null=不覆盖, 0=禁快搜
-        Integer hide;         // null=不覆盖, 1=隐藏
-        float ratio = 0;      // 0=不设置 style
+        Integer searchable;
+        Integer quickSearch;
+        Integer hide;
+        float ratio = 0;
 
         void apply(Site site) {
             if (searchable != null) site.setSearchable(searchable);
