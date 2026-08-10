@@ -393,15 +393,13 @@ public class VodConfig extends BaseConfig {
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
-            String content = Path.read(file);
-            if (content.isEmpty()) continue;
             Site site = Site.get("XBPQ_" + meta.name, meta.name);
             site.setApi("csp_XBPQ");
-            site.setExt(content);
+            site.setExt(UrlUtil.convert("clan://sites-json/" + file.getName()));
             site.setJar(jar);
             site.setName(meta.name + " | PQ");
             meta.apply(site);
-            SpiderDebug.log("vod-config", "XBPQ file-site key=%s name=%s jarMd5=%s extLen=%d", site.getKey(), site.getName(), Util.md5(jar), content.length());
+            SpiderDebug.log("vod-config", "XBPQ file-site key=%s name=%s jarMd5=%s ext=%s", site.getKey(), site.getName(), Util.md5(jar), site.getExt());
             result.add(site);
         }
         return result;
