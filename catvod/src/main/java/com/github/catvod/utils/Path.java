@@ -27,6 +27,8 @@ public class Path {
     }
 
     public static boolean exists(String path) {
+        if (path == null) return false;
+        path = path.replace("clan://", "file://tvbox/");
         return new File(path.replace("file://", "")).exists();
     }
 
@@ -127,6 +129,8 @@ public class Path {
     }
 
     public static File local(String path) {
+        if (path == null) return null;
+        path = path.replace("clan://", "file://tvbox/");
         path = path.replace("file:/", "");
         File file = new File(root(), path);
         return file.exists() ? file : new File(path);
