@@ -369,6 +369,7 @@
     <string name="remote_trust_send_server_failed">Failed to save on the other device: %1$s</string>
     <string name="remote_trust_config_select">Select</string>
     <string name="setting_login_state">Login state learning</string>
+    <string name="setting_file_sites">File sites</string>
     <string name="setting_site_health_sort">Site health ranking</string>
     <string name="setting_site_health_enable">Enable site health ranking</string>
     <string name="setting_site_health_dialog_sort">Sort site dialog</string>
