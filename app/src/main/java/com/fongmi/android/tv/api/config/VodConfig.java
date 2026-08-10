@@ -25,6 +25,7 @@ import com.github.catvod.bean.Proxy;
 import com.github.catvod.crawler.SpiderDebug;
 import com.github.catvod.utils.Json;
 import com.github.catvod.utils.Path;
+import com.github.catvod.utils.Util;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -341,14 +342,14 @@ public class VodConfig extends BaseConfig {
             SpiderDebug.log("vod-config", "XBPQ file sites load failed: %s", e.getMessage());
         }
         try {
-            List<Site> r = loadJsSites();
+            List<Site> r = loadJsSites(globalSpider);
             SpiderDebug.log("vod-config", "file-sites JS count=%d", r.size());
             result.addAll(r);
         } catch (Throwable e) {
             SpiderDebug.log("vod-config", "JS file sites load failed: %s", e.getMessage());
         }
         try {
-            List<Site> r = loadPySites();
+            List<Site> r = loadPySites(globalSpider);
             SpiderDebug.log("vod-config", "file-sites PY count=%d", r.size());
             result.addAll(r);
         } catch (Throwable e) {
@@ -379,16 +380,15 @@ public class VodConfig extends BaseConfig {
         List<File> files = listSorted(dir);
         SpiderDebug.log("vod-config", "XBPQ dir path=%s fileCount=%d", dir.getPath(), files.size());
         if (files.isEmpty()) return result;
-        // 判断全局 spider 是否是 XBPQ jar — 只要文件名包含 xbpq 即可 (大小写不敏感)
         boolean globalIsXbpq = globalSpider.toLowerCase().contains("xbpq");
         String jar;
         if (globalIsXbpq) {
             jar = globalSpider;
-            SpiderDebug.log("vod-config", "XBPQ reusing global spider jar=%s md5Key=%s", jar, com.github.catvod.utils.Util.md5(jar));
+            SpiderDebug.log("vod-config", "XBPQ reusing global spider jar=%s md5Key=%s", jar, Util.md5(jar));
         } else {
             jar = XBPQ_JAR;
             BaseLoader.get().parseJar(jar, true);
-            SpiderDebug.log("vod-config", "XBPQ jar preloaded from %s md5Key=%s", jar, com.github.catvod.utils.Util.md5(jar));
+            SpiderDebug.log("vod-config", "XBPQ jar preloaded from %s md5Key=%s", jar, Util.md5(jar));
         }
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
@@ -401,7 +401,7 @@ public class VodConfig extends BaseConfig {
             site.setJar(jar);
             site.setName(meta.name + " | PQ");
             meta.apply(site);
-            SpiderDebug.log("vod-config", "XBPQ file-site key=%s name=%s jarMd5=%s extLen=%d", site.getKey(), site.getName(), com.github.catvod.utils.Util.md5(jar), content.length());
+            SpiderDebug.log("vod-config", "XBPQ file-site key=%s name=%s jarMd5=%s extLen=%d", site.getKey(), site.getName(), Util.md5(jar), content.length());
             result.add(site);
         }
         return result;
@@ -411,7 +411,7 @@ public class VodConfig extends BaseConfig {
      * /tvbox/sites-js/api/ 目录: 每个文件内容作为 JS Spider 的 api (脚本源码)。
      * key = "JS_" + 文件名, api = 文件内容, ext 不设置 (保持默认)
      */
-    private List<Site> loadJsSites() {
+    private List<Site> loadJsSites(String globalSpider) {
         File dir = new File(CLAN_ROOT + "sites-js", "api");
         List<Site> result = new ArrayList<>();
         if (!dir.exists() || !dir.isDirectory()) {
@@ -423,15 +423,12 @@ public class VodConfig extends BaseConfig {
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
-            String content = Path.read(file);
-            if (content.isEmpty()) continue;
-            // 加 //file-site.js 注释后缀 — 让 BaseLoader.isJs(api) 能正确路由
-            // JS 源码里多一个注释完全不影响执行
             Site site = Site.get("JS_" + meta.name, meta.name);
-            site.setApi(content + "\n//file-site.js");
+            site.setApi(UrlUtil.convert("clan://sites-js/api/" + file.getName()));
+            site.setJar(globalSpider);
             site.setName(meta.name + " | JS");
             meta.apply(site);
-            SpiderDebug.log("vod-config", "JS file-site key=%s name=%s apiLen=%d", site.getKey(), site.getName(), content.length());
+            SpiderDebug.log("vod-config", "JS file-site key=%s name=%s api=%s jarSet=%s", site.getKey(), site.getName(), site.getApi(), !site.getJar().isEmpty());
             result.add(site);
         }
         return result;
@@ -441,7 +438,7 @@ public class VodConfig extends BaseConfig {
      * /tvbox/sites-py/ 目录: 每个文件内容作为 Python Spider 的 api (脚本源码)。
      * key = "PY_" + 文件名, api = 文件内容, ext 不设置 (保持默认)
      */
-    private List<Site> loadPySites() {
+    private List<Site> loadPySites(String globalSpider) {
         File dir = new File(CLAN_ROOT + "sites-py");
         List<Site> result = new ArrayList<>();
         if (!dir.exists() || !dir.isDirectory()) {
@@ -453,15 +450,12 @@ public class VodConfig extends BaseConfig {
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
-            String content = Path.read(file);
-            if (content.isEmpty()) continue;
-            // 加 #file-site.py 注释后缀 — 让 BaseLoader.isPy(api) 能正确路由
-            // Python 源码里多一个注释完全不影响执行
             Site site = Site.get("PY_" + meta.name, meta.name);
-            site.setApi(content + "\n#file-site.py");
+            site.setApi(UrlUtil.convert("clan://sites-py/" + file.getName()));
+            site.setJar(globalSpider);
             site.setName(meta.name + " | PY");
             meta.apply(site);
-            SpiderDebug.log("vod-config", "PY file-site key=%s name=%s apiLen=%d", site.getKey(), site.getName(), content.length());
+            SpiderDebug.log("vod-config", "PY file-site key=%s name=%s api=%s jarSet=%s", site.getKey(), site.getName(), site.getApi(), !site.getJar().isEmpty());
             result.add(site);
         }
         return result;
