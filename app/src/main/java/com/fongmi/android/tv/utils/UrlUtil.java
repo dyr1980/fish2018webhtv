@@ -10,8 +10,6 @@ import java.io.File;
 
 public class UrlUtil {
 
-    public static final String CLAN_ROOT = com.github.catvod.utils.Path.root() + "/tvbox/";
-
     public static Uri uri(String url) {
         return Uri.parse(url.trim().replace("\\", ""));
     }
@@ -50,22 +48,17 @@ public class UrlUtil {
     public static String convert(String url) {
         String scheme = scheme(url);
         String path = null;
+        if ("clan".equals(scheme)) url = "file://tvbox/" + url.substring(7);
+        scheme = scheme(url);
         if ("assets".equals(scheme)) path = "/";
         else if ("file".equals(scheme)) path = "/file/";
         else if ("proxy".equals(scheme)) path = "/proxy?";
-        else if ("clan".equals(scheme)) return clanToPath(url);
         return path != null ? url.replace(scheme + "://", Server.get().getAddress(path)) : url;
-    }
-
-    public static String clanToPath(String url) {
-        if (url == null) return url;
-        if (url.startsWith("clan://")) return CLAN_ROOT + url.substring(7);
-        return url;
     }
 
     public static File toLocalFile(String url) {
         if (url == null) return null;
-        if (url.startsWith("clan://")) return new File(CLAN_ROOT + url.substring(7));
+        if (url.startsWith("clan://")) url = url.replace("clan://", "file://tvbox/");
         if (url.startsWith("file://")) return new File(url.replace("file://", ""));
         if (url.startsWith("file:/")) return new File(url.replace("file:/", ""));
         if (url.startsWith("/")) return new File(url);
