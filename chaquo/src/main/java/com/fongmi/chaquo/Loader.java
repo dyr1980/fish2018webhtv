@@ -50,7 +50,8 @@ public class Loader {
     }
 
     private File local(String api) {
-        if (api.startsWith("clan://")) return new File(com.github.catvod.utils.Path.root(), "tvbox/" + api.substring(7));
+        if (api == null) return null;
+        api = api.replace("clan://", "file://tvbox/");
         if (api.startsWith("file://")) return new File(api.replace("file://", ""));
         if (api.startsWith("file:/")) return new File(api.replace("file:/", ""));
         if (api.startsWith("/")) return new File(api);
