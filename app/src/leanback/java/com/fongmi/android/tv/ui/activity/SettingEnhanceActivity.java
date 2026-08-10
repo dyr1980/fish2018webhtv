@@ -40,7 +40,7 @@ import com.github.catvod.crawler.SpiderDebug;
 
 public class SettingEnhanceActivity extends BaseActivity {
 
-    private static final String URL_GITHUB = "https://github.com/fish2018/webhtv";
+    private static final String URL_GITHUB = "https://github.com/llb0/webhtv";
     private static final String URL_CNB = "https://cnb.cool/fish2035/ext";
 
     private ActivitySettingEnhanceBinding mBinding;
@@ -69,6 +69,7 @@ public class SettingEnhanceActivity extends BaseActivity {
     protected void initEvent() {
         mBinding.githubRepo.setOnClickListener(view -> openRepo(URL_GITHUB));
         mBinding.cnbRepo.setOnClickListener(view -> openRepo(URL_CNB));
+        mBinding.fileSites.setOnClickListener(this::setFileSites);
         mBinding.driveCheck.setOnClickListener(this::setDriveCheck);
         mBinding.debugLog.setOnClickListener(this::setDebugLog);
         mBinding.siteHealthSort.setOnClickListener(view -> SiteHealthDialog.show(this, this::setText));
@@ -97,6 +98,7 @@ public class SettingEnhanceActivity extends BaseActivity {
     private void reorderItems() {
         ViewGroup parent = (ViewGroup) mBinding.customCsp.getParent();
         View[] order = {
+                mBinding.fileSites,
                 mBinding.customCsp,
                 mBinding.webHomeExtension,
                 mBinding.gitCloud,
@@ -120,6 +122,7 @@ public class SettingEnhanceActivity extends BaseActivity {
 
     private void setText() {
         if (!canSetText()) return;
+        safeSet("fileSites", mBinding.fileSitesText, () -> getSwitch(Setting.isFileSites()));
         safeSet("driveCheck", mBinding.driveCheckText, () -> getSwitch(Setting.isDriveCheck()));
         safeSet("debugLog", mBinding.debugLogText, () -> getSwitch(Setting.isDebugLog()));
         safeSet("siteHealthSort", mBinding.siteHealthSortText, () -> getSwitch(Setting.isSiteHealthSort()));
@@ -193,6 +196,11 @@ public class SettingEnhanceActivity extends BaseActivity {
 
     private interface TextSupplier {
         CharSequence get();
+    }
+
+    private void setFileSites(View view) {
+        Setting.putFileSites(!Setting.isFileSites());
+        mBinding.fileSitesText.setText(getSwitch(Setting.isFileSites()));
     }
 
     private void setDriveCheck(View view) {
