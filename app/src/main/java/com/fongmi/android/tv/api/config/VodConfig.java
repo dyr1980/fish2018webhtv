@@ -163,6 +163,7 @@ public class VodConfig extends BaseConfig {
     }
 
     private void parseConfig(Config config, JsonObject object) {
+        SpiderDebug.log("vod-config", "parseConfig enter url=%s", config.getUrl());
         CustomCspSetting.inject(object);
         initList(object);
         initLive(config, object);
@@ -202,7 +203,9 @@ public class VodConfig extends BaseConfig {
 
     private void initSite(Config config, JsonObject object) {
         String spider = Json.safeString(object, "spider");
+        SpiderDebug.log("vod-config", "initSite enter spider=%s sites=%d", spider.isEmpty() ? "(empty)" : spider.substring(0, Math.min(spider.length(), 60)), Json.safeListElement(object, "sites").size());
         BaseLoader.get().parseJar(spider, true);
+        SpiderDebug.log("vod-config", "initSite parseJar done, loading file sites next");
         List<Site> sites = Json.safeListElement(object, "sites").stream().map(e -> Site.objectFrom(e, spider)).distinct().collect(Collectors.toCollection(ArrayList::new));
         List<Site> fileSites = loadFileSites(spider);
         fileSites.addAll(sites);
@@ -328,30 +331,37 @@ public class VodConfig extends BaseConfig {
 
     private List<Site> loadFileSites(String globalSpider) {
         List<Site> result = new ArrayList<>();
+        SpiderDebug.log("vod-config", "file-sites entry enabled=%s root=%s exists=%s", Setting.isFileSites(), new File(CLAN_ROOT).getAbsolutePath(), new File(CLAN_ROOT).exists());
         if (!Setting.isFileSites()) return result;
         try {
-            result.addAll(loadXbpqSites(globalSpider));
+            List<Site> r = loadXbpqSites(globalSpider);
+            SpiderDebug.log("vod-config", "file-sites XBPQ count=%d", r.size());
+            result.addAll(r);
         } catch (Throwable e) {
             SpiderDebug.log("vod-config", "XBPQ file sites load failed: %s", e.getMessage());
         }
         try {
-            result.addAll(loadJsSites());
+            List<Site> r = loadJsSites();
+            SpiderDebug.log("vod-config", "file-sites JS count=%d", r.size());
+            result.addAll(r);
         } catch (Throwable e) {
             SpiderDebug.log("vod-config", "JS file sites load failed: %s", e.getMessage());
         }
         try {
-            result.addAll(loadPySites());
+            List<Site> r = loadPySites();
+            SpiderDebug.log("vod-config", "file-sites PY count=%d", r.size());
+            result.addAll(r);
         } catch (Throwable e) {
             SpiderDebug.log("vod-config", "PY file sites load failed: %s", e.getMessage());
         }
         try {
-            result.addAll(loadRawSites(globalSpider));
+            List<Site> r = loadRawSites(globalSpider);
+            SpiderDebug.log("vod-config", "file-sites RAW count=%d", r.size());
+            result.addAll(r);
         } catch (Throwable e) {
             SpiderDebug.log("vod-config", "Raw file sites load failed: %s", e.getMessage());
         }
-        if (!result.isEmpty()) {
-            SpiderDebug.log("vod-config", "file sites loaded count=%d", result.size());
-        }
+        SpiderDebug.log("vod-config", "file-sites total=%d", result.size());
         return result;
     }
 
@@ -362,8 +372,12 @@ public class VodConfig extends BaseConfig {
     private List<Site> loadXbpqSites(String globalSpider) {
         File dir = new File(CLAN_ROOT + "sites-json");
         List<Site> result = new ArrayList<>();
-        if (!dir.exists() || !dir.isDirectory()) return result;
+        if (!dir.exists() || !dir.isDirectory()) {
+            SpiderDebug.log("vod-config", "XBPQ dir missing path=%s exists=%s isDir=%s", dir.getPath(), dir.exists(), dir.isDirectory());
+            return result;
+        }
         List<File> files = listSorted(dir);
+        SpiderDebug.log("vod-config", "XBPQ dir path=%s fileCount=%d", dir.getPath(), files.size());
         if (files.isEmpty()) return result;
         boolean globalIsXbpq = globalSpider.toLowerCase().contains("xbpq") && globalSpider.toLowerCase().endsWith(".jar");
         if (!globalIsXbpq) {
@@ -392,8 +406,13 @@ public class VodConfig extends BaseConfig {
     private List<Site> loadJsSites() {
         File dir = new File(CLAN_ROOT + "sites-js", "api");
         List<Site> result = new ArrayList<>();
-        if (!dir.exists() || !dir.isDirectory()) return result;
-        for (File file : listSorted(dir)) {
+        if (!dir.exists() || !dir.isDirectory()) {
+            SpiderDebug.log("vod-config", "JS dir missing path=%s exists=%s isDir=%s", dir.getPath(), dir.exists(), dir.isDirectory());
+            return result;
+        }
+        List<File> files = listSorted(dir);
+        SpiderDebug.log("vod-config", "JS dir path=%s fileCount=%d", dir.getPath(), files.size());
+        for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
             String content = Path.read(file);
@@ -413,8 +432,13 @@ public class VodConfig extends BaseConfig {
     private List<Site> loadPySites() {
         File dir = new File(CLAN_ROOT + "sites-py");
         List<Site> result = new ArrayList<>();
-        if (!dir.exists() || !dir.isDirectory()) return result;
-        for (File file : listSorted(dir)) {
+        if (!dir.exists() || !dir.isDirectory()) {
+            SpiderDebug.log("vod-config", "PY dir missing path=%s exists=%s isDir=%s", dir.getPath(), dir.exists(), dir.isDirectory());
+            return result;
+        }
+        List<File> files = listSorted(dir);
+        SpiderDebug.log("vod-config", "PY dir path=%s fileCount=%d", dir.getPath(), files.size());
+        for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
             String content = Path.read(file);
@@ -435,8 +459,13 @@ public class VodConfig extends BaseConfig {
     private List<Site> loadRawSites(String globalSpider) {
         File dir = new File(CLAN_ROOT + "sites");
         List<Site> result = new ArrayList<>();
-        if (!dir.exists() || !dir.isDirectory()) return result;
-        for (File file : listSorted(dir)) {
+        if (!dir.exists() || !dir.isDirectory()) {
+            SpiderDebug.log("vod-config", "RAW dir missing path=%s exists=%s isDir=%s", dir.getPath(), dir.exists(), dir.isDirectory());
+            return result;
+        }
+        List<File> files = listSorted(dir);
+        SpiderDebug.log("vod-config", "RAW dir path=%s fileCount=%d", dir.getPath(), files.size());
+        for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             String content = Path.read(file);
             if (content.isEmpty()) continue;
