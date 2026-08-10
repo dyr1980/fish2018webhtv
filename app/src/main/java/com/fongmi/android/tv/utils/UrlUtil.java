@@ -46,10 +46,10 @@ public class UrlUtil {
     }
 
     public static String convert(String url) {
+        if (url == null) return null;
+        url = url.replace("clan://", "file://tvbox/");
         String scheme = scheme(url);
         String path = null;
-        if ("clan".equals(scheme)) url = "file://tvbox/" + url.substring(7);
-        scheme = scheme(url);
         if ("assets".equals(scheme)) path = "/";
         else if ("file".equals(scheme)) path = "/file/";
         else if ("proxy".equals(scheme)) path = "/proxy?";
@@ -58,7 +58,7 @@ public class UrlUtil {
 
     public static File toLocalFile(String url) {
         if (url == null) return null;
-        if (url.startsWith("clan://")) url = url.replace("clan://", "file://tvbox/");
+        url = url.replace("clan://", "file://tvbox/");
         if (url.startsWith("file://")) return new File(url.replace("file://", ""));
         if (url.startsWith("file:/")) return new File(url.replace("file:/", ""));
         if (url.startsWith("/")) return new File(url);
