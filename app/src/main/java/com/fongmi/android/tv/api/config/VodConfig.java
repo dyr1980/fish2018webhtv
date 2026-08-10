@@ -125,8 +125,26 @@ public class VodConfig extends BaseConfig {
 
     @Override
     protected void load(Config config) throws Throwable {
-        String json = Decoder.getJson(UrlUtil.convert(config.getUrl()), TAG);
-        checkJson(config, Json.parse(json).getAsJsonObject());
+        String globalSpider = "";
+        try {
+            String json = Decoder.getJson(UrlUtil.convert(config.getUrl()), TAG);
+            JsonObject object = Json.parse(json).getAsJsonObject();
+            globalSpider = Json.safeString(object, "spider");
+            SpiderDebug.log("vod-config", "remote config loaded spider=%s", globalSpider.isEmpty() ? "(empty)" : globalSpider.substring(0, Math.min(globalSpider.length(), 60)));
+            checkJson(config, object);
+        } catch (Throwable e) {
+            SpiderDebug.log("vod-config", "remote config failed: %s, loading file sites as fallback", e.getMessage());
+            List<Site> fileSites = new ArrayList<>();
+            try {
+                fileSites = loadFileSites(globalSpider);
+                SpiderDebug.log("vod-config", "file-only sites count=%d", fileSites.size());
+            } catch (Throwable ex) {
+                SpiderDebug.log("vod-config", "file sites load failed: %s", ex.getMessage());
+            }
+            setSites(fileSites);
+            setHome(config, fileSites.isEmpty() ? new Site() : fileSites.get(0), false);
+            throw e;
+        }
     }
 
     @Override
@@ -394,6 +412,7 @@ public class VodConfig extends BaseConfig {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
             Site site = Site.get("XBPQ_" + meta.name, meta.name);
+            site.setType(3);
             site.setApi("csp_XBPQ");
             site.setExt(UrlUtil.convert("clan://sites-json/" + file.getName()));
             site.setJar(jar);
@@ -422,6 +441,7 @@ public class VodConfig extends BaseConfig {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
             Site site = Site.get("JS_" + meta.name, meta.name);
+            site.setType(3);
             site.setApi(UrlUtil.convert("clan://sites-js/api/" + file.getName()));
             site.setJar(globalSpider);
             site.setName(meta.name + " | JS");
@@ -449,6 +469,7 @@ public class VodConfig extends BaseConfig {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
             Site site = Site.get("PY_" + meta.name, meta.name);
+            site.setType(3);
             site.setApi(UrlUtil.convert("clan://sites-py/" + file.getName()));
             site.setJar(globalSpider);
             site.setName(meta.name + " | PY");

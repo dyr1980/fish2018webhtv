@@ -128,9 +128,18 @@ public class LiveConfig extends BaseConfig {
             initLive(config, new JsonObject());
             return;
         }
-        String json = Decoder.getJson(UrlUtil.convert(config.getUrl()), TAG);
-        if (Json.isObj(json)) checkJson(config, Json.parse(json).getAsJsonObject());
-        else parseText(config, json);
+        try {
+            String json = Decoder.getJson(UrlUtil.convert(config.getUrl()), TAG);
+            if (Json.isObj(json)) {
+                checkJson(config, Json.parse(json).getAsJsonObject());
+            } else {
+                parseText(config, json);
+            }
+        } catch (Throwable e) {
+            SpiderDebug.log("live-config", "remote config failed: %s, loading file lives as fallback", e.getMessage());
+            initLive(config, new JsonObject());
+            throw e;
+        }
     }
 
     @Override
