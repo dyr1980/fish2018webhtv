@@ -350,6 +350,14 @@ public class Setting {
         Prefers.put("incognito", incognito);
     }
 
+    public static boolean isFileSites() {
+        return Prefers.getBoolean("file_sites", true);
+    }
+
+    public static void putFileSites(boolean fileSites) {
+        Prefers.put("file_sites", fileSites);
+    }
+
     public static int getLanguage() {
         int language = Prefers.getInt("language", LANGUAGE_FOLLOW_SYSTEM);
         return isLanguage(language) ? language : LANGUAGE_FOLLOW_SYSTEM;
