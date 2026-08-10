@@ -326,7 +326,7 @@ public class VodConfig extends BaseConfig {
 
     // ==================== 文件站点加载器 ====================
 
-    private static final String CLAN_ROOT = "/tvbox/";
+    private static final String CLAN_ROOT = Path.root() + "/tvbox/";
     private static final String XBPQ_JAR = CLAN_ROOT + "jars/XBPQ.jar";
 
     private List<Site> loadFileSites(String globalSpider) {
