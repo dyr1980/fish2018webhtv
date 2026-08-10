@@ -367,6 +367,7 @@
     <string name="remote_trust_send_server_done">已保存到对方设备</string>
     <string name="remote_trust_send_server_failed">保存到对方设备失败：%1$s</string>
     <string name="setting_login_state">登录态学习</string>
+    <string name="setting_file_sites">文件站源</string>
     <string name="setting_site_health_sort">站点健康排序</string>
     <string name="setting_site_health_enable">启用站点健康排序</string>
     <string name="setting_site_health_dialog_sort">站点弹窗排序</string>
