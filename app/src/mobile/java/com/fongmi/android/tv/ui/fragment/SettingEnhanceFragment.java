@@ -43,7 +43,7 @@ import com.google.gson.JsonObject;
 
 public class SettingEnhanceFragment extends BaseFragment {
 
-    private static final String URL_GITHUB = "https://github.com/fish2018/webhtv";
+    private static final String URL_GITHUB = "https://github.com/llb0/webhtv";
     private static final String URL_CNB = "https://cnb.cool/fish2035/ext";
 
     private FragmentSettingEnhanceBinding mBinding;
@@ -80,6 +80,7 @@ public class SettingEnhanceFragment extends BaseFragment {
             }
             return false;
         });
+        mBinding.fileSites.setOnClickListener(this::setFileSites);
         mBinding.driveCheck.setOnClickListener(this::setDriveCheck);
         mBinding.debugLog.setOnClickListener(this::setDebugLog);
         mBinding.siteHealthSort.setOnClickListener(view -> SiteHealthDialog.show(this, this::setText));
@@ -108,6 +109,7 @@ public class SettingEnhanceFragment extends BaseFragment {
     private void reorderItems() {
         ViewGroup parent = (ViewGroup) mBinding.customCsp.getParent();
         View[] order = {
+                mBinding.fileSites,
                 mBinding.customCsp,
                 mBinding.webHomeExtension,
                 mBinding.gitCloud,
@@ -131,6 +133,7 @@ public class SettingEnhanceFragment extends BaseFragment {
 
     private void setText() {
         if (!canSetText()) return;
+        safeSet("fileSites", mBinding.fileSitesText, () -> getSwitch(Setting.isFileSites()));
         safeSet("driveCheck", mBinding.driveCheckText, () -> getSwitch(Setting.isDriveCheck()));
         safeSet("debugLog", mBinding.debugLogText, () -> getSwitch(Setting.isDebugLog()));
         safeSet("siteHealthSort", mBinding.siteHealthSortText, () -> getSwitch(Setting.isSiteHealthSort()));
@@ -204,6 +207,11 @@ public class SettingEnhanceFragment extends BaseFragment {
 
     private interface TextSupplier {
         CharSequence get();
+    }
+
+    private void setFileSites(View view) {
+        Setting.putFileSites(!Setting.isFileSites());
+        mBinding.fileSitesText.setText(getSwitch(Setting.isFileSites()));
     }
 
     private void setDriveCheck(View view) {
