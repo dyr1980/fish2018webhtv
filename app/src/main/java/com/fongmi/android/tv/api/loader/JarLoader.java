@@ -210,9 +210,10 @@ public class JarLoader {
     }
 
     private String source(String jar) {
+        if (jar == null) return null;
+        jar = jar.replace("clan://", "file://tvbox/");
         if (jar.startsWith("http")) return "http:" + Util.md5(jar);
         if (jar.startsWith("file")) return "file:" + jar.length();
-        if (jar.startsWith("clan")) return "clan:" + UrlUtil.clanToPath(jar);
         if (jar.startsWith("/")) return "local:" + jar;
         return jar;
     }
