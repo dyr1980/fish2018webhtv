@@ -10,7 +10,7 @@ import java.io.File;
 
 public class UrlUtil {
 
-    public static final String CLAN_ROOT = "/tvbox/";
+    public static final String CLAN_ROOT = com.github.catvod.utils.Path.root() + "/tvbox/";
 
     public static Uri uri(String url) {
         return Uri.parse(url.trim().replace("\\", ""));
