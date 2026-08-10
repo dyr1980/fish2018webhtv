@@ -166,7 +166,7 @@ public class JarLoader {
                 load(key, Path.local(jar));
             } else {
                 File local = UrlUtil.toLocalFile(jar);
-                if (local != null) load(key, local);
+                if (local != null && local.exists()) load(key, local);
             }
         }
     }
