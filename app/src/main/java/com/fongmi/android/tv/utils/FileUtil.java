@@ -142,6 +142,8 @@ public class FileUtil {
     }
 
     public static Uri getShareUri(String path) {
+        if (path == null) return null;
+        path = path.replace("clan://", "file://tvbox/");
         return getShareUri(new File(path.replace("file://", "")));
     }
 

@@ -1086,6 +1086,7 @@ public class LoginStateSync {
 
     private static String normalize(String path) {
         if (path == null) return "";
+        path = path.replace("clan://", "file://tvbox/");
         String appRoot = appRoot().getAbsolutePath().replace('\\', '/');
         String dataRoot = new File(App.get().getApplicationInfo().dataDir).getAbsolutePath().replace('\\', '/');
         String sdcardRoot = sdcardRoot().getAbsolutePath().replace('\\', '/');

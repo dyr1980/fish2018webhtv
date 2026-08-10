@@ -215,6 +215,7 @@ public class SyncFiles {
 
     public static String normalize(String path) {
         if (path == null) return "";
+        path = path.replace("clan://", "file://tvbox/");
         String root = Path.root().getAbsolutePath().replace('\\', '/');
         String value = path.trim().replace('\\', '/');
         value = value.replace("file://", "");
