@@ -27,9 +27,6 @@
     <string name="device_select">Select devices</string>
     <string name="device_offline">Device is offline</string>
     <string name="device_scan">Please scan WebHTV QRCode to bind</string>
-    <string name="setting_site_delete_title">Delete file site</string>
-    <string name="setting_site_delete_message">Delete %1$s and its source file? This cannot be undone.</string>
-    <string name="setting_site_delete_done">Deleted %1$s</string>
     <string name="timer_5">5 minutes</string>
     <string name="timer_15">15 minutes</string>
     <string name="timer_30">30 minutes</string>
