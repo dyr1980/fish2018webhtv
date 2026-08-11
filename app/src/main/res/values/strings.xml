@@ -675,6 +675,7 @@
     <string name="setting_language">Language</string>
     <string name="setting_size">Image size</string>
     <string name="setting_ui_scale">Interface size</string>
+    <string name="setting_title_lines">Title wrapping</string>
     <string name="dialog_close">Close</string>
     <string name="setting_doh">DoH</string>
     <string name="setting_proxy">Proxy</string>
@@ -1209,11 +1210,19 @@
 
     <string-array name="select_ui_scale">
         <item>Follow system</item>
+        <item>Slightly relaxed</item>
         <item>Standard</item>
         <item>Mild compact</item>
         <item>Compact</item>
         <item>More compact</item>
         <item>Smaller</item>
+    </string-array>
+
+    <string-array name="select_title_lines">
+        <item>Off</item>
+        <item>Up to 2 lines</item>
+        <item>Up to 3 lines</item>
+        <item>Unlimited</item>
     </string-array>
 
     <string-array name="select_language">
