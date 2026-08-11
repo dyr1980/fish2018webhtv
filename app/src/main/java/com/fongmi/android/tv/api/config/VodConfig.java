@@ -370,7 +370,7 @@ public class VodConfig extends BaseConfig {
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
-            Site site = Site.get("XBPQ_" + meta.name, meta.name);
+            Site site = Site.get("XBPQ_" + file.getName() + "_file", meta.name);
             site.setType(3);
             site.setApi("csp_XBPQ");
             site.setExt(UrlUtil.convert("clan://sites-json/" + file.getName()));
@@ -390,7 +390,7 @@ public class VodConfig extends BaseConfig {
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
-            Site site = Site.get("JS_" + meta.name, meta.name);
+            Site site = Site.get("JS_" + file.getName() + "_file", meta.name);
             site.setType(3);
             site.setApi(UrlUtil.convert("clan://sites-js/api/" + file.getName()));
             site.setJar(globalSpider);
@@ -409,7 +409,7 @@ public class VodConfig extends BaseConfig {
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
-            Site site = Site.get("PY_" + meta.name, meta.name);
+            Site site = Site.get("PY_" + file.getName() + "_file", meta.name);
             site.setType(3);
             site.setApi(UrlUtil.convert("clan://sites-py/" + file.getName()));
             site.setJar(globalSpider);
@@ -434,10 +434,9 @@ public class VodConfig extends BaseConfig {
                 if (element.isJsonObject()) {
                     Site site = Site.objectFrom(element, globalSpider);
                     if (site.getName().isEmpty()) site.setName(meta.name);
-                    if (!site.getKey().isEmpty()) {
-                        meta.apply(site);
-                        result.add(site);
-                    }
+                    site.setKey("RAW_" + file.getName() + "_file");
+                    meta.apply(site);
+                    result.add(site);
                 }
             } catch (Throwable ignored) {}
         }
