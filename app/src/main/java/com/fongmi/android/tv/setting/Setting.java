@@ -417,7 +417,7 @@ public class Setting {
     }
 
     public static int getUiScale() {
-        int scale = Prefers.getInt("ui_scale", UI_SCALE_FOLLOW_SYSTEM);
+        int scale = Prefers.getInt("ui_scale", UI_SCALE_MILD_RELAXED);
         return isUiScale(scale) ? scale : UI_SCALE_FOLLOW_SYSTEM;
     }
 
@@ -473,7 +473,7 @@ public class Setting {
     }
 
     public static int getTitleLines() {
-        int lines = Prefers.getInt("title_lines", TITLE_LINES_OFF);
+        int lines = Prefers.getInt("title_lines", TITLE_LINES_UNLIMITED);
         return isTitleLines(lines) ? lines : TITLE_LINES_OFF;
     }
 
