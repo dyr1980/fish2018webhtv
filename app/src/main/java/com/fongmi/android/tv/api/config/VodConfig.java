@@ -122,6 +122,12 @@ public class VodConfig extends BaseConfig {
 
     @Override
     protected void load(Config config) throws Throwable {
+        if (config.isEmpty()) {
+            try {
+                initSites(config, "", new JsonObject());
+            } catch (Throwable ignored) {}
+            return;
+        }
         String globalSpider = "";
         try {
             String json = Decoder.getJson(UrlUtil.convert(config.getUrl()), TAG);
@@ -131,9 +137,7 @@ public class VodConfig extends BaseConfig {
             return;
         } catch (Throwable ignored) {}
         try {
-            List<Site> fileSites = loadFileSites(globalSpider);
-            setSites(fileSites);
-            setHome(config, fileSites.isEmpty() ? new Site() : fileSites.get(0), false);
+            initSites(config, globalSpider, new JsonObject());
         } catch (Throwable ignored) {}
     }
 
@@ -210,7 +214,11 @@ public class VodConfig extends BaseConfig {
     }
 
     private void initSite(Config config, JsonObject object) {
-        String spider = Json.safeString(object, "spider");
+        initSites(config, "", object);
+    }
+
+    private void initSites(Config config, String globalSpider, JsonObject object) {
+        String spider = TextUtils.isEmpty(globalSpider) ? Json.safeString(object, "spider") : globalSpider;
         BaseLoader.get().parseJar(spider, true);
         List<Site> sites = Json.safeListElement(object, "sites").stream().map(e -> Site.objectFrom(e, spider)).distinct().collect(Collectors.toCollection(ArrayList::new));
         List<Site> fileSites = loadFileSites(spider);

@@ -124,7 +124,9 @@ public class LiveConfig extends BaseConfig {
     @Override
     protected void load(Config config) throws Throwable {
         if (config.isEmpty()) {
-            initLive(config, new JsonObject());
+            try {
+                initLive(config, new JsonObject());
+            } catch (Throwable ignored) {}
             return;
         }
         try {
@@ -136,7 +138,9 @@ public class LiveConfig extends BaseConfig {
             }
             return;
         } catch (Throwable ignored) {}
-        initLive(config, new JsonObject());
+        try {
+            initLive(config, new JsonObject());
+        } catch (Throwable ignored) {}
     }
 
     @Override
