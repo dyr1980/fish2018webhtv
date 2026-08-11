@@ -35,8 +35,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class VodConfig extends BaseConfig {
@@ -473,31 +471,32 @@ public class VodConfig extends BaseConfig {
             stem = stem.substring(sep + 1);
         }
     
-        Matcher ratio = Pattern.compile("\\.(-?\\d+(?:\\.\\d+)?)$").matcher(stem);
-        if (ratio.find()) {
-            meta.ratio = Float.parseFloat(ratio.group(1));
-            stem = stem.substring(0, ratio.start());
-        } else {
-            Matcher flag = Pattern.compile("\\.([NS])$", Pattern.CASE_INSENSITIVE).matcher(stem);
-            if (flag.find()) {
-                if (flag.group(1).equalsIgnoreCase("N")) { meta.searchable = 0; meta.quickSearch = 0; }
-                else meta.hide = 1;
-                stem = stem.substring(0, flag.start());
+        int firstDot = stem.indexOf('.');
+        if (firstDot > 0) {
+            String func = stem.substring(firstDot + 1);
+            String upper = func.toUpperCase();
+    
+            boolean isFunc = upper.startsWith("N") || upper.startsWith("S") || func.contains("-");
+    
+            if (isFunc) {
+                stem = stem.substring(0, firstDot);
+    
+                if (upper.startsWith("N")) { meta.searchable = 0; meta.quickSearch = 0; }
+                else if (upper.startsWith("S")) { meta.hide = 1; }
+    
+                int dash = func.lastIndexOf('-');
+                if (dash >= 0 && dash < func.length() - 1) {
+                    String tail = func.substring(dash + 1);
+                    if (tail.equalsIgnoreCase("H")) meta.ratio = 1.33f;
+                    else if (tail.equalsIgnoreCase("S")) meta.ratio = 1.0f;
+                    else { try { meta.ratio = Float.parseFloat(tail); }
+                    catch (NumberFormatException ignored) {} }
+                }
             }
         }
     
         meta.name = stem.trim();
         return meta;
-    }
-
-    private String cleanName(String raw) {
-        if (raw == null) return "";
-        String s = raw.trim();
-        s = s.replaceAll("\\d+-\\d+", "");
-        s = s.replaceAll("(?:^|[.\\s-])\\d+(?![\\p{L}])", "-");
-        s = s.replaceAll("[-\\s.]+", "-");
-        s = s.replaceAll("^-+|-+$", "");
-        return s.trim();
     }
 
     private static class FileMeta {
