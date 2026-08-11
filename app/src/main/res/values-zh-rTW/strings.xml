@@ -657,6 +657,7 @@
     <string name="setting_language">語言</string>
     <string name="setting_size">圖片尺寸</string>
     <string name="setting_ui_scale">介面大小</string>
+    <string name="setting_title_lines">標題換行</string>
     <string name="dialog_close">關閉</string>
     <string name="setting_doh">DoH</string>
     <string name="setting_proxy">Proxy</string>
@@ -1185,11 +1186,19 @@
 
     <string-array name="select_ui_scale">
         <item>跟隨系統</item>
+        <item>稍寬鬆</item>
         <item>標準</item>
         <item>較緊湊</item>
         <item>緊湊</item>
         <item>更緊湊</item>
         <item>更小</item>
+    </string-array>
+
+    <string-array name="select_title_lines">
+        <item>關閉</item>
+        <item>最多2行</item>
+        <item>最多3行</item>
+        <item>不限行數</item>
     </string-array>
 
     <string-array name="select_language">
