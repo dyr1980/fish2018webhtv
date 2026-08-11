@@ -676,6 +676,9 @@
     <string name="setting_size">Image size</string>
     <string name="setting_ui_scale">Interface size</string>
     <string name="setting_title_lines">Title wrapping</string>
+    <string name="setting_site_delete_title">Delete file site</string>
+    <string name="setting_site_delete_message">Delete %1$s and its source file? This cannot be undone.</string>
+    <string name="setting_site_delete_done">Deleted %1$s</string>
     <string name="dialog_close">Close</string>
     <string name="setting_doh">DoH</string>
     <string name="setting_proxy">Proxy</string>
