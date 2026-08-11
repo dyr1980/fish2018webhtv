@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
+import java.io.File;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,10 +31,11 @@ import com.fongmi.android.tv.ui.adapter.SiteAdapter;
 import com.fongmi.android.tv.ui.custom.SpaceItemDecoration;
 import com.fongmi.android.tv.utils.Notify;
 import com.fongmi.android.tv.utils.ResUtil;
+import com.github.catvod.utils.Path;
 import com.github.catvod.crawler.SpiderDebug;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickListener {
+public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickListener, SiteAdapter.OnDeleteListener {
 
     private static final int GRID_COUNT = 3;
     private static final String TAG = "site_dialog";
@@ -270,6 +273,35 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
     @Override
     public void onItemClick(Site item) {
         if (listener != null) listener.setSite(item);
+        dismiss();
+    }
+
+    @Override
+    public void onDelete(Site item) {
+        if (!item.isFile()) return;
+        new MaterialAlertDialogBuilder(getDialogActivity())
+                .setTitle(R.string.setting_site_delete_title)
+                .setMessage(getString(R.string.setting_site_delete_message, item.getName()))
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> deleteFileSite(item))
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void deleteFileSite(Site item) {
+        String type = item.getFileType();
+        String fileName = item.getFileName();
+        if (fileName.isEmpty()) return;
+        String subDir = switch (type) {
+            case "XBPQ" -> "sites-json";
+            case "JS" -> "sites-js/api";
+            case "PY" -> "sites-py";
+            case "RAW" -> "sites";
+            default -> "";
+        };
+        if (subDir.isEmpty()) return;
+        File file = Path.root(subDir, fileName);
+        if (file.exists()) file.delete();
+        if (activity != null) Toast.makeText(activity, getString(R.string.setting_site_delete_done, item.getName()), Toast.LENGTH_SHORT).show();
         dismiss();
     }
 
