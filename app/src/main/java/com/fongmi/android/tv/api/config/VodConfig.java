@@ -462,44 +462,31 @@ public class VodConfig extends BaseConfig {
     private FileMeta parseFileMeta(String fileName) {
         FileMeta meta = new FileMeta();
         if (fileName == null) return meta;
-
+    
         String stem = fileName;
         int lastDot = fileName.lastIndexOf('.');
         if (lastDot > 0) stem = fileName.substring(0, lastDot);
-
-        Matcher tailStyle = Pattern.compile("(?i)(-H|-S|-\\d+(?:\\.\\d+)?)\\s*$").matcher(stem);
-        if (tailStyle.find()) {
-            String mark = tailStyle.group(1);
-            if (mark.equalsIgnoreCase("-H")) meta.ratio = 1.33f;
-            else if (mark.equalsIgnoreCase("-S")) meta.ratio = 1.0f;
-            else {
-                try {
-                    float v = Float.parseFloat(mark.substring(1));
-                    if (v != 0) meta.ratio = v;
-                } catch (NumberFormatException ignored) {}
-            }
-            stem = stem.substring(0, tailStyle.start());
-        }
-
-        Pattern dotPattern = Pattern.compile("\\.(N|S)", Pattern.CASE_INSENSITIVE);
-        Matcher dotMatcher = dotPattern.matcher(stem);
-        String lastDotMarkType = null;
-        while (dotMatcher.find()) {
-            lastDotMarkType = dotMatcher.group(1).toUpperCase();
-        }
-        if (lastDotMarkType != null) {
-            stem = stem.replaceAll("(?i)\\.[NS]", "");
-            if ("N".equals(lastDotMarkType)) { meta.searchable = 0; meta.quickSearch = 0; }
-            else if ("S".equals(lastDotMarkType)) { meta.hide = 1; }
-        }
-
+    
         if (stem.matches("^\\d+_.*")) {
             int sep = stem.indexOf('_');
             meta.order = Integer.parseInt(stem.substring(0, sep));
             stem = stem.substring(sep + 1);
         }
-
-        meta.name = cleanName(stem);
+    
+        Matcher ratio = Pattern.compile("\\.(-?\\d+(?:\\.\\d+)?)$").matcher(stem);
+        if (ratio.find()) {
+            meta.ratio = Float.parseFloat(ratio.group(1));
+            stem = stem.substring(0, ratio.start());
+        } else {
+            Matcher flag = Pattern.compile("\\.([NS])$", Pattern.CASE_INSENSITIVE).matcher(stem);
+            if (flag.find()) {
+                if (flag.group(1).equalsIgnoreCase("N")) { meta.searchable = 0; meta.quickSearch = 0; }
+                else meta.hide = 1;
+                stem = stem.substring(0, flag.start());
+            }
+        }
+    
+        meta.name = stem.trim();
         return meta;
     }
 
