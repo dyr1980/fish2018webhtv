@@ -303,7 +303,7 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
             default -> "";
         };
         if (subDir.isEmpty()) return;
-        File file = Path.root(subDir, fileName);
+        File file = new File(Path.root() + "/tvbox/" + subDir, fileName);
         boolean deleted = file.exists() && file.delete();
         if (!deleted && file.exists()) {
             Toast.makeText(requireActivity(), R.string.remote_trust_delete_device_done, Toast.LENGTH_SHORT).show();
