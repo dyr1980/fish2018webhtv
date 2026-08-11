@@ -46,12 +46,19 @@ public class Setting {
     public static final int CSP_WARMUP_CUSTOM = 2;
 
     public static final int UI_SCALE_FOLLOW_SYSTEM = 0;
+    public static final int UI_SCALE_MILD_RELAXED = 6;
     public static final int UI_SCALE_STANDARD = 1;
     public static final int UI_SCALE_COMPACT = 2;
     public static final int UI_SCALE_SMALLER = 3;
     public static final int UI_SCALE_MILD_COMPACT = 4;
     public static final int UI_SCALE_MORE_COMPACT = 5;
-    private static final int[] UI_SCALE_OPTIONS = {UI_SCALE_FOLLOW_SYSTEM, UI_SCALE_STANDARD, UI_SCALE_MILD_COMPACT, UI_SCALE_COMPACT, UI_SCALE_MORE_COMPACT, UI_SCALE_SMALLER};
+    private static final int[] UI_SCALE_OPTIONS = {UI_SCALE_FOLLOW_SYSTEM, UI_SCALE_MILD_RELAXED, UI_SCALE_STANDARD, UI_SCALE_MILD_COMPACT, UI_SCALE_COMPACT, UI_SCALE_MORE_COMPACT, UI_SCALE_SMALLER};
+
+    public static final int TITLE_LINES_OFF = 0;
+    public static final int TITLE_LINES_2 = 1;
+    public static final int TITLE_LINES_3 = 2;
+    public static final int TITLE_LINES_UNLIMITED = 3;
+    private static final int[] TITLE_LINES_OPTIONS = {TITLE_LINES_OFF, TITLE_LINES_2, TITLE_LINES_3, TITLE_LINES_UNLIMITED};
 
     public static final int WALL_CINEMA = 5;
     public static final int WALL_CINEMA_WARM = 6;
@@ -451,6 +458,7 @@ public class Setting {
 
     private static float getUiScaleFactor(int scale) {
         return switch (scale) {
+            case UI_SCALE_MILD_RELAXED -> 0.9f;
             case UI_SCALE_STANDARD -> 0.8f;
             case UI_SCALE_MILD_COMPACT -> 0.75f;
             case UI_SCALE_COMPACT -> 0.7f;
@@ -462,6 +470,39 @@ public class Setting {
 
     private static int pxToDp(int px, int densityDpi) {
         return Math.max(1, Math.round(px * (float) DisplayMetrics.DENSITY_DEFAULT / densityDpi));
+    }
+
+    public static int getTitleLines() {
+        int lines = Prefers.getInt("title_lines", TITLE_LINES_OFF);
+        return isTitleLines(lines) ? lines : TITLE_LINES_OFF;
+    }
+
+    public static void putTitleLines(int lines) {
+        Prefers.put("title_lines", isTitleLines(lines) ? lines : TITLE_LINES_OFF);
+    }
+
+    public static int getTitleLinesIndex() {
+        int lines = getTitleLines();
+        for (int i = 0; i < TITLE_LINES_OPTIONS.length; i++) if (TITLE_LINES_OPTIONS[i] == lines) return i;
+        return 0;
+    }
+
+    public static void putTitleLinesIndex(int index) {
+        putTitleLines(index >= 0 && index < TITLE_LINES_OPTIONS.length ? TITLE_LINES_OPTIONS[index] : TITLE_LINES_OFF);
+    }
+
+    private static boolean isTitleLines(int lines) {
+        for (int option : TITLE_LINES_OPTIONS) if (option == lines) return true;
+        return false;
+    }
+
+    public static int resolveTitleMaxLines() {
+        return switch (getTitleLines()) {
+            case TITLE_LINES_2 -> 2;
+            case TITLE_LINES_3 -> 3;
+            case TITLE_LINES_UNLIMITED -> Integer.MAX_VALUE;
+            default -> 1;
+        };
     }
 
     public static boolean isDriveCheck() {
