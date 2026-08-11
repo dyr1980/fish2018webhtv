@@ -674,6 +674,9 @@
     <string name="setting_size">图片尺寸</string>
     <string name="setting_ui_scale">界面大小</string>
     <string name="setting_title_lines">标题换行</string>
+    <string name="setting_site_delete_title">删除文件站点</string>
+    <string name="setting_site_delete_message">确定删除 %1$s 及其源文件？此操作不可恢复。</string>
+    <string name="setting_site_delete_done">已删除 %1$s</string>
     <string name="dialog_close">关闭</string>
     <string name="setting_doh">DoH</string>
     <string name="setting_proxy">Proxy</string>
