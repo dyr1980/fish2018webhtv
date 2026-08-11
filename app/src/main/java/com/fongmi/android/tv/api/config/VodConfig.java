@@ -214,8 +214,8 @@ public class VodConfig extends BaseConfig {
         BaseLoader.get().parseJar(spider, true);
         List<Site> sites = Json.safeListElement(object, "sites").stream().map(e -> Site.objectFrom(e, spider)).distinct().collect(Collectors.toCollection(ArrayList::new));
         List<Site> fileSites = loadFileSites(spider);
-        fileSites.addAll(sites);
-        setSites(fileSites);
+        sites.addAll(0, fileSites);
+        setSites(sites);
         Map<String, Site> items = Site.findAll().stream().collect(Collectors.toMap(Site::getKey, Function.identity()));
         getSites().forEach(site -> site.sync(items.get(site.getKey())));
         CustomCspSetting.Result custom = CustomCspSetting.inject(getSites());
