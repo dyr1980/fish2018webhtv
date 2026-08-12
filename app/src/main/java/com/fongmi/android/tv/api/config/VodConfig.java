@@ -214,9 +214,10 @@ public class VodConfig extends BaseConfig {
 
     private void initSites(Config config, String globalSpider, JsonObject object) {
         String spider = TextUtils.isEmpty(globalSpider) ? Json.safeString(object, "spider") : globalSpider;
-        BaseLoader.get().parseJar(spider, true);
-        List<Site> sites = Json.safeListElement(object, "sites").stream().map(e -> Site.objectFrom(e, spider)).distinct().collect(Collectors.toCollection(ArrayList::new));
-        List<Site> fileSites = loadFileSites(spider);
+        String resolvedSpider = ensureJar(spider, "XBPQ.jar");
+        BaseLoader.get().parseJar(resolvedSpider, true);
+        List<Site> sites = Json.safeListElement(object, "sites").stream().map(e -> Site.objectFrom(e, resolvedSpider)).distinct().collect(Collectors.toCollection(ArrayList::new));
+        List<Site> fileSites = loadFileSites(resolvedSpider);
         sites.addAll(0, fileSites);
         setSites(sites);
         Map<String, Site> items = Site.findAll().stream().collect(Collectors.toMap(Site::getKey, Function.identity()));
@@ -336,7 +337,46 @@ public class VodConfig extends BaseConfig {
     // ==================== 文件站点加载器 ====================
 
     private static final String CLAN_ROOT = Path.root() + "/tvbox/";
-    private static final String XBPQ_JAR = CLAN_ROOT + "jars/XBPQ.jar";
+
+    private File jarToFile(String jar) {
+        if (TextUtils.isEmpty(jar)) return null;
+        String path = jar;
+        if (jar.startsWith("clan://")) path = CLAN_ROOT + jar.substring("clan://".length());
+        else if (jar.startsWith("./")) path = CLAN_ROOT + jar.substring(2);
+        else if (jar.startsWith("file://")) path = jar.substring(7);
+        else if (jar.startsWith("file:/")) path = jar.substring(6);
+        return new File(path);
+    }
+
+    private String findJarRecursively(File base, String targetName) {
+        if (base == null || !base.exists() || !base.isDirectory()) return null;
+        File[] files = base.listFiles();
+        if (files == null) return null;
+        for (File f : files) {
+            if (f.isFile() && f.getName().equalsIgnoreCase(targetName)) return f.getAbsolutePath();
+        }
+        for (File f : files) {
+            if (f.isDirectory()) {
+                String found = findJarRecursively(f, targetName);
+                if (found != null) return found;
+            }
+        }
+        return null;
+    }
+
+    private String ensureJar(String jarPath, String fallbackName) {
+        if (TextUtils.isEmpty(jarPath)) {
+            String found = findJarRecursively(new File(CLAN_ROOT), fallbackName);
+            return found != null ? found : "";
+        }
+        File target = jarToFile(jarPath);
+        if (target != null && target.exists()) return target.getAbsolutePath();
+        File standard = new File(CLAN_ROOT, "jars/" + fallbackName);
+        if (standard.exists()) return standard.getAbsolutePath();
+        String found = findJarRecursively(new File(CLAN_ROOT), fallbackName);
+        if (found != null) return found;
+        return jarPath;
+    }
 
     private List<Site> loadFileSites(String globalSpider) {
         List<Site> result = new ArrayList<>();
@@ -362,14 +402,8 @@ public class VodConfig extends BaseConfig {
         if (!dir.exists() || !dir.isDirectory()) return result;
         List<File> files = listSorted(dir);
         if (files.isEmpty()) return result;
-        boolean globalIsXbpq = globalSpider.toLowerCase().contains("xbpq");
-        String jar;
-        if (globalIsXbpq) {
-            jar = globalSpider;
-        } else {
-            jar = XBPQ_JAR;
-            BaseLoader.get().parseJar(jar, true);
-        }
+        String jar = ensureJar(CLAN_ROOT + "jars/XBPQ.jar", "XBPQ.jar");
+        BaseLoader.get().parseJar(jar, true);
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
@@ -390,13 +424,14 @@ public class VodConfig extends BaseConfig {
         List<Site> result = new ArrayList<>();
         if (!dir.exists() || !dir.isDirectory()) return result;
         List<File> files = listSorted(dir);
+        String jar = ensureJar(globalSpider, "XBPQ.jar");
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
             Site site = Site.get("JS_" + file.getName() + "_file", meta.name);
             site.setType(3);
             site.setApi(UrlUtil.convert("clan://sites-js/api/" + file.getName()));
-            site.setJar(globalSpider);
+            site.setJar(jar);
             site.setName(meta.name + " | JS");
             meta.apply(site);
             result.add(site);
@@ -409,13 +444,14 @@ public class VodConfig extends BaseConfig {
         List<Site> result = new ArrayList<>();
         if (!dir.exists() || !dir.isDirectory()) return result;
         List<File> files = listSorted(dir);
+        String jar = ensureJar(globalSpider, "XBPQ.jar");
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
             Site site = Site.get("PY_" + file.getName() + "_file", meta.name);
             site.setType(3);
             site.setApi(UrlUtil.convert("clan://sites-py/" + file.getName()));
-            site.setJar(globalSpider);
+            site.setJar(jar);
             site.setName(meta.name + " | PY");
             meta.apply(site);
             result.add(site);
@@ -462,30 +498,30 @@ public class VodConfig extends BaseConfig {
     private FileMeta parseFileMeta(String fileName) {
         FileMeta meta = new FileMeta();
         if (fileName == null) return meta;
-
+    
         String stem = fileName;
         int lastDot = fileName.lastIndexOf('.');
         if (lastDot > 0) stem = fileName.substring(0, lastDot);
-
+    
         if (stem.matches("^\\d+_.*")) {
             int sep = stem.indexOf('_');
             meta.order = Integer.parseInt(stem.substring(0, sep));
             stem = stem.substring(sep + 1);
         }
-
+    
         int firstDot = stem.indexOf('.');
         if (firstDot > 0) {
             String func = stem.substring(firstDot + 1);
             String upper = func.toUpperCase();
-
+    
             boolean isFunc = upper.startsWith("N") || upper.startsWith("S") || func.contains("-");
-
+    
             if (isFunc) {
                 stem = stem.substring(0, firstDot);
-
+    
                 if (upper.startsWith("N")) { meta.searchable = 0; meta.quickSearch = 0; }
                 else if (upper.startsWith("S")) { meta.hide = 1; }
-
+    
                 int dash = func.lastIndexOf('-');
                 if (dash >= 0 && dash < func.length() - 1) {
                     String tail = func.substring(dash + 1);
@@ -496,7 +532,7 @@ public class VodConfig extends BaseConfig {
                 }
             }
         }
-
+    
         meta.name = stem.trim();
         return meta;
     }
