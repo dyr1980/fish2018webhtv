@@ -111,7 +111,7 @@ public class JarLoader {
                 Throwable cause = e;
                 while (cause.getCause() != null) cause = cause.getCause();
                 SpiderDebug.log("youtube-iframe", "probe failed error=%s", cause.getClass().getName() + ":" + cause.getMessage());
-                SpiderDebug.log("youtube-iframe", cause);
+                SpiderDebug.log("jar-loader", cause);
             }
         } catch (ClassNotFoundException | NoSuchMethodException ignored) {
         } catch (Throwable e) {
@@ -164,6 +164,9 @@ public class JarLoader {
                 load(key, Download.create(jar, Path.jar(jar)).get());
             } else if (jar.startsWith("file")) {
                 load(key, Path.local(jar));
+            } else if (jar.startsWith("clan")) {
+                File local = Path.local(jar);
+                if (local != null && local.exists()) load(key, local);
             } else {
                 File local = UrlUtil.toLocalFile(jar);
                 if (local != null && local.exists()) load(key, local);
