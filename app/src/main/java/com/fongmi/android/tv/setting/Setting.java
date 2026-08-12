@@ -310,7 +310,7 @@ public class Setting {
     }
 
     public static String getSyncPaths() {
-        return Prefers.getString("sync_paths", "TV\nTVBox\nTVData");
+        return Prefers.getString("sync_paths", "");
     }
 
     public static void putSyncPaths(String paths) {
