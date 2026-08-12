@@ -23,7 +23,7 @@ import java.util.zip.ZipOutputStream;
 
 public class SyncFiles {
 
-    public static final String DEFAULT_PATHS = "TV\nTVBox\nTVData";
+    public static final String DEFAULT_PATHS = "";
     public static final String CUSTOM_CSP_PATH = "TV/CustomCsp";
     public static final String PART_NAME = "syncFiles";
 
