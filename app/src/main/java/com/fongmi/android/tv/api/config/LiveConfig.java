@@ -281,9 +281,9 @@ public class LiveConfig extends BaseConfig {
     }
 
     public int[] findByChannelNumber(String number, List<Group> items) {
-        String[] splits = getHome().getKeep().split(AppDatabase.SYMBOL);
+        int num = Integer.parseInt(number);
         for (int i = 0; i < items.size(); i++) {
-            int j = items.get(i).find(Integer.parseInt(number));
+            int j = items.get(i).find(num);
             if (j != -1) return new int[]{i, j};
         }
         return new int[]{-1, -1};
