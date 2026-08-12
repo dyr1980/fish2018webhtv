@@ -74,7 +74,12 @@ public class LiveConfig extends BaseConfig {
     }
 
     public static boolean hasLoadedLives() {
-        return !get().getLives().isEmpty();
+        if (!get().getLives().isEmpty()) return true;
+        if (!Setting.isFileSites()) return false;
+        File dir = new File(Path.root() + "/tvbox/lives/");
+        if (!dir.exists() || !dir.isDirectory()) return false;
+        File[] files = dir.listFiles(f -> f.isFile() && !f.getName().startsWith("."));
+        return files != null && files.length > 0;
     }
 
     public static boolean hasUrl() {
@@ -86,7 +91,7 @@ public class LiveConfig extends BaseConfig {
     }
 
     public LiveConfig init() {
-        return clear().config(Config.live());
+        return config(Config.live());
     }
 
     public LiveConfig config(Config config) {
@@ -249,6 +254,13 @@ public class LiveConfig extends BaseConfig {
         Map<String, Live> items = Live.findAll().stream().collect(Collectors.toMap(Live::getName, Function.identity()));
         getLives().forEach(live -> live.sync(items.get(live.getName())));
         setHome(config, getLives().isEmpty() ? new Live() : getLives().stream().filter(item -> item.getName().equals(config.getHome())).findFirst().orElse(getLives().get(0)), false);
+        if (getLives().isEmpty() && Setting.isFileSites()) {
+            List<Live> files = loadFileLives();
+            if (!files.isEmpty()) {
+                setLives(files);
+                setHome(config, files.stream().filter(item -> item.getName().equals(config.getHome())).findFirst().orElse(files.get(0)), false);
+            }
+        }
     }
 
     public void setKeep(Channel channel) {

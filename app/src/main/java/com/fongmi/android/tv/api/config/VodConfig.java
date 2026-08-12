@@ -462,30 +462,30 @@ public class VodConfig extends BaseConfig {
     private FileMeta parseFileMeta(String fileName) {
         FileMeta meta = new FileMeta();
         if (fileName == null) return meta;
-    
+
         String stem = fileName;
         int lastDot = fileName.lastIndexOf('.');
         if (lastDot > 0) stem = fileName.substring(0, lastDot);
-    
+
         if (stem.matches("^\\d+_.*")) {
             int sep = stem.indexOf('_');
             meta.order = Integer.parseInt(stem.substring(0, sep));
             stem = stem.substring(sep + 1);
         }
-    
+
         int firstDot = stem.indexOf('.');
         if (firstDot > 0) {
             String func = stem.substring(firstDot + 1);
             String upper = func.toUpperCase();
-    
+
             boolean isFunc = upper.startsWith("N") || upper.startsWith("S") || func.contains("-");
-    
+
             if (isFunc) {
                 stem = stem.substring(0, firstDot);
-    
+
                 if (upper.startsWith("N")) { meta.searchable = 0; meta.quickSearch = 0; }
                 else if (upper.startsWith("S")) { meta.hide = 1; }
-    
+
                 int dash = func.lastIndexOf('-');
                 if (dash >= 0 && dash < func.length() - 1) {
                     String tail = func.substring(dash + 1);
@@ -496,7 +496,7 @@ public class VodConfig extends BaseConfig {
                 }
             }
         }
-    
+
         meta.name = stem.trim();
         return meta;
     }
