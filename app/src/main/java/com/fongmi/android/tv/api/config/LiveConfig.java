@@ -86,7 +86,7 @@ public class LiveConfig extends BaseConfig {
     }
 
     public LiveConfig init() {
-        return config(Config.live());
+        return clear().config(Config.live());
     }
 
     public LiveConfig config(Config config) {
@@ -218,6 +218,8 @@ public class LiveConfig extends BaseConfig {
         finishLive(config, spider);
     }
 
+    // ==================== 文件直播源加载器 ====================
+
     private static final String CLAN_LIVE_ROOT = Path.root() + "/tvbox/lives/";
 
     private List<Live> loadFileLives() {
@@ -279,9 +281,9 @@ public class LiveConfig extends BaseConfig {
     }
 
     public int[] findByChannelNumber(String number, List<Group> items) {
-        int num = Integer.parseInt(number);
+        String[] splits = getHome().getKeep().split(AppDatabase.SYMBOL);
         for (int i = 0; i < items.size(); i++) {
-            int j = items.get(i).find(num);
+            int j = items.get(i).find(Integer.parseInt(number));
             if (j != -1) return new int[]{i, j};
         }
         return new int[]{-1, -1};
