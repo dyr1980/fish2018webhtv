@@ -254,27 +254,8 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
     }
 
     private boolean reloadConfig(View view) {
-        VodConfig.get().clear().config(getConfig()).load(new Callback() {
-            @Override
-            public void start() {
-                showProgress();
-                hideContent();
-            }
-
-            @Override
-            public void success() {
-                hideProgress();
-                showContent();
-            }
-
-            @Override
-            public void error(String msg) {
-                Notify.dismiss();
-                Notify.show(msg);
-                hideProgress();
-                showContent();
-            }
-        });
+        if (mWeb != null && mWeb.isVisible()) mWeb.reload();
+        else homeContent();
         return true;
     }
 
@@ -284,8 +265,8 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
 
     private boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.refresh) {
-            if (mWeb != null && mWeb.isVisible()) mWeb.reload();
-            else homeContent();
+            HomeActivity activity = homeActivity();
+            if (activity != null) activity.initConfig();
         } else if (item.getItemId() == R.id.keep) KeepActivity.start(requireActivity());
         else if (item.getItemId() == R.id.search) SearchActivity.start(requireActivity());
         else if (item.getItemId() == R.id.history) HistoryActivity.start(requireActivity());
