@@ -98,22 +98,28 @@ public class SyncPathDialog extends BaseAlertDialog {
             root = Path.root().getCanonicalFile();
             dir = path.isEmpty() ? root : new File(root, path).getCanonicalFile();
             if (!inside(root, dir) || !dir.isDirectory()) return;
-            File[] files = dir.listFiles(file -> file.isDirectory() && !file.getName().startsWith("."));
-            if (files != null) Arrays.sort(files, (a, b) -> a.getName().compareToIgnoreCase(b.getName()));
+            File[] files = dir.listFiles(file -> !file.getName().startsWith("."));
+            if (files != null) {
+                Arrays.sort(files, (a, b) -> {
+                    if (a.isDirectory() != b.isDirectory()) return a.isDirectory() ? -1 : 1;
+                    return a.getName().compareToIgnoreCase(b.getName());
+                });
+            }
             int count = 0;
             for (File file : files == null ? new File[0] : files) {
                 if (count++ >= TREE_LIMIT) break;
                 String child = relativeTo(root, file);
                 if (child.isEmpty()) continue;
-                Item item = new Item(file.getName(), child, depth, hasChildren(file));
+                boolean isDir = file.isDirectory();
+                Item item = new Item(file.getName(), child, depth, isDir && hasSubDirs(file), !isDir);
                 items.add(item);
-                if (expanded.contains(child)) appendChildren(child, depth + 1);
+                if (isDir && expanded.contains(child)) appendChildren(child, depth + 1);
             }
         } catch (Exception ignored) {
         }
     }
 
-    private boolean hasChildren(File dir) {
+    private boolean hasSubDirs(File dir) {
         File[] files = dir.listFiles(file -> file.isDirectory() && !file.getName().startsWith("."));
         return files != null && files.length > 0;
     }
@@ -127,7 +133,6 @@ public class SyncPathDialog extends BaseAlertDialog {
 
     private void reset() {
         selected.clear();
-        selected.addAll(SyncFiles.getPaths(SyncFiles.DEFAULT_PATHS));
         collapseAll();
     }
 
@@ -188,12 +193,14 @@ public class SyncPathDialog extends BaseAlertDialog {
         private final String path;
         private final int depth;
         private final boolean hasChildren;
+        private final boolean isFile;
 
-        private Item(String name, String path, int depth, boolean hasChildren) {
+        private Item(String name, String path, int depth, boolean hasChildren, boolean isFile) {
             this.name = name;
             this.path = path;
             this.depth = depth;
             this.hasChildren = hasChildren;
+            this.isFile = isFile;
         }
     }
 
@@ -231,16 +238,17 @@ public class SyncPathDialog extends BaseAlertDialog {
                 binding.name.setText(item.name);
                 binding.path.setText(item.path);
                 binding.check.setChecked(selected.contains(item.path));
-                binding.getRoot().setOnClickListener(v -> toggle(item.path));
-                binding.getRoot().setOnKeyListener((v, keyCode, event) -> {
-                    if (event.getAction() != KeyEvent.ACTION_DOWN || keyCode != KeyEvent.KEYCODE_DPAD_RIGHT) return false;
-                    if (item.hasChildren) toggleExpanded(item.path);
-                    return true;
-                });
-                binding.enter.setVisibility(item.hasChildren ? View.VISIBLE : View.INVISIBLE);
+                binding.icon.setImageResource(item.isFile ? R.drawable.ic_file : R.drawable.ic_folder);
+                binding.enter.setVisibility(item.isFile ? View.INVISIBLE : (item.hasChildren ? View.VISIBLE : View.INVISIBLE));
                 binding.enter.setImageResource(expanded.contains(item.path) ? R.drawable.ic_detail_minus : R.drawable.ic_detail_plus);
                 binding.enter.setOnClickListener(v -> {
                     if (item.hasChildren) toggleExpanded(item.path);
+                });
+                binding.getRoot().setOnClickListener(v -> toggle(item.path));
+                binding.getRoot().setOnKeyListener((v, keyCode, event) -> {
+                    if (event.getAction() != KeyEvent.ACTION_DOWN || keyCode != KeyEvent.KEYCODE_DPAD_RIGHT) return false;
+                    if (!item.isFile && item.hasChildren) toggleExpanded(item.path);
+                    return true;
                 });
             }
         }
