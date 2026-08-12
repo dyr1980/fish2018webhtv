@@ -28,8 +28,8 @@ public class Path {
 
     public static boolean exists(String path) {
         if (path == null) return false;
-        path = path.replace("clan://", "file://tvbox/");
-        return new File(path.replace("file://", "")).exists();
+        File file = local(path);
+        return file != null && file.exists();
     }
 
     public static boolean exists(File file) {
