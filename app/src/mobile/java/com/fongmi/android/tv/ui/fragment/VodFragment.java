@@ -55,6 +55,7 @@ import com.fongmi.android.tv.ui.dialog.OneKeySyncDialog;
 import com.fongmi.android.tv.ui.dialog.ReceiveDialog;
 import com.fongmi.android.tv.ui.dialog.SiteDialog;
 import com.fongmi.android.tv.ui.dialog.TypeDialog;
+import com.fongmi.android.tv.utils.FileChooser;
 import com.fongmi.android.tv.utils.ImgUtil;
 import com.fongmi.android.tv.utils.Notify;
 import com.fongmi.android.tv.utils.ResUtil;
