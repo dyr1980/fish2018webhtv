@@ -29,8 +29,8 @@ public class VodOvalHolder extends BaseVodHolder {
 
     @Override
     public void initView(Vod item) {
+        Setting.applyTitleMaxLines(binding.name);
         binding.name.setText(item.getName());
-        binding.name.setMaxLines(Setting.resolveTitleMaxLines());
         binding.name.setVisibility(item.getNameVisible());
         binding.getRoot().setOnClickListener(v -> listener.onItemClick(item));
         binding.getRoot().setOnLongClickListener(v -> listener.onLongClick(item));

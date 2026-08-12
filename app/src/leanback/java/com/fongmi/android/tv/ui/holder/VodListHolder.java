@@ -23,8 +23,8 @@ public class VodListHolder extends BaseVodHolder {
 
     @Override
     public void initView(Vod item) {
+        Setting.applyTitleMaxLines(binding.name);
         binding.name.setText(item.getName());
-        binding.name.setMaxLines(Setting.resolveTitleMaxLines());
         binding.remark.setText(item.getRemarks());
         binding.name.setVisibility(item.getNameVisible());
         binding.remark.setVisibility(item.getRemarkVisible());

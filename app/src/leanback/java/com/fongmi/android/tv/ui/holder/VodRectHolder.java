@@ -29,8 +29,8 @@ public class VodRectHolder extends BaseVodHolder {
 
     @Override
     public void initView(Vod item) {
+        Setting.applyTitleMaxLines(binding.name);
         binding.name.setText(item.getName());
-        binding.name.setMaxLines(Setting.resolveTitleMaxLines());
         binding.year.setText(item.getYear());
         binding.site.setText(item.getSiteName());
         binding.remark.setText(item.getRemarks());
