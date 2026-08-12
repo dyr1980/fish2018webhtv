@@ -373,6 +373,9 @@
     <string name="setting_site_health_sort">Site health ranking</string>
     <string name="setting_site_health_enable">Enable site health ranking</string>
     <string name="setting_site_health_dialog_sort">Sort site dialog</string>
+    <string name="setting_site_delete_title">Delete file site</string>
+    <string name="setting_site_delete_message">Delete %1$s and its source file? This cannot be undone.</string>
+    <string name="setting_site_delete_done">Deleted %1$s</string>
     <string name="site_health_clear_done">Site health data cleared</string>
     <string name="setting_web_home_extension">WebHome extensions</string>
     <string name="setting_web_home_fullscreen">WebHome homepage fullscreen</string>
@@ -758,8 +761,8 @@
     <string name="sync_receive_success">Sync data received</string>
     <string name="sync_paths_title">Sync folders</string>
     <string name="sync_paths_edit">Edit</string>
-    <string name="sync_paths_desc">One external-storage relative path per line. TV, TVBox and TVData are synced by default. You can add local package folders; folder contents are synced with Jar/script saved data.</string>
-    <string name="sync_paths_hint">TV&#10;TVBox&#10;TVData</string>
+    <string name="sync_paths_desc">One external-storage relative path per line. Select folders in the directory tree below; folder contents are synced with Jar/script saved data.</string>
+    <string name="sync_paths_hint"></string>
     <string name="sync_paths_up">Collapse</string>
     <string name="sync_paths_refresh">Refresh</string>
     <string name="sync_paths_enter">Open folder</string>
