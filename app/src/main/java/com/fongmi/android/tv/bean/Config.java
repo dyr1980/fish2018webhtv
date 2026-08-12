@@ -254,12 +254,12 @@ public class Config {
     }
 
     public Config save() {
+        setTime(System.currentTimeMillis());
         if (id == 0) {
             setId(Math.toIntExact(AppDatabase.get().getConfigDao().insert(this)));
         } else {
             AppDatabase.get().getConfigDao().update(this);
         }
-        setTime(System.currentTimeMillis());
         Prefers.put("config_" + getType(), getUrl());
         return this;
     }
