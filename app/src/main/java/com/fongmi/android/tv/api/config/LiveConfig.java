@@ -124,9 +124,7 @@ public class LiveConfig extends BaseConfig {
     @Override
     protected void load(Config config) throws Throwable {
         if (config.isEmpty()) {
-            try {
-                initLive(config, new JsonObject());
-            } catch (Throwable ignored) {}
+            parseConfig(config, new JsonObject());
             return;
         }
         try {
@@ -138,9 +136,7 @@ public class LiveConfig extends BaseConfig {
             }
             return;
         } catch (Throwable ignored) {}
-        try {
-            initLive(config, new JsonObject());
-        } catch (Throwable ignored) {}
+        parseConfig(config, new JsonObject());
     }
 
     @Override
@@ -166,8 +162,11 @@ public class LiveConfig extends BaseConfig {
     }
 
     private void parseText(Config config, String text) {
+        initList(new JsonObject());
         Live live = new Live(UrlUtil.getName(config.getUrl()), config.getUrl()).sync();
-        lives = new ArrayList<>(List.of(live));
+        List<Live> lives = new ArrayList<>(List.of(live));
+        lives.addAll(0, loadFileLives());
+        setLives(lives);
         LiveParser.text(live, text);
         finishLive(config, "");
     }
