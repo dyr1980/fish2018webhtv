@@ -740,8 +740,8 @@
     <string name="sync_item_remote_relay">中转服务配置</string>
     <string name="sync_paths_title">同步目录</string>
     <string name="sync_paths_edit">编辑</string>
-    <string name="sync_paths_desc">每行一个外置存储相对路径，默认同步 TV、TVBox、TVData。可加入本地包目录；目录内容会随 Jar/脚本保存数据一起同步。</string>
-    <string name="sync_paths_hint">TV&#10;TVBox&#10;TVData</string>
+    <string name="sync_paths_desc">每行一个外置存储相对路径，不默认同步任何目录，需自行勾选。目录内容会随 Jar/脚本保存数据一起同步。</string>
+    <string name="sync_paths_hint"></string>
     <string name="sync_paths_up">收起</string>
     <string name="sync_paths_refresh">刷新</string>
     <string name="sync_paths_enter">打开目录</string>
