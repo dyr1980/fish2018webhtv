@@ -505,6 +505,19 @@ public class Setting {
         };
     }
 
+    public static void applyTitleMaxLines(android.widget.TextView textView) {
+        int maxLines = resolveTitleMaxLines();
+        textView.setMaxLines(maxLines);
+        if (maxLines <= 1) {
+            textView.setSingleLine(true);
+            textView.setEllipsize(android.text.TextUtils.TruncateAt.MARQUEE);
+            textView.setMarqueeRepeatLimit(-1);
+        } else {
+            textView.setSingleLine(false);
+            textView.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        }
+    }
+
     public static boolean isDriveCheck() {
         return Prefers.getBoolean("drive_check", true);
     }
