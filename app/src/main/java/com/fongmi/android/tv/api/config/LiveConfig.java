@@ -218,8 +218,6 @@ public class LiveConfig extends BaseConfig {
         finishLive(config, spider);
     }
 
-    // ==================== 文件直播源加载器 ====================
-
     private static final String CLAN_LIVE_ROOT = Path.root() + "/tvbox/lives/";
 
     private List<Live> loadFileLives() {
