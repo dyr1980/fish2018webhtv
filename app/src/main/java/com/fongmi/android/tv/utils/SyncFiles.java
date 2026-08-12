@@ -215,10 +215,10 @@ public class SyncFiles {
 
     public static String normalize(String path) {
         if (path == null) return "";
-        path = path.replace("clan://", "file://tvbox/");
+        File localFile = com.github.catvod.utils.Path.local(path);
+        String absolute = localFile != null ? localFile.getAbsolutePath() : path;
         String root = Path.root().getAbsolutePath().replace('\\', '/');
-        String value = path.trim().replace('\\', '/');
-        value = value.replace("file://", "");
+        String value = absolute.trim().replace('\\', '/');
         if (value.startsWith(root)) value = value.substring(root.length());
         if (value.startsWith("/sdcard/")) value = value.substring("/sdcard/".length());
         return normalizeRelative(value);
