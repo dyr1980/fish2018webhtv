@@ -214,10 +214,9 @@ public class VodConfig extends BaseConfig {
 
     private void initSites(Config config, String globalSpider, JsonObject object) {
         String spider = TextUtils.isEmpty(globalSpider) ? Json.safeString(object, "spider") : globalSpider;
-        String resolvedSpider = ensureJar(spider, "XBPQ.jar");
-        BaseLoader.get().parseJar(resolvedSpider, true);
-        List<Site> sites = Json.safeListElement(object, "sites").stream().map(e -> Site.objectFrom(e, resolvedSpider)).distinct().collect(Collectors.toCollection(ArrayList::new));
-        List<Site> fileSites = loadFileSites(resolvedSpider);
+        BaseLoader.get().parseJar(spider, true);
+        List<Site> sites = Json.safeListElement(object, "sites").stream().map(e -> Site.objectFrom(e, spider)).distinct().collect(Collectors.toCollection(ArrayList::new));
+        List<Site> fileSites = loadFileSites(spider);
         sites.addAll(0, fileSites);
         setSites(sites);
         Map<String, Site> items = Site.findAll().stream().collect(Collectors.toMap(Site::getKey, Function.identity()));
@@ -337,48 +336,7 @@ public class VodConfig extends BaseConfig {
     // ==================== 文件站点加载器 ====================
 
     private static final String CLAN_ROOT = Path.root() + "/tvbox/";
-
-    private File jarToFile(String jar) {
-        if (TextUtils.isEmpty(jar)) return null;
-        String path = jar;
-        if (jar.startsWith("clan://")) path = CLAN_ROOT + jar.substring("clan://".length());
-        else if (jar.startsWith("./")) path = CLAN_ROOT + jar.substring(2);
-        else if (jar.startsWith("file://")) path = jar.substring(7);
-        else if (jar.startsWith("file:/")) path = jar.substring(6);
-        return new File(path);
-    }
-
-    private String findJarRecursively(File base, String targetName) {
-        if (base == null || !base.exists() || !base.isDirectory()) return null;
-        File[] files = base.listFiles();
-        if (files == null) return null;
-        for (File f : files) {
-            if (f.isFile() && f.getName().equalsIgnoreCase(targetName)) return f.getAbsolutePath();
-        }
-        for (File f : files) {
-            if (f.isDirectory()) {
-                String found = findJarRecursively(f, targetName);
-                if (found != null) return found;
-            }
-        }
-        return null;
-    }
-
-    private String ensureJar(String jarPath, String fallbackName) {
-        if (TextUtils.isEmpty(jarPath)) {
-            File standard = new File(CLAN_ROOT, "jars/" + fallbackName);
-            if (standard.exists()) return standard.getAbsolutePath();
-            String found = findJarRecursively(new File(CLAN_ROOT), fallbackName);
-            return found != null ? found : "";
-        }
-        File target = jarToFile(jarPath);
-        if (target != null && target.exists()) return target.getAbsolutePath();
-        File standard = new File(CLAN_ROOT, "jars/" + fallbackName);
-        if (standard.exists()) return standard.getAbsolutePath();
-        String found = findJarRecursively(new File(CLAN_ROOT), fallbackName);
-        if (found != null) return found;
-        return jarPath;
-    }
+    private static final String XBPQ_JAR = CLAN_ROOT + "jars/XBPQ.jar";
 
     private List<Site> loadFileSites(String globalSpider) {
         List<Site> result = new ArrayList<>();
@@ -404,8 +362,14 @@ public class VodConfig extends BaseConfig {
         if (!dir.exists() || !dir.isDirectory()) return result;
         List<File> files = listSorted(dir);
         if (files.isEmpty()) return result;
-        String jar = ensureJar(CLAN_ROOT + "jars/XBPQ.jar", "XBPQ.jar");
-        BaseLoader.get().parseJar(jar, true);
+        boolean globalIsXbpq = globalSpider.toLowerCase().contains("xbpq");
+        String jar;
+        if (globalIsXbpq) {
+            jar = globalSpider;
+        } else {
+            jar = XBPQ_JAR;
+            BaseLoader.get().parseJar(jar, true);
+        }
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
@@ -426,14 +390,13 @@ public class VodConfig extends BaseConfig {
         List<Site> result = new ArrayList<>();
         if (!dir.exists() || !dir.isDirectory()) return result;
         List<File> files = listSorted(dir);
-        String jar = ensureJar(globalSpider, "XBPQ.jar");
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
             Site site = Site.get("JS_" + file.getName() + "_file", meta.name);
             site.setType(3);
             site.setApi(UrlUtil.convert("clan://sites-js/api/" + file.getName()));
-            site.setJar(jar);
+            site.setJar(globalSpider);
             site.setName(meta.name + " | JS");
             meta.apply(site);
             result.add(site);
@@ -446,14 +409,13 @@ public class VodConfig extends BaseConfig {
         List<Site> result = new ArrayList<>();
         if (!dir.exists() || !dir.isDirectory()) return result;
         List<File> files = listSorted(dir);
-        String jar = ensureJar(globalSpider, "XBPQ.jar");
         for (File file : files) {
             FileMeta meta = parseFileMeta(file.getName());
             if (meta.name.isEmpty()) continue;
             Site site = Site.get("PY_" + file.getName() + "_file", meta.name);
             site.setType(3);
             site.setApi(UrlUtil.convert("clan://sites-py/" + file.getName()));
-            site.setJar(jar);
+            site.setJar(globalSpider);
             site.setName(meta.name + " | PY");
             meta.apply(site);
             result.add(site);
