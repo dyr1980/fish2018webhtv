@@ -366,6 +366,8 @@ public class VodConfig extends BaseConfig {
 
     private String ensureJar(String jarPath, String fallbackName) {
         if (TextUtils.isEmpty(jarPath)) {
+            File standard = new File(CLAN_ROOT, "jars/" + fallbackName);
+            if (standard.exists()) return standard.getAbsolutePath();
             String found = findJarRecursively(new File(CLAN_ROOT), fallbackName);
             return found != null ? found : "";
         }
