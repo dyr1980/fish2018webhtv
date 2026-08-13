@@ -16,6 +16,9 @@
     <string name="menu_site">站點</string>
     <string name="menu_reset">重設</string>
     <string name="menu_push_apk">推送apk</string>
+    <string name="menu_download_config">接口下載</string>
+    <string name="config_download_success">接口已下載到 tvbox/%1$s/</string>
+    <string name="config_download_failed">接口下載失敗：%1$s</string>
     <string name="apk_push_preparing">正在準備APK…</string>
     <string name="apk_push_select_device">推送apk · 選擇接收裝置</string>
     <string name="apk_push_ready">推送apk · %1$s · %2$s</string>
