@@ -163,14 +163,8 @@ public class JarLoader {
                     load(key, Path.jar(jar));
                 } else if (jar.startsWith("http")) {
                     load(key, Download.create(jar, Path.jar(jar)).get());
-                } else if (jar.startsWith("file")) {
-                    load(key, Path.local(jar));
-                } else if (jar.startsWith("clan")) {
-                    File local = Path.local(jar);
-                    if (local != null && local.exists()) load(key, local);
                 } else {
-                    File local = UrlUtil.toLocalFile(jar);
-                    if (local != null && local.exists()) load(key, local);
+                    load(key, Path.local(jar));
                 }
             } catch (Throwable e) {
                 SpiderDebug.log("jar-loader", "parse error key=%s jar=%s error=%s", key, jar, e.getMessage());
