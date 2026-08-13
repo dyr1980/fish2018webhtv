@@ -158,18 +158,22 @@ public class JarLoader {
             if (md5.startsWith("http")) md5 = OkHttp.string(md5).trim();
             jar = texts[0];
             SpiderDebug.log("jar-loader", "parse start key=%s source=%s md5=%s", key, source(jar), !md5.isEmpty());
-            if (!md5.isEmpty() && Util.equals(jar, md5)) {
-                load(key, Path.jar(jar));
-            } else if (jar.startsWith("http")) {
-                load(key, Download.create(jar, Path.jar(jar)).get());
-            } else if (jar.startsWith("file")) {
-                load(key, Path.local(jar));
-            } else if (jar.startsWith("clan")) {
-                File local = Path.local(jar);
-                if (local != null && local.exists()) load(key, local);
-            } else {
-                File local = UrlUtil.toLocalFile(jar);
-                if (local != null && local.exists()) load(key, local);
+            try {
+                if (!md5.isEmpty() && Util.equals(jar, md5)) {
+                    load(key, Path.jar(jar));
+                } else if (jar.startsWith("http")) {
+                    load(key, Download.create(jar, Path.jar(jar)).get());
+                } else if (jar.startsWith("file")) {
+                    load(key, Path.local(jar));
+                } else if (jar.startsWith("clan")) {
+                    File local = Path.local(jar);
+                    if (local != null && local.exists()) load(key, local);
+                } else {
+                    File local = UrlUtil.toLocalFile(jar);
+                    if (local != null && local.exists()) load(key, local);
+                }
+            } catch (Throwable e) {
+                SpiderDebug.log("jar-loader", "parse error key=%s jar=%s error=%s", key, jar, e.getMessage());
             }
         }
     }
