@@ -129,29 +129,10 @@ public class Path {
     }
 
     public static File local(String path) {
-        if (path == null || path.isEmpty()) return null;
-        if (path.startsWith("http://") || path.startsWith("https://")) return null;
-        String root = root().getAbsolutePath();
-        String rel;
-        if (path.startsWith("file:///")) {
-            return new File(path.substring(7));
-        } else if (path.startsWith("file://")) {
-            rel = path.substring(7);
-        } else if (path.startsWith("file:/")) {
-            return new File(path.substring(5));
-        } else if (path.startsWith("clan://")) {
-            rel = "tvbox/" + path.substring(7);
-        } else if (path.startsWith("./")) {
-            rel = "tvbox/" + path.substring(2);
-        } else if (path.startsWith("../")) {
-            rel = path.substring(3);
-        } else if (path.startsWith("/")) {
-            return new File(path);
-        } else {
-            rel = "tvbox/" + path;
-        }
-        while (rel.startsWith("/")) rel = rel.substring(1);
-        return new File(root, rel);
+        if (path == null) return null;
+        path = path.replace("clan://", "file://tvbox/").replace("file:/", "");
+        File file = new File(root(), path);
+        return file.exists() ? file : new File(path);
     }
 
     public static String read(File file) {
