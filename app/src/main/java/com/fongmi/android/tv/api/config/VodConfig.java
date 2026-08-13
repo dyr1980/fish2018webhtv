@@ -133,7 +133,11 @@ public class VodConfig extends BaseConfig {
             String json = Decoder.getJson(UrlUtil.convert(config.getUrl()), TAG);
             JsonObject object = Json.parse(json).getAsJsonObject();
             globalSpider = Json.safeString(object, "spider");
-            checkJson(config, object);
+            try {
+                checkJson(config, object);
+            } catch (Throwable e) {
+                initSites(config, globalSpider, new JsonObject());
+            }
             return;
         } catch (Throwable ignored) {}
         try {
