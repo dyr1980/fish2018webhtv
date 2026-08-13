@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +25,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.fongmi.android.tv.App;
 import com.fongmi.android.tv.R;
 import com.fongmi.android.tv.api.config.VodConfig;
+import com.github.catvod.crawler.SpiderDebug;
 import com.fongmi.android.tv.bean.Class;
 import com.fongmi.android.tv.bean.Config;
 import com.fongmi.android.tv.bean.Device;
@@ -55,6 +57,7 @@ import com.fongmi.android.tv.ui.dialog.OneKeySyncDialog;
 import com.fongmi.android.tv.ui.dialog.ReceiveDialog;
 import com.fongmi.android.tv.ui.dialog.SiteDialog;
 import com.fongmi.android.tv.ui.dialog.TypeDialog;
+import com.fongmi.android.tv.utils.ConfigDownload;
 import com.fongmi.android.tv.utils.ImgUtil;
 import com.fongmi.android.tv.utils.Notify;
 import com.fongmi.android.tv.utils.ResUtil;
@@ -272,6 +275,10 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
         else if (item.getItemId() == R.id.history) HistoryActivity.start(requireActivity());
         else if (item.getItemId() == R.id.sync) OneKeySyncDialog.create().show(requireActivity());
         else if (item.getItemId() == R.id.push_apk) ApkPushDialog.create().listener(this::onApkDeviceSelected).show(requireActivity());
+        else if (item.getItemId() == R.id.download_config) {
+            SpiderDebug.log(TAG, "onMenuItemClick: R.id.download_config triggered");
+            downloadConfig();
+        }
         else if (item.getItemId() == R.id.enhance && homeActivity() != null) homeActivity().openEnhanceFromVod();
         else if (item.getItemId() == R.id.web_home_fullscreen) onWebHomeFullscreen();
         else return false;
@@ -299,10 +306,46 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
         setChrome(payload);
     }
 
+    private static final String TAG = "VodFragment";
+
     private void updateToolbarMenu() {
         Menu menu = mBinding.toolbar.getMenu();
+        SpiderDebug.log(TAG, "updateToolbarMenu: menu=%s size=%d", menu, menu != null ? menu.size() : -1);
         MenuItem fullscreen = menu.findItem(R.id.web_home_fullscreen);
         if (fullscreen != null) fullscreen.setVisible(Setting.isWebHomeFullscreen() && mWeb != null && mWeb.isVisible());
+        String url = VodConfig.getUrl();
+        boolean shouldShow = ConfigDownload.shouldShow(url);
+        MenuItem download = menu.findItem(R.id.download_config);
+        SpiderDebug.log(TAG, "updateToolbarMenu: downloadItem=%s url=%s shouldShow=%s", download, url, shouldShow);
+        if (download != null) {
+            SpiderDebug.log(TAG, "updateToolbarMenu: setting download visible=%s", shouldShow);
+            download.setVisible(shouldShow);
+        }
+    }
+
+    private void downloadConfig() {
+        String url = VodConfig.getUrl();
+        SpiderDebug.log(TAG, "downloadConfig: called url=%s", url);
+        if (!ConfigDownload.shouldShow(url)) {
+            SpiderDebug.log(TAG, "downloadConfig: shouldShow=false, aborting");
+            Toast.makeText(requireActivity(), "接口地址不符合下载条件: " + (url == null ? "null" : url), Toast.LENGTH_LONG).show();
+            return;
+        }
+        SpiderDebug.log(TAG, "downloadConfig: starting ConfigDownload.start");
+        ConfigDownload.start(url, new ConfigDownload.Callback() {
+            @Override
+            public void success(String dirName) {
+                SpiderDebug.log(TAG, "downloadConfig: success dirName=%s isAdded=%s", dirName, isAdded());
+                if (!isAdded()) return;
+                Toast.makeText(requireActivity(), getString(R.string.config_download_success, dirName), Toast.LENGTH_LONG).show();
+            }
+            @Override
+            public void error(String msg) {
+                SpiderDebug.log(TAG, "downloadConfig: error msg=%s isAdded=%s", msg, isAdded());
+                if (!isAdded()) return;
+                Toast.makeText(requireActivity(), getString(R.string.config_download_failed, msg), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void setSearchLongClick() {
