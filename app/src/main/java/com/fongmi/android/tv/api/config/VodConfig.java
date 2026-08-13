@@ -133,11 +133,7 @@ public class VodConfig extends BaseConfig {
             String json = Decoder.getJson(UrlUtil.convert(config.getUrl()), TAG);
             JsonObject object = Json.parse(json).getAsJsonObject();
             globalSpider = Json.safeString(object, "spider");
-            try {
-                checkJson(config, object);
-            } catch (Throwable e) {
-                initSites(config, globalSpider, new JsonObject());
-            }
+            checkJson(config, object);
             return;
         } catch (Throwable ignored) {}
         try {
@@ -371,9 +367,11 @@ public class VodConfig extends BaseConfig {
         if (!dir.exists() || !dir.isDirectory()) return result;
         List<File> files = listSorted(dir);
         if (files.isEmpty()) return result;
-        boolean globalIsXbpq = globalSpider.toLowerCase().contains("xbpq");
         String jar;
-        if (globalIsXbpq) {
+        if (!TextUtils.isEmpty(globalSpider)
+                && globalSpider.toLowerCase().contains("xbpq")
+                && Path.local(globalSpider) != null
+                && Path.local(globalSpider).exists()) {
             jar = globalSpider;
         } else {
             jar = XBPQ_JAR;
