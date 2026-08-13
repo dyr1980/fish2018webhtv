@@ -133,37 +133,25 @@ public class Path {
         if (path.startsWith("http://") || path.startsWith("https://")) return null;
         String root = root().getAbsolutePath();
         String rel;
-        if (path.startsWith("clan://")) {
+        if (path.startsWith("file:///")) {
+            return new File(path.substring(7));
+        } else if (path.startsWith("file://")) {
             rel = path.substring(7);
-            return resolveLocal(root, rel);
-        }
-        if (path.startsWith("./")) {
-            rel = path.substring(2);
-            return resolveLocal(root, rel);
-        }
-        if (path.startsWith("../")) {
-            rel = path.substring(3);
-            return resolveLocal(root, rel);
-        }
-        if (path.startsWith("file://")) {
-            path = path.substring(7);
         } else if (path.startsWith("file:/")) {
-            path = path.substring(6);
+            return new File(path.substring(5));
+        } else if (path.startsWith("clan://")) {
+            rel = "tvbox/" + path.substring(7);
+        } else if (path.startsWith("./")) {
+            rel = "tvbox/" + path.substring(2);
+        } else if (path.startsWith("../")) {
+            rel = path.substring(3);
+        } else if (path.startsWith("/")) {
+            return new File(path);
+        } else {
+            rel = "tvbox/" + path;
         }
-        if (path.startsWith("/")) {
-            File f = new File(path);
-            return f.exists() ? f : new File(path);
-        }
-        return resolveLocal(root, path);
-    }
-
-    private static File resolveLocal(String root, String rel) {
         while (rel.startsWith("/")) rel = rel.substring(1);
-        File tvbox = new File(root, "tvbox/" + rel);
-        if (tvbox.exists()) return tvbox;
-        File direct = new File(root, rel);
-        if (direct.exists()) return direct;
-        return tvbox;
+        return new File(root, rel);
     }
 
     public static String read(File file) {
