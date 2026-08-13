@@ -129,11 +129,41 @@ public class Path {
     }
 
     public static File local(String path) {
-        if (path == null) return null;
-        path = path.replace("clan://", "file://tvbox/");
-        path = path.replace("file:/", "");
-        File file = new File(root(), path);
-        return file.exists() ? file : new File(path);
+        if (path == null || path.isEmpty()) return null;
+        if (path.startsWith("http://") || path.startsWith("https://")) return null;
+        String root = root().getAbsolutePath();
+        String rel;
+        if (path.startsWith("clan://")) {
+            rel = path.substring(7);
+            return resolveLocal(root, rel);
+        }
+        if (path.startsWith("./")) {
+            rel = path.substring(2);
+            return resolveLocal(root, rel);
+        }
+        if (path.startsWith("../")) {
+            rel = path.substring(3);
+            return resolveLocal(root, rel);
+        }
+        if (path.startsWith("file://")) {
+            path = path.substring(7);
+        } else if (path.startsWith("file:/")) {
+            path = path.substring(6);
+        }
+        if (path.startsWith("/")) {
+            File f = new File(path);
+            return f.exists() ? f : new File(path);
+        }
+        return resolveLocal(root, path);
+    }
+
+    private static File resolveLocal(String root, String rel) {
+        while (rel.startsWith("/")) rel = rel.substring(1);
+        File tvbox = new File(root, "tvbox/" + rel);
+        if (tvbox.exists()) return tvbox;
+        File direct = new File(root, rel);
+        if (direct.exists()) return direct;
+        return tvbox;
     }
 
     public static String read(File file) {
