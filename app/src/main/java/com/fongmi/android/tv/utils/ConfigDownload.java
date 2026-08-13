@@ -9,6 +9,7 @@ import com.fongmi.android.tv.bean.Channel;
 import com.fongmi.android.tv.bean.Group;
 import com.fongmi.android.tv.bean.Live;
 import com.fongmi.android.tv.bean.Site;
+import com.github.catvod.crawler.SpiderDebug;
 import com.github.catvod.net.OkHttp;
 import com.github.catvod.utils.Path;
 import com.google.gson.JsonArray;
@@ -28,16 +29,20 @@ import okhttp3.Response;
 
 public class ConfigDownload {
 
+    private static final String TAG = "ConfigDownload";
+
     public interface Callback {
         void success(String dirName);
         void error(String msg);
     }
 
     public static boolean shouldShow(String url) {
-        if (TextUtils.isEmpty(url)) return false;
-        if (!url.toLowerCase(Locale.ROOT).startsWith("http")) return false;
-        if (url.startsWith("http://127.") || url.startsWith("https://127.")) return false;
-        return true;
+        boolean empty = TextUtils.isEmpty(url);
+        boolean startsHttp = !empty && url.toLowerCase(Locale.ROOT).startsWith("http");
+        boolean local = startsHttp && (url.startsWith("http://127.") || url.startsWith("https://127."));
+        boolean result = !empty && startsHttp && !local;
+        SpiderDebug.log(TAG, "shouldShow: url=%s empty=%s http=%s local=%s => %s", url, empty, startsHttp, local, result);
+        return result;
     }
 
     private static String computeGlobalSpider() {
@@ -46,24 +51,26 @@ public class ConfigDownload {
             String jar = site.getJar();
             if (!TextUtils.isEmpty(jar)) counts.merge(jar, 1, Integer::sum);
         }
+        SpiderDebug.log(TAG, "computeGlobalSpider: jar counts=%s", counts);
         if (counts.isEmpty()) return null;
         String best = null;
         int max = 0;
         for (Map.Entry<String, Integer> e : counts.entrySet()) {
             if (e.getValue() > max) { max = e.getValue(); best = e.getKey(); }
         }
+        SpiderDebug.log(TAG, "computeGlobalSpider: best=%s count=%d", best, max);
         return best;
     }
 
     public static void start(String url, Callback callback) {
+        SpiderDebug.log(TAG, "start: url=%s callback=%s", url, callback != null);
         new Thread(() -> {
             try {
                 String dirName = extractDirName(url);
                 String outDir = "tvbox/" + dirName;
-                new File(Path.root(), outDir + "/jars").mkdirs();
-                new File(Path.root(), outDir + "/json").mkdirs();
-                new File(Path.root(), outDir + "/js").mkdirs();
-                new File(Path.root(), outDir + "/py").mkdirs();
+                File outRoot = new File(Path.root(), outDir);
+                outRoot.mkdirs();
+                SpiderDebug.log(TAG, "start: dirName=%s outDir=%s Path.root()=%s", dirName, outDir, Path.root());
 
                 JsonObject root = new JsonObject();
                 Set<String> savedNames = new HashSet<>();
@@ -75,8 +82,11 @@ public class ConfigDownload {
                     globalJarRel = "./jars/" + fname;
                     downloadJar(globalSpider, outDir + "/jars/" + fname);
                     root.addProperty("spider", globalJarRel);
+                } else {
+                    SpiderDebug.log(TAG, "start: no global spider");
                 }
 
+                SpiderDebug.log(TAG, "start: sites count=%d", VodConfig.get().getSites().size());
                 JsonArray sitesArr = new JsonArray();
                 Set<String> savedJars = new HashSet<>();
                 savedJars.add(globalJarRel);
@@ -129,6 +139,7 @@ public class ConfigDownload {
                 }
                 root.add("sites", sitesArr);
 
+                int livesCount = 0;
                 JsonArray livesArr = new JsonArray();
                 for (Live live : LiveConfig.get().getLives()) {
                     for (Group group : live.getGroups()) {
@@ -139,18 +150,25 @@ public class ConfigDownload {
                                 lo.addProperty("name", safeStr(ch.getName()));
                                 lo.addProperty("url", u);
                                 livesArr.add(lo);
+                                livesCount++;
                             }
                         }
                     }
                 }
                 root.add("lives", livesArr);
+                SpiderDebug.log(TAG, "start: lives entries=%d", livesCount);
 
                 String pretty = prettyPrint(root);
-                File outFile = new File(Path.root(), outDir + "/" + dirName + ".json");
+                File outFile = new File(outRoot, dirName + ".json");
+                SpiderDebug.log(TAG, "start: writing json to %s parentExists=%s", outFile.getAbsolutePath(), outFile.getParentFile().exists());
                 Path.write(outFile, pretty.getBytes("UTF-8"));
+                SpiderDebug.log(TAG, "start: json written length=%d fileExists=%s size=%d", pretty.length(), outFile.exists(), outFile.exists() ? outFile.length() : -1);
+                SpiderDebug.log(TAG, "start: SUCCESS dirName=%s", dirName);
 
                 if (callback != null) App.post(() -> callback.success(dirName));
             } catch (Throwable e) {
+                SpiderDebug.log(TAG, "start: FAILED error=%s", e.getMessage());
+                SpiderDebug.log(e);
                 if (callback != null) App.post(() -> callback.error(e.getMessage() == null ? "unknown" : e.getMessage()));
             }
         }).start();
@@ -176,13 +194,19 @@ public class ConfigDownload {
 
     private static String downloadJar(String src, String relOut) throws Exception {
         File out = new File(Path.root(), relOut);
+        File parent = out.getParentFile();
+        if (parent != null) parent.mkdirs();
         byte[] data = fetchBytes(src);
         if (data != null && data.length > 0) {
             Path.write(out, data);
+            SpiderDebug.log(TAG, "downloadJar: HTTP src=%s out=%s bytes=%d", src, relOut, data.length);
         } else {
             File local = Path.local(src);
             if (local != null && local.exists()) {
                 Path.write(out, Path.readToByte(local));
+                SpiderDebug.log(TAG, "downloadJar: local src=%s path=%s", src, local.getAbsolutePath());
+            } else {
+                SpiderDebug.log(TAG, "downloadJar: SKIP src=%s local=%s exists=false", src, local != null ? local.getAbsolutePath() : "null");
             }
         }
         return "./jars/" + out.getName();
@@ -191,19 +215,28 @@ public class ConfigDownload {
     private static void downloadText(String src, String relOut) {
         try {
             File out = new File(Path.root(), relOut);
+            File parent = out.getParentFile();
+            if (parent != null) parent.mkdirs();
             String content = null;
             if (src.startsWith("http")) {
                 content = OkHttp.string(src);
+                SpiderDebug.log(TAG, "downloadText: HTTP src=%s len=%d", src, content != null ? content.length() : -1);
             } else {
                 File local = Path.local(src);
                 if (local != null && local.exists()) {
                     content = Path.read(local);
+                    SpiderDebug.log(TAG, "downloadText: local src=%s path=%s len=%d", src, local.getAbsolutePath(), content != null ? content.length() : -1);
+                } else {
+                    SpiderDebug.log(TAG, "downloadText: SKIP src=%s local=%s", src, local != null ? local.getAbsolutePath() : "null");
                 }
             }
             if (!TextUtils.isEmpty(content)) {
                 Path.write(out, content.getBytes("UTF-8"));
             }
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            SpiderDebug.log(TAG, "downloadText: FAILED src=%s error=%s", src, e.getMessage());
+            SpiderDebug.log(e);
+        }
     }
 
     private static byte[] fetchBytes(String url) throws IOException {
@@ -211,11 +244,16 @@ public class ConfigDownload {
             Response res = null;
             try {
                 res = OkHttp.newCall(url).execute();
-                if (res.body() != null) return res.body().bytes();
+                if (res.body() != null) {
+                    byte[] bytes = res.body().bytes();
+                    SpiderDebug.log(TAG, "fetchBytes: OK url=%s status=%d bytes=%d", url, res.code(), bytes.length);
+                    return bytes;
+                }
             } finally {
                 if (res != null) res.close();
             }
         }
+        SpiderDebug.log(TAG, "fetchBytes: null url=%s", url);
         return null;
     }
 
