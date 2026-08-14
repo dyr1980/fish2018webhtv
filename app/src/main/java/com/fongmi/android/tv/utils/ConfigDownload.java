@@ -16,6 +16,8 @@ import com.google.gson.JsonObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -195,7 +197,8 @@ public class ConfigDownload {
         host = host.replaceAll("[^a-zA-Z0-9_-]", "_");
         if (host.isEmpty()) host = "config";
         if (host.length() > 20) host = host.substring(0, 20);
-        return host;
+        String stamp = new SimpleDateFormat("HHmmss", Locale.ROOT).format(new Date());
+        return host + "_" + stamp;
     }
 
     private static void downloadJar(String src, String relOut) throws Exception {
