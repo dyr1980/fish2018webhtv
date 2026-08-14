@@ -17,7 +17,7 @@
     <string name="menu_reset">Reset</string>
     <string name="menu_push_apk">Push APK</string>
     <string name="menu_download_config">Download Config</string>
-    <string name="config_download_start">Config downloading…</string>
+    <string name="config_download_start">Downloading config…</string>
     <string name="config_download_success">Config downloaded to tvbox/api/%1$s/</string>
     <string name="config_download_failed">Config download failed: %1$s</string>
     <string name="apk_push_preparing">Preparing APK...</string>
