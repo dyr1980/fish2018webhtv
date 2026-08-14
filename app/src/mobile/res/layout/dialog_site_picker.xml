@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape_dialog_control_glass_panel"
+    android:background="@drawable/shape_shell_proxy_dialog"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -11,15 +10,16 @@
         android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_dialog_glass_input"
+        android:background="@drawable/shape_shell_proxy_dialog"
         android:hint="@string/search_sites"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:maxLines="1"
         android:paddingHorizontal="14dp"
         android:paddingVertical="10dp"
-        android:textColor="?attr/colorOnSurface"
-        android:textColorHint="?attr/colorOnSurfaceVariant"
+        android:textColor="@color/dialog_outlined_button_text"
+        android:textColorHint="@color/dialog_outlined_button_text"
+        android:alpha="0.5"
         android:textSize="14sp" />
 
     <LinearLayout
@@ -34,7 +34,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textColor="@color/dialog_outlined_button_text"
+            android:alpha="0.55"
             android:textSize="12sp" />
 
         <TextView
@@ -46,7 +47,7 @@
             android:paddingHorizontal="14dp"
             android:paddingVertical="6dp"
             android:text="@string/select_all"
-            android:textColor="@color/selector_control_sheet_text"
+            android:textColor="@color/dialog_outlined_button_text"
             android:textSize="12sp" />
 
         <TextView
@@ -59,7 +60,7 @@
             android:paddingHorizontal="14dp"
             android:paddingVertical="6dp"
             android:text="@string/select_none"
-            android:textColor="@color/selector_control_sheet_text"
+            android:textColor="@color/dialog_outlined_button_text"
             android:textSize="12sp" />
 
         <TextView
@@ -72,7 +73,7 @@
             android:paddingHorizontal="14dp"
             android:paddingVertical="6dp"
             android:text="@string/select_invert"
-            android:textColor="@color/selector_control_sheet_text"
+            android:textColor="@color/dialog_outlined_button_text"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -104,7 +105,7 @@
             android:paddingHorizontal="20dp"
             android:paddingVertical="10dp"
             android:text="@string/confirm"
-            android:textColor="@color/selector_control_sheet_text"
+            android:textColor="@color/dialog_outlined_button_text"
             android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>
