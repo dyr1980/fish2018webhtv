@@ -48,6 +48,7 @@ import com.fongmi.android.tv.ui.activity.SearchActivity;
 import com.fongmi.android.tv.ui.adapter.TypeAdapter;
 import com.fongmi.android.tv.ui.base.BaseFragment;
 import com.fongmi.android.tv.ui.dialog.ApkPushDialog;
+import com.fongmi.android.tv.ui.dialog.BackupProgressDialog;
 import com.fongmi.android.tv.ui.dialog.FilterDialog;
 import com.fongmi.android.tv.ui.dialog.HistoryDialog;
 import com.fongmi.android.tv.ui.dialog.LinkDialog;
@@ -312,15 +313,23 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
     private void downloadConfig() {
         String url = VodConfig.getUrl();
         if (!ConfigDownload.shouldShow(url)) return;
-        Notify.show(R.string.config_download_start);
-        ConfigDownload.start(url, new ConfigDownload.Callback() {
+        String title = getString(R.string.menu_download_config);
+        BackupProgressDialog dialog = BackupProgressDialog.open(getChildFragmentManager(), title);
+        ConfigDownload.start(url, new ConfigDownload.Listener() {
             @Override
-            public void success(String dirName) {
+            public void onProgress(String stage, int current, int total) {
+                int percent = total <= 0 ? 0 : Math.min(100, current * 100 / total);
+                dialog.update(stage, percent, current, total);
+            }
+            @Override
+            public void onSuccess(String dirName) {
+                dialog.finish();
                 if (!isAdded()) return;
                 Notify.show(getString(R.string.config_download_success, dirName));
             }
             @Override
-            public void error(String msg) {
+            public void onError(String msg) {
+                dialog.finish();
                 if (!isAdded()) return;
                 Notify.show(getString(R.string.config_download_failed, msg));
             }
