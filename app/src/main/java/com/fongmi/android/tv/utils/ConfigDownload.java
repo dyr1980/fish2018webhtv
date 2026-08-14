@@ -28,9 +28,10 @@ import okhttp3.Response;
 
 public class ConfigDownload {
 
-    public interface Callback {
-        void success(String dirName);
-        void error(String msg);
+    public interface Listener {
+        void onProgress(String stage, int current, int total);
+        void onSuccess(String dirName);
+        void onError(String msg);
     }
 
     public static boolean shouldShow(String url) {
@@ -74,7 +75,7 @@ public class ConfigDownload {
         return best;
     }
 
-    public static void start(String url, Callback callback) {
+    public static void start(String url, Listener listener) {
         new Thread(() -> {
             try {
                 String dirName = extractDirName(url);
@@ -88,8 +89,18 @@ public class ConfigDownload {
                 Map<String, String> jarCache = new HashMap<>();
 
                 String globalSpider = computeGlobalSpider();
+
+                int total = countTotal();
+                final int totalRef = total;
+                final int[] progress = new int[]{0};
+
+                notify(listener, "准备下载", progress[0], totalRef);
+
                 if (!TextUtils.isEmpty(globalSpider)) {
-                    String jarRel = ensureJar(globalSpider, outDir, clanPrefix, jarCache);
+                    String jarRel = ensureJar(globalSpider, outDir, clanPrefix, jarCache, () -> {
+                        progress[0]++;
+                        notify(listener, "下载 jar", progress[0], totalRef);
+                    });
                     if (jarRel != null) root.addProperty("spider", jarRel);
                 }
 
@@ -107,12 +118,17 @@ public class ConfigDownload {
                         String fname = uniqueName(stripSlash(getBasename(api)), savedNames);
                         downloadText(api, outDir + "/" + ext + "/" + fname);
                         api = clanPrefix + "/" + ext + "/" + fname;
+                        progress[0]++;
+                        notify(listener, "下载 " + ext, progress[0], totalRef);
                     }
                     so.addProperty("api", api);
 
                     String jar = cleanJar(site.getJar());
                     if (!isJsPy && !TextUtils.isEmpty(jar) && !jar.equals(globalSpider)) {
-                        String jarRel = ensureJar(site.getJar(), outDir, clanPrefix, jarCache);
+                        String jarRel = ensureJar(site.getJar(), outDir, clanPrefix, jarCache, () -> {
+                            progress[0]++;
+                            notify(listener, "下载 jar", progress[0], totalRef);
+                        });
                         if (jarRel != null) so.addProperty("jar", jarRel);
                     }
 
@@ -130,6 +146,8 @@ public class ConfigDownload {
                             String fname = uniqueName(stripSlash(getBasename(trimmed)), savedNames);
                             downloadText(trimmed, outDir + "/json/" + fname);
                             so.addProperty("ext", clanPrefix + "/json/" + fname);
+                            progress[0]++;
+                            notify(listener, "下载 json", progress[0], totalRef);
                         } else {
                             so.addProperty("ext", extRaw);
                         }
@@ -146,6 +164,8 @@ public class ConfigDownload {
                         String fname = uniqueName(stripSlash(getBasename(liveUrl)), savedNames);
                         downloadText(liveUrl, outDir + "/lives/" + fname);
                         liveUrl = clanPrefix + "/lives/" + fname;
+                        progress[0]++;
+                        notify(listener, "下载直播源", progress[0], totalRef);
                     }
                     JsonObject lo = new JsonObject();
                     lo.addProperty("name", safeStr(live.getName()));
@@ -154,18 +174,59 @@ public class ConfigDownload {
                 }
                 root.add("lives", livesArr);
 
+                notify(listener, "生成配置文件", progress[0], totalRef);
                 String pretty = prettyPrint(root);
                 File outFile = new File(outRoot, dirName + ".json");
                 Path.write(outFile, pretty.getBytes("UTF-8"));
 
-                if (callback != null) App.post(() -> callback.success(dirName));
+                App.post(() -> {
+                    if (listener != null) listener.onProgress("完成", totalRef, totalRef);
+                });
+                App.post(() -> {
+                    if (listener != null) listener.onSuccess(dirName);
+                });
             } catch (Throwable e) {
-                if (callback != null) App.post(() -> callback.error(e.getMessage() == null ? "unknown" : e.getMessage()));
+                App.post(() -> {
+                    if (listener != null) listener.onError(e.getMessage() == null ? "unknown" : e.getMessage());
+                });
             }
         }).start();
     }
 
-    private static String ensureJar(String rawJar, String outDir, String clanPrefix, Map<String, String> jarCache) {
+    private static int countTotal() {
+        int count = 0;
+        String globalSpider = computeGlobalSpider();
+        if (!TextUtils.isEmpty(globalSpider)) count++;
+        Map<String, String> jarCache = new HashMap<>();
+        for (Site site : VodConfig.get().getSites()) {
+            String api = safeStr(site.getApi());
+            if (isJsOrPyFile(api)) count++;
+            String jar = cleanJar(site.getJar());
+            if (!TextUtils.isEmpty(jar) && !jar.equals(globalSpider)) {
+                String fp = jarFingerprint(site.getJar());
+                if (!TextUtils.isEmpty(fp) && !jarCache.containsKey(fp)) {
+                    jarCache.put(fp, jar);
+                    count++;
+                }
+            }
+            String extRaw = site.getExt();
+            if (!TextUtils.isEmpty(extRaw) && isJsonPath(extRaw.trim())) count++;
+        }
+        for (Live live : LiveConfig.get().getLives()) {
+            String liveUrl = safeStr(live.getUrl());
+            if (!TextUtils.isEmpty(liveUrl) && liveUrl.startsWith("clan://lives/")) count++;
+        }
+        count++;
+        return count;
+    }
+
+    private static void notify(Listener listener, String stage, int current, int total) {
+        App.post(() -> {
+            if (listener != null) listener.onProgress(stage, current, total);
+        });
+    }
+
+    private static String ensureJar(String rawJar, String outDir, String clanPrefix, Map<String, String> jarCache, Runnable downloaded) {
         String fp = jarFingerprint(rawJar);
         if (TextUtils.isEmpty(fp)) return null;
         String cached = jarCache.get(fp);
@@ -175,6 +236,7 @@ public class ConfigDownload {
         String relDir = outDir + "/jars/";
         try {
             downloadJar(cleanJar(rawJar), relDir + fname);
+            if (downloaded != null) downloaded.run();
         } catch (Exception ignored) {
         }
         String rel = clanPrefix + "/jars/" + fname;
