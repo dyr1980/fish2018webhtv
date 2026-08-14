@@ -39,7 +39,7 @@
         android:focusableInTouchMode="true"
         android:contentDescription="@string/setting"
         android:padding="4dp"
-        android:src="@drawable/ic_site_config"
+        android:src="@drawable/ic_action_more_vert"
         app:tint="@color/site_action_icon"
         android:visibility="gone" />
 
