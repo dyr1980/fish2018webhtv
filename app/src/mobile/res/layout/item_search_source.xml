@@ -48,9 +48,8 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/setting"
         android:padding="6dp"
-        android:src="@drawable/ic_nav_setting"
+        android:src="@drawable/ic_action_more_vert"
         android:visibility="gone"
-        app:tint="@color/dialog_outlined_button_text"
         android:tint="@color/dialog_outlined_button_text" />
 
 </LinearLayout>
