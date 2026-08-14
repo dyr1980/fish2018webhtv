@@ -1460,4 +1460,18 @@
 
     <string name="player_audio_badge_queue">Queue</string>
     <string name="player_audio_repeat">Repeat</string>
+
+    <string name="setting">Config</string>
+    <string name="confirm">OK</string>
+    <string name="search_sites">Search sites…</string>
+    <string name="select_all">Select all</string>
+    <string name="select_none">Select none</string>
+    <string name="select_invert">Invert</string>
+    <string name="search_source_all">All sources</string>
+    <string name="search_source_home">Home source</string>
+    <string name="search_source_tag">Tag source</string>
+    <string name="search_source_white">Whitelist</string>
+    <string name="search_source_black">Blacklist</string>
+    <string name="search_site_count">%d site(s)</string>
+    <string name="search_site_count_of">Selected %d / %d</string>
 </resources>
