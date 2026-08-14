@@ -17,8 +17,8 @@
     <string name="menu_reset">重置</string>
     <string name="menu_push_apk">推送apk</string>
     <string name="menu_download_config">接口下载</string>
-    <string name="config_download_start">开始下载接口配置…</string>
-    <string name="config_download_success">接口已下载到 tvbox/%1$s/</string>
+    <string name="config_download_start">接口配置下载接中…</string>
+    <string name="config_download_success">接口已下载到 tvbox/api/%1$s/</string>
     <string name="config_download_failed">接口下载失败：%1$s</string>
     <string name="apk_push_preparing">正在准备APK…</string>
     <string name="apk_push_select_device">推送apk · 选择接收设备</string>
