@@ -1452,4 +1452,18 @@
 
     <string name="player_audio_badge_queue">队列</string>
     <string name="player_audio_repeat">循环</string>
+
+    <string name="setting">配置</string>
+    <string name="confirm">确定</string>
+    <string name="search_sites">搜索站点…</string>
+    <string name="select_all">全选</string>
+    <string name="select_none">全清</string>
+    <string name="select_invert">反选</string>
+    <string name="search_source_all">全部源</string>
+    <string name="search_source_home">首页源</string>
+    <string name="search_source_tag">标签源</string>
+    <string name="search_source_white">白名单</string>
+    <string name="search_source_black">黑名单</string>
+    <string name="search_site_count">%d 个站点</string>
+    <string name="search_site_count_of">已选 %d / %d</string>
 </resources>
