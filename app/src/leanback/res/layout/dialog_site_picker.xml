@@ -80,29 +80,12 @@
             android:text="@string/select_invert"
             android:textColor="@color/white"
             android:textSize="14sp" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="280dp"
-        android:layout_marginTop="12dp"
-        android:clipToPadding="false"
-        android:overScrollMode="never"
-        android:padding="4dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:gravity="end"
-        android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/confirm"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
+            android:layout_marginStart="16dp"
             android:background="@drawable/selector_site_item"
             android:focusable="true"
             android:focusableInTouchMode="true"
@@ -113,5 +96,15 @@
             android:textColor="@color/white"
             android:textSize="14sp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_marginTop="12dp"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:padding="4dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
