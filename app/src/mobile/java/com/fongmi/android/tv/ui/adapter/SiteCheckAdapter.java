@@ -108,3 +108,4 @@ public class SiteCheckAdapter extends RecyclerView.Adapter<SiteCheckAdapter.View
             this.binding = binding;
         }
     }
+}
