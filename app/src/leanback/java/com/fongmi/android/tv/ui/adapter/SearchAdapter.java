@@ -117,7 +117,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ViewHolder holder = new ViewHolder(AdapterSearchBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
         holder.binding.getRoot().getLayoutParams().width = width;
-        holder.binding.getRoot().getLayoutParams().height = height + ResUtil.dp2px(34);
+        holder.binding.getRoot().getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         holder.binding.image.getLayoutParams().height = height;
         return holder;
     }
