@@ -347,7 +347,7 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
     private void hideContent() {
         mBinding.type.setVisibility(View.INVISIBLE);
         mBinding.typeMore.setVisibility(View.INVISIBLE);
-        mBinding.pager.setVisibility(View INVISIBLE);
+        mBinding.pager.setVisibility(View.INVISIBLE);
     }
 
     private void showContent() {
