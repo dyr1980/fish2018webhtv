@@ -30,6 +30,7 @@ import com.fongmi.android.tv.ui.adapter.SearchAdapter;
 import com.fongmi.android.tv.ui.base.BaseActivity;
 import com.fongmi.android.tv.ui.custom.CustomScroller;
 import com.fongmi.android.tv.utils.ResUtil;
+import com.fongmi.android.tv.utils.SearchModeStore;
 import com.github.catvod.crawler.SpiderDebug;
 import com.google.gson.reflect.TypeToken;
 
@@ -173,13 +174,7 @@ public class CollectActivity extends BaseActivity implements CollectAdapter.OnCl
     }
 
     private void setSites() {
-        String siteKey = getSiteKey();
-        mSites = new ArrayList<>();
-        for (Site site : VodConfig.get().getSites()) {
-            if (!site.isSearchable()) continue;
-            if (!siteKey.isEmpty() && !site.getKey().equals(siteKey)) continue;
-            mSites.add(site);
-        }
+        mSites = new ArrayList<>(SearchModeStore.filterSites(VodConfig.get().getSites(), getSiteKey()));
         SiteHealthStore.sortSites(mSites);
     }
 
