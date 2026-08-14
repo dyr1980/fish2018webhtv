@@ -15,6 +15,7 @@ import androidx.viewbinding.ViewBinding;
 
 import com.bumptech.glide.Glide;
 import com.fongmi.android.tv.App;
+import com.fongmi.android.tv.Product;
 import com.fongmi.android.tv.R;
 import com.fongmi.android.tv.api.config.VodConfig;
 import com.fongmi.android.tv.bean.Collect;
@@ -191,7 +192,7 @@ public class CollectActivity extends BaseActivity implements CollectAdapter.OnCl
     }
 
     private int getCount() {
-        return 5;
+        return Product.getColumn();
     }
 
     private int getItemWidth(int count) {
