@@ -25,8 +25,6 @@ public class CustomTitleView extends MaterialTextView {
     private Listener listener;
     private Animation flicker;
     private boolean coolDown;
-    private long okDownTime;
-    private final long LONG_PRESS_DELAY = 800;
 
     private Site getHome() {
         return VodConfig.get().getHome();
@@ -51,7 +49,7 @@ public class CustomTitleView extends MaterialTextView {
     }
 
     private boolean hasEvent(KeyEvent event) {
-        return !getHome().isEmpty() && (KeyUtil.isLeftKey(event) || KeyUtil.isRightKey(event) || (KeyUtil.isUpKey(event) && !coolDown) || KeyUtil.isOkKey(event));
+        return !getHome().isEmpty() && (KeyUtil.isLeftKey(event) || KeyUtil.isRightKey(event) || (KeyUtil.isUpKey(event) && !coolDown));
     }
 
     @Override
@@ -64,24 +62,6 @@ public class CustomTitleView extends MaterialTextView {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (!hasEvent(event)) return super.dispatchKeyEvent(event);
-
-        //===== OK长按检测逻辑 =====
-        if(KeyUtil.isOkKey(event)){
-            if(event.getAction() == KeyEvent.ACTION_DOWN){
-                okDownTime = System.currentTimeMillis();
-            }else if(event.getAction() == KeyEvent.ACTION_UP){
-                long pressDuration = System.currentTimeMillis() - okDownTime;
-                //按下时长超过 800ms →判定长按刷新
-                if(pressDuration >= LONG_PRESS_DELAY){
-                    listener.reloadConfig();
-                }else{
-                    //短按OK，弹出站源选择弹窗
-                    listener.showDialog();
-                }
-                return true;
-            }
-        }
-
         onKeyDown(event);
         return true;
     }
@@ -92,11 +72,11 @@ public class CustomTitleView extends MaterialTextView {
         else if (KeyUtil.isActionDown(event) && KeyUtil.isRightKey(event)) listener.setSite(getSite(true));
     }
 
-    //上方向键刷新
+    //上方向键刷新，调用原生现成onRefresh
     private void onKeyUp() {
+        coolDown = true;
         App.post(() -> coolDown = false, 3000);
         listener.onRefresh();
-        coolDown = true;
     }
 
     private Site getSite(boolean next) {
@@ -113,9 +93,10 @@ public class CustomTitleView extends MaterialTextView {
         return VodConfig.get().getSites().stream().filter(site -> !site.isHide()).toList();
     }
 
+    // 恢复原生接口，和HomeActivity完美匹配，不需要新增任何方法
     public interface Listener extends SiteListener {
         void showDialog();
-        void onRefreshByUpKey();
+        void onRefresh();
         void reloadConfig();
     }
 }
