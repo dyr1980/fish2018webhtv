@@ -779,4 +779,33 @@ public class Setting {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return false;
         return new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + App.get().getPackageName())).resolveActivity(App.get().getPackageManager()) != null || new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION).resolveActivity(App.get().getPackageManager()) != null;
     }
+    public static int getSourceBlockMask() {
+        return Prefers.getInt("source_block_mask", 0);
+    }
+
+    public static void putSourceBlockMask(int mask) {
+        Prefers.put("source_block_mask", mask);
+    }
+
+    public static boolean isSourceBlocked(int source) {
+        return (getSourceBlockMask() & source) != 0;
+    }
+
+    public static boolean isSourceAllowed(int source) {
+        return !isSourceBlocked(source);
+    }
+
+    public static void setSourceBlocked(int source, boolean blocked) {
+        int mask = getSourceBlockMask();
+        if (blocked) mask |= source;
+        else mask &= ~source;
+        putSourceBlockMask(mask);
+    }
+
+    public static int getSourceBlockedCount() {
+        int mask = getSourceBlockMask();
+        int count = 0;
+        for (int source : SOURCE_ALL) if ((mask & source) != 0) count++;
+        return count;
+    }
 }
