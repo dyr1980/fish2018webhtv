@@ -67,10 +67,6 @@ public class JarLoader {
             SpiderDebug.log("jar-loader", "load skip missing key=%s file=%s", key, file);
             return;
         }
-        if (!file.setReadOnly()) {
-            SpiderDebug.log("jar-loader", "load skip readonly failed key=%s file=%s size=%s", key, file.getAbsolutePath(), file.length());
-            return;
-        }
         String cachePath = Path.jar().getAbsolutePath();
         SpiderDebug.log("jar-loader", "load start key=%s file=%s size=%s cache=%s", key, file.getAbsolutePath(), file.length(), cachePath);
         DexClassLoader loader = new CspDexClassLoader(file.getAbsolutePath(), cachePath, cachePath, App.get().getClassLoader());
