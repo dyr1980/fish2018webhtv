@@ -369,7 +369,16 @@
     <string name="remote_trust_send_server_failed">Failed to save on the other device: %1$s</string>
     <string name="remote_trust_config_select">Select</string>
     <string name="setting_login_state">Login state learning</string>
-    <string name="setting_file_sites">File sites</string>
+    <string name="setting_file_sites">Source blocking</string>
+    <string name="setting_source_block_dialog_title">Select sources to block</string>
+    <string name="setting_source_block_count">Blocked %1$d / %2$d</string>
+    <string name="source_vod_url">Vod URL</string>
+    <string name="source_live_url">Live URL</string>
+    <string name="source_sites_json">sites-json</string>
+    <string name="source_sites_js">sites-js</string>
+    <string name="source_sites_py">sites-py</string>
+    <string name="source_sites_raw">sites</string>
+    <string name="source_lives_file">lives files</string>
     <string name="setting_site_health_sort">Site health ranking</string>
     <string name="setting_site_health_enable">Enable site health ranking</string>
     <string name="setting_site_health_dialog_sort">Sort site dialog</string>
