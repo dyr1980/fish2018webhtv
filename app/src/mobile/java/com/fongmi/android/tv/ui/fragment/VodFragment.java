@@ -256,7 +256,8 @@ public class VodFragment extends BaseFragment implements ConfigListener, SiteLis
     }
 
     private boolean reloadConfig(View view) {
-        if (mWeb != null && mWeb.isVisible()) mWeb.reload();
+        HomeActivity activity = homeActivity();
+        if (activity != null) activity.initConfig();
         else homeContent();
         return true;
     }
