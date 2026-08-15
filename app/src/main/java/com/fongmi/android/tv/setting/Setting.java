@@ -60,6 +60,15 @@ public class Setting {
     public static final int TITLE_LINES_UNLIMITED = 3;
     private static final int[] TITLE_LINES_OPTIONS = {TITLE_LINES_OFF, TITLE_LINES_2, TITLE_LINES_3, TITLE_LINES_UNLIMITED};
 
+        public static final int SOURCE_VOD_URL = 1 << 0;
+    public static final int SOURCE_LIVE_URL = 1 << 1;
+    public static final int SOURCE_SITES_JSON = 1 << 2;
+    public static final int SOURCE_SITES_JS = 1 << 3;
+    public static final int SOURCE_SITES_PY = 1 << 4;
+    public static final int SOURCE_SITES_RAW = 1 << 5;
+    public static final int SOURCE_LIVES_FILE = 1 << 6;
+    public static final int[] SOURCE_ALL = {SOURCE_VOD_URL, SOURCE_LIVE_URL, SOURCE_SITES_JSON, SOURCE_SITES_JS, SOURCE_SITES_PY, SOURCE_SITES_RAW, SOURCE_LIVES_FILE};
+
     public static final int WALL_CINEMA = 5;
     public static final int WALL_CINEMA_WARM = 6;
     public static final int WALL_CINEMA_MOSS = 7;
