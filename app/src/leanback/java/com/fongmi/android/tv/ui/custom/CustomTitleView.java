@@ -76,6 +76,20 @@ public class CustomTitleView extends MaterialTextView {
         coolDown = true;
     }
 
+    private Site getSite(boolean next) {
+        List<Site> items = getSites();
+        if (items.isEmpty()) return new Site();
+        int position = items.indexOf(getHome());
+        if (position < 0) position = 0;
+        if (next) position = (position + 1) % items.size();
+        else position = (position - 1 + items.size()) % items.size();
+        return items.get(position);
+    }
+
+    private List<Site> getSites() {
+        return VodConfig.get().getSites().stream().filter(site -> !site.isHide()).toList();
+    }
+
     public interface Listener extends SiteListener {
 
         void showDialog();
