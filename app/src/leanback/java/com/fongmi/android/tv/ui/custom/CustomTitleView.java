@@ -72,11 +72,10 @@ public class CustomTitleView extends MaterialTextView {
         else if (KeyUtil.isActionDown(event) && KeyUtil.isRightKey(event)) listener.setSite(getSite(true));
     }
 
-    //上方向键刷新，调用原生现成onRefresh
     private void onKeyUp() {
-        coolDown = true;
         App.post(() -> coolDown = false, 3000);
         listener.onRefresh();
+        coolDown = true;
     }
 
     private Site getSite(boolean next) {
@@ -93,10 +92,12 @@ public class CustomTitleView extends MaterialTextView {
         return VodConfig.get().getSites().stream().filter(site -> !site.isHide()).toList();
     }
 
-    // 恢复原生接口，和HomeActivity完美匹配，不需要新增任何方法
     public interface Listener extends SiteListener {
+
         void showDialog();
+
         void onRefresh();
+
         void reloadConfig();
     }
 }
