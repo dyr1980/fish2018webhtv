@@ -32,6 +32,7 @@ import com.fongmi.android.tv.ui.dialog.OneKeySyncDialog;
 import com.fongmi.android.tv.ui.dialog.RemoteTrustDialog;
 import com.fongmi.android.tv.ui.dialog.ShellProxyDialog;
 import com.fongmi.android.tv.ui.dialog.SiteHealthDialog;
+import com.fongmi.android.tv.ui.dialog.SourceBlockDialog;
 import com.fongmi.android.tv.ui.dialog.ViewingRecordSyncDialog;
 import com.fongmi.android.tv.ui.dialog.WebHomeExtensionDialog;
 import com.fongmi.android.tv.utils.LoginStateSync;
@@ -133,7 +134,7 @@ public class SettingEnhanceFragment extends BaseFragment {
 
     private void setText() {
         if (!canSetText()) return;
-        safeSet("fileSites", mBinding.fileSitesText, () -> getSwitch(Setting.isFileSites()));
+        safeSet("fileSites", mBinding.fileSitesText, () -> getString(R.string.setting_source_block_count, Setting.getSourceBlockedCount(), Setting.SOURCE_ALL.length));
         safeSet("driveCheck", mBinding.driveCheckText, () -> getSwitch(Setting.isDriveCheck()));
         safeSet("debugLog", mBinding.debugLogText, () -> getSwitch(Setting.isDebugLog()));
         safeSet("siteHealthSort", mBinding.siteHealthSortText, () -> getSwitch(Setting.isSiteHealthSort()));
@@ -210,8 +211,7 @@ public class SettingEnhanceFragment extends BaseFragment {
     }
 
     private void setFileSites(View view) {
-        Setting.putFileSites(!Setting.isFileSites());
-        mBinding.fileSitesText.setText(getSwitch(Setting.isFileSites()));
+        SourceBlockDialog.create(this::setText).show(this);
     }
 
     private void setDriveCheck(View view) {
