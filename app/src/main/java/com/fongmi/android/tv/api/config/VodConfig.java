@@ -220,7 +220,10 @@ public class VodConfig extends BaseConfig {
     private void initSites(Config config, String globalSpider, JsonObject object) {
         String spider = TextUtils.isEmpty(globalSpider) ? Json.safeString(object, "spider") : globalSpider;
         BaseLoader.get().parseJar(spider, true);
-        List<Site> sites = Json.safeListElement(object, "sites").stream().map(e -> Site.objectFrom(e, spider)).distinct().collect(Collectors.toCollection(ArrayList::new));
+        List<Site> sites = new ArrayList<>();
+        if (Setting.isSourceAllowed(Setting.SOURCE_VOD_URL)) {
+            sites.addAll(Json.safeListElement(object, "sites").stream().map(e -> Site.objectFrom(e, spider)).distinct().collect(Collectors.toCollection(ArrayList::new)));
+        }
         List<Site> fileSites = loadFileSites(spider);
         sites.addAll(0, fileSites);
         setSites(sites);
@@ -345,19 +348,18 @@ public class VodConfig extends BaseConfig {
 
     private List<Site> loadFileSites(String globalSpider) {
         List<Site> result = new ArrayList<>();
-        if (!Setting.isFileSites()) return result;
-        try {
-            result.addAll(loadXbpqSites(globalSpider));
-        } catch (Throwable ignored) {}
-        try {
-            result.addAll(loadJsSites(globalSpider));
-        } catch (Throwable ignored) {}
-        try {
-            result.addAll(loadPySites(globalSpider));
-        } catch (Throwable ignored) {}
-        try {
-            result.addAll(loadRawSites(globalSpider));
-        } catch (Throwable ignored) {}
+        if (Setting.isSourceAllowed(Setting.SOURCE_SITES_JSON)) {
+            try { result.addAll(loadXbpqSites(globalSpider)); } catch (Throwable ignored) {}
+        }
+        if (Setting.isSourceAllowed(Setting.SOURCE_SITES_JS)) {
+            try { result.addAll(loadJsSites(globalSpider)); } catch (Throwable ignored) {}
+        }
+        if (Setting.isSourceAllowed(Setting.SOURCE_SITES_PY)) {
+            try { result.addAll(loadPySites(globalSpider)); } catch (Throwable ignored) {}
+        }
+        if (Setting.isSourceAllowed(Setting.SOURCE_SITES_RAW)) {
+            try { result.addAll(loadRawSites(globalSpider)); } catch (Throwable ignored) {}
+        }
         return result;
     }
 

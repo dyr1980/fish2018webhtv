@@ -75,7 +75,7 @@ public class LiveConfig extends BaseConfig {
 
     public static boolean hasLoadedLives() {
         if (!get().getLives().isEmpty()) return true;
-        if (!Setting.isFileSites()) return false;
+        if (!Setting.isSourceAllowed(Setting.SOURCE_LIVES_FILE)) return false;
         File dir = new File(Path.root() + "/tvbox/lives/");
         if (!dir.exists() || !dir.isDirectory()) return false;
         File[] files = dir.listFiles(f -> f.isFile() && !f.getName().startsWith("."));
@@ -168,10 +168,17 @@ public class LiveConfig extends BaseConfig {
 
     private void parseText(Config config, String text) {
         initList(new JsonObject());
-        Live live = new Live(UrlUtil.getName(config.getUrl()), config.getUrl()).sync();
-        List<Live> lives = new ArrayList<>(List.of(live));
-        lives.addAll(0, loadFileLives());
+        List<Live> lives = new ArrayList<>();
+        if (Setting.isSourceAllowed(Setting.SOURCE_LIVE_URL)) {
+            Live live = new Live(UrlUtil.getName(config.getUrl()), config.getUrl()).sync();
+            lives.add(live);
+        }
+        if (Setting.isSourceAllowed(Setting.SOURCE_LIVES_FILE)) {
+            lives.addAll(loadFileLives());
+        }
         setLives(lives);
+        Live live = lives.isEmpty() ? new Live() : lives.get(0);
+        if (live.isEmpty()) return;
         LiveParser.text(live, text);
         finishLive(config, "");
     }
@@ -216,8 +223,13 @@ public class LiveConfig extends BaseConfig {
     private void initLive(Config config, JsonObject object) {
         String spider = Json.safeString(object, "spider");
         BaseLoader.get().parseJar(spider, false);
-        List<Live> lives = Json.safeListElement(object, "lives").stream().map(e -> Live.objectFrom(e, spider)).distinct().collect(Collectors.toCollection(ArrayList::new));
-        lives.addAll(0, loadFileLives());
+        List<Live> lives = new ArrayList<>();
+        if (Setting.isSourceAllowed(Setting.SOURCE_LIVE_URL)) {
+            lives.addAll(Json.safeListElement(object, "lives").stream().map(e -> Live.objectFrom(e, spider)).distinct().collect(Collectors.toCollection(ArrayList::new)));
+        }
+        if (Setting.isSourceAllowed(Setting.SOURCE_LIVES_FILE)) {
+            lives.addAll(0, loadFileLives());
+        }
         setLives(lives);
         finishLive(config, spider);
     }
@@ -228,7 +240,7 @@ public class LiveConfig extends BaseConfig {
 
     private List<Live> loadFileLives() {
         List<Live> result = new ArrayList<>();
-        if (!Setting.isFileSites()) return result;
+        if (!Setting.isSourceAllowed(Setting.SOURCE_LIVES_FILE)) return result;
         File dir = new File(CLAN_LIVE_ROOT);
         if (!dir.exists() || !dir.isDirectory()) return result;
         File[] files = dir.listFiles(f -> f.isFile() && !f.getName().startsWith("."));
@@ -254,7 +266,7 @@ public class LiveConfig extends BaseConfig {
         Map<String, Live> items = Live.findAll().stream().collect(Collectors.toMap(Live::getName, Function.identity()));
         getLives().forEach(live -> live.sync(items.get(live.getName())));
         setHome(config, getLives().isEmpty() ? new Live() : getLives().stream().filter(item -> item.getName().equals(config.getHome())).findFirst().orElse(getLives().get(0)), false);
-        if (getLives().isEmpty() && Setting.isFileSites()) {
+        if (getLives().isEmpty() && Setting.isSourceAllowed(Setting.SOURCE_LIVES_FILE)) {
             List<Live> files = loadFileLives();
             if (!files.isEmpty()) {
                 setLives(files);
