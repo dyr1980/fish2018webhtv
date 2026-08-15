@@ -25,6 +25,8 @@ public class CustomTitleView extends MaterialTextView {
     private Listener listener;
     private Animation flicker;
     private boolean coolDown;
+    private long okDownTime;
+    private final long LONG_PRESS_DELAY = 800;
 
     private Site getHome() {
         return VodConfig.get().getHome();
@@ -49,7 +51,7 @@ public class CustomTitleView extends MaterialTextView {
     }
 
     private boolean hasEvent(KeyEvent event) {
-        return !getHome().isEmpty() && (KeyUtil.isUpKey(event) && !coolDown);
+        return !getHome().isEmpty() && (KeyUtil.isLeftKey(event) || KeyUtil.isRightKey(event) || (KeyUtil.isUpKey(event) && !coolDown) || KeyUtil.isOkKey(event));
     }
 
     @Override
@@ -62,14 +64,35 @@ public class CustomTitleView extends MaterialTextView {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (!hasEvent(event)) return super.dispatchKeyEvent(event);
+
+        //===== OK长按检测逻辑 =====
+        if(KeyUtil.isOkKey(event)){
+            if(event.getAction() == KeyEvent.ACTION_DOWN){
+                okDownTime = System.currentTimeMillis();
+            }else if(event.getAction() == KeyEvent.ACTION_UP){
+                long pressDuration = System.currentTimeMillis() - okDownTime;
+                //按下时长超过 800ms →判定长按刷新
+                if(pressDuration >= LONG_PRESS_DELAY){
+                    listener.reloadConfig();
+                }else{
+                    //短按OK，弹出站源选择弹窗
+                    listener.showDialog();
+                }
+                return true;
+            }
+        }
+
         onKeyDown(event);
         return true;
     }
 
     private void onKeyDown(KeyEvent event) {
         if (KeyUtil.isActionDown(event) && KeyUtil.isUpKey(event)) onKeyUp();
+        else if (KeyUtil.isActionDown(event) && KeyUtil.isLeftKey(event)) listener.setSite(getSite(false));
+        else if (KeyUtil.isActionDown(event) && KeyUtil.isRightKey(event)) listener.setSite(getSite(true));
     }
 
+    //上方向键刷新
     private void onKeyUp() {
         App.post(() -> coolDown = false, 3000);
         listener.onRefresh();
@@ -91,11 +114,8 @@ public class CustomTitleView extends MaterialTextView {
     }
 
     public interface Listener extends SiteListener {
-
         void showDialog();
-
-        void onRefresh();
-
+        void onRefreshByUpKey();
         void reloadConfig();
     }
 }
