@@ -94,7 +94,7 @@ public class DebugLogs implements Process {
     private String html() {
         String logs = escape(DebugLogStore.text());
         String localUrl = Server.get().getAddress("/debug/logs");
-        String localUrl = Server.get().getAddress("/proxy?do=log");
+        String xbpqUrl = Server.get().getAddress("/proxy?do=log");
         String lanUrl = Server.get().getAddress(false) + "/debug/logs";
         boolean enabled = DebugLogStore.isEnabled();
         return "<!doctype html>"
