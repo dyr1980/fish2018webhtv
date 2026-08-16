@@ -657,8 +657,7 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
 
     @Override
     public void onRefresh() {
-        if (mWeb != null && mWeb.isVisible()) mWeb.reload();
-        else getVideo();
+        initConfig();
     }
 
     @Override
