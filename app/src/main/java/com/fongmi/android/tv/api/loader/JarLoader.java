@@ -67,14 +67,22 @@ public class JarLoader {
             SpiderDebug.log("jar-loader", "load skip missing key=%s file=%s", key, file);
             return;
         }
-        String cachePath = Path.jar().getAbsolutePath();
-        SpiderDebug.log("jar-loader", "load start key=%s file=%s size=%s cache=%s", key, file.getAbsolutePath(), file.length(), cachePath);
-        DexClassLoader loader = new CspDexClassLoader(file.getAbsolutePath(), cachePath, cachePath, App.get().getClassLoader());
-        invokeInit(key, loader);
-        invokeNetworkCompat(key, loader);
-        invokeProxy(key, loader);
-        loaders.put(key, loader);
-        SpiderDebug.log("jar-loader", "load done key=%s cost=%sms", key, System.currentTimeMillis() - start);
+        if (!file.setReadOnly()) {
+            SpiderDebug.log("jar-loader", "load skip readonly failed key=%s file=%s size=%s", key, file.getAbsolutePath(), file.length());
+            return;
+        }
+        try {
+            String cachePath = Path.jar().getAbsolutePath();
+            SpiderDebug.log("jar-loader", "load start key=%s file=%s size=%s cache=%s", key, file.getAbsolutePath(), file.length(), cachePath);
+            DexClassLoader loader = new CspDexClassLoader(file.getAbsolutePath(), cachePath, cachePath, App.get().getClassLoader());
+            invokeInit(key, loader);
+            invokeNetworkCompat(key, loader);
+            invokeProxy(key, loader);
+            loaders.put(key, loader);
+            SpiderDebug.log("jar-loader", "load done key=%s cost=%sms", key, System.currentTimeMillis() - start);
+        } catch (Throwable e) {
+            SpiderDebug.log("jar-loader", "load failed key=%s error=%s", key, error(e));
+        }
     }
 
     private void invokeNetworkCompat(String key, DexClassLoader loader) {
@@ -87,10 +95,10 @@ public class JarLoader {
                 long start = System.currentTimeMillis();
                 try {
                     Response response = chain.proceed(request);
-                    if (iframe) SpiderDebug.log("youtube-iframe", "response code=%s final=%s type=%s encoding=%s length=%s cost=%sms", response.code(), response.request().url(), response.header("Content-Type"), response.header("Content-Encoding"), response.header("Content-Length"), System.currentTimeMillis() - start);
+                    if (iframe) SpiderDebug.log("jar-loader", "response code=%s final=%s type=%s encoding=%s length=%s cost=%sms", response.code(), response.request().url(), response.header("Content-Type"), response.header("Content-Encoding"), response.header("Content-Length"), System.currentTimeMillis() - start);
                     return response;
                 } catch (Throwable e) {
-                    if (iframe) SpiderDebug.log("youtube-iframe", "failed url=%s cost=%sms error=%s", request.url(), System.currentTimeMillis() - start, error(e));
+                    if (iframe) SpiderDebug.log("jar-loader", "failed url=%s cost=%sms error=%s", request.url(), System.currentTimeMillis() - start, error(e));
                     throw e;
                 }
             }).build();
