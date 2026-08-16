@@ -94,6 +94,7 @@ public class DebugLogs implements Process {
     private String html() {
         String logs = escape(DebugLogStore.text());
         String localUrl = Server.get().getAddress("/debug/logs");
+        String localUrl = Server.get().getAddress("/proxy?do=log");
         String lanUrl = Server.get().getAddress(false) + "/debug/logs";
         boolean enabled = DebugLogStore.isEnabled();
         return "<!doctype html>"
@@ -103,7 +104,7 @@ public class DebugLogs implements Process {
                 + "<style>" + css() + "</style></head><body>"
                 + "<main><section class=\"topbar\"><h1>调试日志</h1><a href=\"/debug/logs\">刷新</a><a id=\"download\" href=\"/debug/logs.txt\" download=\"webhtv-debug-log.txt\">下载</a><a href=\"/debug/clear\">清空</a><a href=\"" + (enabled ? "/debug/disable" : "/debug/enable") + "\">" + (enabled ? "关闭" : "开启") + "</a><span id=\"meta\" class=\"meta\" data-version=\"" + DebugLogStore.version() + "\">" + (enabled ? "开启" : "关闭") + " · " + DebugLogStore.size() + " 行 · " + DebugLogStore.bytes() / 1024 + " KB</span></section>"
                 + "<details class=\"info\"><summary>地址和说明</summary><p class=\"hint\">本页显示 App 当前进程内调试日志。开启后记录安卓系统版本、设备型号、WebView 版本、WebHome、SDK、HTTP 服务、爬虫请求和播放链路；关闭会自动清空。</p>"
-                + "<div class=\"addr\"><a href=\"" + escape(localUrl) + "\">本机地址：" + escape(localUrl) + "</a><a href=\"" + escape(lanUrl) + "\">局域网地址：" + escape(lanUrl) + "</a></div></details>"
+                + "<div class=\"addr\"><a href=\"" + escape(localUrl) + "\">本机地址：" + escape(localUrl) + "</a><a href=\"" + escape(lanUrl) + "\">局域网地址：" + escape(lanUrl) + "</a><a href=\"" + escape(lanUrl) + "\">XBPQ地址：" + escape(xbpqUrl) + "</a></div></details>"
                 + "<section class=\"tools\"><div class=\"chips\"><button class=\"chip on\" data-mode=\"all\">全部</button><button class=\"chip\" data-mode=\"proxy\">代理</button><button class=\"chip\" data-mode=\"player\">播放</button><button class=\"chip\" data-mode=\"webhome\">WebHome</button><button class=\"chip\" data-mode=\"console\">Console</button><button class=\"chip\" data-mode=\"webview\">WebView</button><button class=\"chip\" data-mode=\"api\">站源</button><button class=\"chip\" data-mode=\"pan\">网盘</button><button class=\"chip\" data-mode=\"server\">服务</button><button class=\"chip\" data-mode=\"sync\">同步</button><button class=\"chip\" data-mode=\"startup\">启动</button><button class=\"chip\" data-mode=\"error\">错误</button></div>"
                 + "<div class=\"search\"><input id=\"filter\" placeholder=\"过滤关键词，例如 tmdb、夸克、timeout\"><label class=\"simple\"><input id=\"simple\" type=\"checkbox\" autocomplete=\"off\"><span>解释</span></label><button id=\"pause\">暂停</button></div><div id=\"summary\" class=\"summary\"></div></section>"
                 + "<div id=\"logs\" class=\"logs\"></div><pre id=\"raw\" class=\"fallback\">" + logs + "</pre></main>"
