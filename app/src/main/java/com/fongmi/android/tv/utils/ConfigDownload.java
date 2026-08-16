@@ -37,7 +37,7 @@ public class ConfigDownload {
     public static boolean shouldShow(String url) {
         boolean empty = TextUtils.isEmpty(url);
         boolean startsHttp = !empty && url.toLowerCase(Locale.ROOT).startsWith("http");
-        boolean local = startsHttp && (url.startsWith("http://127.") || url.startsWith("https://127."));
+        boolean local = startsHttp && (url.startsWith("http://127.0.0.1"));
         return !empty && startsHttp && !local;
     }
 
@@ -160,6 +160,12 @@ public class ConfigDownload {
                 for (Live live : LiveConfig.get().getLives()) {
                     String liveUrl = safeStr(live.getUrl());
                     if (TextUtils.isEmpty(liveUrl)) continue;
+                    if (liveUrl.startsWith("http://127.0.0.1")) {
+                        int pos = liveUrl.indexOf("lives");
+                        if(pos != -1){
+                            liveUrl = "clan://lives" + liveUrl.substring(pos + "lives".length());
+                        }
+                    }
                     if (liveUrl.startsWith("clan://lives/")) {
                         String fname = uniqueName(stripSlash(getBasename(liveUrl)), savedNames);
                         downloadText(liveUrl, outDir + "/lives/" + fname);
