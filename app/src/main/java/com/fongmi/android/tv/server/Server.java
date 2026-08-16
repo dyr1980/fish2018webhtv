@@ -46,6 +46,7 @@ public class Server {
     }
 
     public String getAddress(boolean local) {
+        if (Proxy.getPort()==-1) start();
         return "http://" + (local ? "127.0.0.1" : Util.getIp()) + ":" + Proxy.getPort();
     }
 
