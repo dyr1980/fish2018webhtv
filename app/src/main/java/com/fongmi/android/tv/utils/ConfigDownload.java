@@ -80,7 +80,7 @@ public class ConfigDownload {
             try {
                 String dirName = extractDirName(url);
                 String outDir = "tvbox/api/" + dirName;
-                String clanPrefix = "./";
+                String clanPrefix = ".";
                 File outRoot = new File(Path.root(), outDir);
                 outRoot.mkdirs();
 
