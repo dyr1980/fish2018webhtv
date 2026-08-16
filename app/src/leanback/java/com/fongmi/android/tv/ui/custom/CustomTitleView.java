@@ -50,7 +50,7 @@ public class CustomTitleView extends MaterialTextView {
     }
 
     private boolean hasEvent(KeyEvent event) {
-        return !getHome().isEmpty() && (KeyUtil.isUpKey(event) && !coolDown);
+        return !getHome().isEmpty() && (KeyUtil.isLeftKey(event) || KeyUtil.isRightKey(event) || (KeyUtil.isUpKey(event) && !coolDown));
     }
 
     @Override
@@ -69,12 +69,28 @@ public class CustomTitleView extends MaterialTextView {
 
     private void onKeyDown(KeyEvent event) {
         if (KeyUtil.isActionDown(event) && KeyUtil.isUpKey(event)) onKeyUp();
+        else if (KeyUtil.isActionDown(event) && KeyUtil.isLeftKey(event)) listener.setSite(getSite(false));
+        else if (KeyUtil.isActionDown(event) && KeyUtil.isRightKey(event)) listener.setSite(getSite(true));
     }
 
     private void onKeyUp() {
         App.post(() -> coolDown = false, 3000);
         HomeActivity.onRefresh();
         coolDown = true;
+    }
+
+    private Site getSite(boolean next) {
+        List<Site> items = getSites();
+        if (items.isEmpty()) return new Site();
+        int position = items.indexOf(getHome());
+        if (position < 0) position = 0;
+        if (next) position = (position + 1) % items.size();
+        else position = (position - 1 + items.size()) % items.size();
+        return items.get(position);
+    }
+
+    private List<Site> getSites() {
+        return VodConfig.get().getSites().stream().filter(site -> !site.isHide()).toList();
     }
 
     public interface Listener extends SiteListener {

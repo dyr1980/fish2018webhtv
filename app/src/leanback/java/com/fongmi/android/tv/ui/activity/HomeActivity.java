@@ -32,6 +32,7 @@ import com.fongmi.android.tv.api.config.WallConfig;
 import com.fongmi.android.tv.bean.Cache;
 import com.fongmi.android.tv.bean.Class;
 import com.fongmi.android.tv.bean.Config;
+import com.fongmi.android.tv.bean.Func;
 import com.fongmi.android.tv.bean.History;
 import com.fongmi.android.tv.bean.Result;
 import com.fongmi.android.tv.bean.Site;
@@ -58,6 +59,7 @@ import com.fongmi.android.tv.ui.custom.CustomSelector;
 import com.fongmi.android.tv.ui.custom.CustomTitleView;
 import com.fongmi.android.tv.ui.dialog.ExitConfirmDialog;
 import com.fongmi.android.tv.ui.dialog.SiteDialog;
+import com.fongmi.android.tv.ui.presenter.FuncPresenter;
 import com.fongmi.android.tv.ui.presenter.HeaderPresenter;
 import com.fongmi.android.tv.ui.presenter.HistoryPresenter;
 import com.fongmi.android.tv.ui.presenter.ProgressPresenter;
@@ -87,7 +89,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-public class HomeActivity extends BaseActivity implements CustomTitleView.Listener, VodPresenter.OnClickListener, HistoryPresenter.OnClickListener, TypeAdapter.OnClickListener, HomeWebController.Listener {
+public class HomeActivity extends BaseActivity implements CustomTitleView.Listener, VodPresenter.OnClickListener, FuncPresenter.OnClickListener, HistoryPresenter.OnClickListener, TypeAdapter.OnClickListener, HomeWebController.Listener {
 
     private static final String TV_NORMAL = "tv-normal";
     private static final String TV_TOOLBAR_HIDDEN = "tv-toolbar-hidden";
@@ -96,6 +98,7 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
 
     private ActivityHomeBinding mBinding;
     private ArrayObjectAdapter mHistoryAdapter;
+    private ArrayObjectAdapter mFuncAdapter;
     private ArrayObjectAdapter mAdapter;
     private HistoryPresenter mPresenter;
     private SiteViewModel mViewModel;
@@ -174,7 +177,6 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
     @Override
     protected void initEvent() {
         mBinding.title.setListener(this);
-        initFuncBar();
         mBinding.toolbar.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             syncNativeContentInset();
             syncWebOverlayLayout();
@@ -259,6 +261,7 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
         selector.addPresenter(String.class, new ProgressPresenter());
         selector.addPresenter(Vod.class, new VodPresenter(this, Style.list()));
         selector.addPresenter(ListRow.class, new CustomRowPresenter(16), VodPresenter.class);
+        selector.addPresenter(ListRow.class, new CustomRowPresenter(16), FuncPresenter.class);
         selector.addPresenter(ListRow.class, new CustomRowPresenter(16, FocusHighlight.ZOOM_FACTOR_SMALL, HorizontalGridView.FOCUS_SCROLL_ALIGNED), HistoryPresenter.class);
         mBinding.recycler.setAdapter(new ItemBridgeAdapter(mAdapter = new ArrayObjectAdapter(selector)));
         mBinding.recycler.setVerticalSpacing(ResUtil.dp2px(16));
@@ -308,6 +311,7 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
 
     private void setAdapter() {
         mHistoryAdapter = new ArrayObjectAdapter(mPresenter = new HistoryPresenter(this));
+        mAdapter.add(new ListRow(mFuncAdapter = new ArrayObjectAdapter(new FuncPresenter(this))));
         mAdapter.add(R.string.home_history);
         mAdapter.add(R.string.home_recommend);
     }
@@ -459,8 +463,13 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
     }
 
     private void setFunc() {
-        mBinding.funcLive.setVisibility(LiveConfig.hasLoadedLives() ? View.VISIBLE : View.GONE);
-        initFuncBar();
+        List<Func> items = new ArrayList<>();
+        if (LiveConfig.hasLoadedLives()) items.add(Func.create(R.string.home_live));
+        items.add(Func.create(R.string.home_search));
+        items.add(Func.create(R.string.home_keep));
+        items.add(Func.create(R.string.home_push));
+        items.add(Func.create(R.string.home_setting));
+        mFuncAdapter.setItems(items, new BaseDiffCallback<Func>());
     }
 
     private void getHistory() {
@@ -577,32 +586,20 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
         };
     }
 
-    private void initFuncBar() {
-        mBinding.funcLive.setOnClickListener(v -> LiveActivity.start(this));
-        mBinding.funcSearch.setOnClickListener(v -> SearchActivity.start(this));
-        mBinding.funcSearch.setOnLongClickListener(v -> {
-            SearchActivity.start(this, "", getHome().getKey());
-            return true;
-        });
-        mBinding.funcKeep.setOnClickListener(v -> KeepActivity.start(this));
-        mBinding.funcPush.setOnClickListener(v -> PushActivity.start(this));
-        mBinding.funcSetting.setOnClickListener(v -> SettingActivity.start(this));
+    @Override
+    public void onItemClick(Func item) {
+        if (item.getResId() == R.string.home_live) LiveActivity.start(this);
+        else if (item.getResId() == R.string.home_keep) KeepActivity.start(this);
+        else if (item.getResId() == R.string.home_push) PushActivity.start(this);
+        else if (item.getResId() == R.string.home_search) SearchActivity.start(this);
+        else if (item.getResId() == R.string.home_setting) SettingActivity.start(this);
+    }
 
-        View[] buttons = {mBinding.funcLive, mBinding.funcSearch, mBinding.funcKeep, mBinding.funcPush, mBinding.funcSetting};
-        List<View> visibleButtons = new ArrayList<>();
-        for (View b : buttons) if (b.getVisibility() == View.VISIBLE) visibleButtons.add(b);
-
-        if (visibleButtons.isEmpty()) {
-            mBinding.title.setNextFocusRightId(View.NO_ID);
-        } else {
-            for (int i = 0; i < visibleButtons.size(); i++) {
-                View cur = visibleButtons.get(i);
-                cur.setNextFocusLeftId(i == 0 ? R.id.title : visibleButtons.get(i - 1).getId());
-                cur.setNextFocusRightId(i == visibleButtons.size() - 1 ? R.id.title : visibleButtons.get(i + 1).getId());
-                cur.setNextFocusDownId(R.id.typeRecycler);
-            }
-            mBinding.title.setNextFocusRightId(visibleButtons.get(0).getId());
-        }
+    @Override
+    public boolean onLongClick(Func item) {
+        if (item.getResId() != R.string.home_search) return false;
+        SearchActivity.start(this, "", getHome().getKey());
+        return true;
     }
 
     @Override
@@ -666,7 +663,7 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
 
     @Override
     public void reloadConfig() {
-        initConfig();
+        onRefresh();
     }
 
     @Override
