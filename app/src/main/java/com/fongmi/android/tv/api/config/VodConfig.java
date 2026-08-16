@@ -218,7 +218,7 @@ public class VodConfig extends BaseConfig {
     }
 
     private void initSites(Config config, String globalSpider, JsonObject object) {
-        String spider = TextUtils.isEmpty(globalSpider) ? UrlUtil.resolve("./jars/XBPQ.jar", "./") : globalSpider;
+        String spider = TextUtils.isEmpty(globalSpider) ? UrlUtil.convert("./jars/XBPQ.jar") : globalSpider;
         BaseLoader.get().parseJar(spider, true);
         List<Site> sites = new ArrayList<>();
         if (Setting.isSourceAllowed(Setting.SOURCE_VOD_URL)) {
@@ -344,7 +344,7 @@ public class VodConfig extends BaseConfig {
     // ==================== 文件站点加载器 ====================
 
     private static final String CLAN_ROOT = Path.root() + "/tvbox/";
-    private static final String XBPQ_JAR = UrlUtil.resolve("./jars/XBPQ.jar", "./");
+    private static final String XBPQ_JAR = UrlUtil.convert("./jars/XBPQ.jar");
 
     private List<Site> loadFileSites(String globalSpider) {
         List<Site> result = new ArrayList<>();
