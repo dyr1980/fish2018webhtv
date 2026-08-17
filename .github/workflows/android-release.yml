@@ -176,9 +176,9 @@ jobs:
           chmod +x ./gradlew
           rm -rf Release/apk
           ./gradlew \
+            :app:assembleMobileArm64_v8aRelease \
             :app:assembleLeanbackArm64_v8aRelease \
-            --no-daemon\
-            --no-build-cache
+            --no-daemon \
 
       - name: Collect artifacts
         run: |
