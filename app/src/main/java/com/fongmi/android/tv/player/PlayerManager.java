@@ -4485,15 +4485,6 @@ public class PlayerManager implements ParseCallback {
 
     public void start(PlaySpec spec, long timeout, boolean playWhenReady) {
         Integer forced = spec.getForcedPlayer();
-        int desiredKernel;
-        if (forced != null) {
-            desiredKernel = forced;
-        } else {
-            desiredKernel = PlayerSetting.getPlayer();
-        }
-        if (desiredKernel != playerType) {
-            switchPlayer(desiredKernel, false);
-        }
         endPlaybackTelemetrySession("replace-start");
         prepareIjkRuntimeForUserPlayback();
         clearPendingSwitchRestore();
@@ -4506,6 +4497,15 @@ public class PlayerManager implements ParseCallback {
         localProxyRetry = 0;
         hardDecodeSwitchRetryArmed = false;
         setMediaItem(timeout);
+        int desiredKernel;
+        if (forced != null) {
+            desiredKernel = forced;
+        } else {
+            desiredKernel = PlayerSetting.getPlayer();
+        }
+        if (desiredKernel != playerType) {
+            switchPlayer(desiredKernel, false);
+        }
     }
 
     public void parse(String key, Result result, boolean useParse, MediaMetadata metadata) {
