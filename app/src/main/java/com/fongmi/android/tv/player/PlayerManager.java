@@ -4484,6 +4484,7 @@ public class PlayerManager implements ParseCallback {
     }
 
     public void start(PlaySpec spec, long timeout, boolean playWhenReady) {
+        Integer forced = spec.getForcedPlayer();
         int desiredKernel;
         if (forced != null) {
             desiredKernel = forced;
@@ -4512,7 +4513,6 @@ public class PlayerManager implements ParseCallback {
     }
 
     public void parse(String key, Result result, boolean useParse, MediaMetadata metadata, boolean playWhenReady) {
-Integer forced = spec.getForcedPlayer();
         endPlaybackTelemetrySession("replace-parse");
         prepareIjkRuntimeForUserPlayback();
         stopParse();
