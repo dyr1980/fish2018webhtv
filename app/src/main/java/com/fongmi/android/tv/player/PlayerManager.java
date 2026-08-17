@@ -4504,7 +4504,8 @@ public class PlayerManager implements ParseCallback {
             desiredKernel = PlayerSetting.getPlayer();
         }
         if (desiredKernel != playerType) {
-            switchPlayer(desiredKernel, false);
+            final Integer target = desiredKernel;
+            App.postDelayed(() -> switchPlayer(target, false), 200);
         }
     }
 
