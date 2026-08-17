@@ -3561,6 +3561,7 @@ public class VideoActivity extends PlaybackActivity implements CustomKeyDownVod.
         if (mHistory == null || Setting.isIncognito()) return;
         if (service() != null && isOwner()) {
             updatePlaybackHistoryPosition();
+            mHistory.setPlayerType(player().playerType);
             mHistory.setCreateTime(System.currentTimeMillis());
         }
         if (exit && service() != null) PlaybackEventCollector.get().onStop(player());
