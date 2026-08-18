@@ -177,6 +177,17 @@ public class SyncPathDialog extends BaseAlertDialog {
         binding.summary.setText(paths.isEmpty() ? getString(R.string.sync_paths_selected_empty) : getString(R.string.sync_paths_selected, TextUtils.join(", ", paths)));
     }
 
+    // ============ 方案A新增：前缀匹配判断子项是否被父目录选中 ============
+    private boolean isPathSelected(String childPath) {
+        for (String sel : selected) {
+            if (sel.isEmpty()) continue;
+            if (childPath.equals(sel) || childPath.startsWith(sel + "/")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean inside(File root, File file) throws IOException {
         String rootPath = root.getCanonicalPath();
         String filePath = file.getCanonicalPath();
@@ -237,7 +248,8 @@ public class SyncPathDialog extends BaseAlertDialog {
                 binding.icon.setLayoutParams(iconParams);
                 binding.name.setText(item.name);
                 binding.path.setText(item.path);
-                binding.check.setChecked(selected.contains(item.path));
+                // 【改动点】由前缀匹配代替直接 contains 判断
+                binding.check.setChecked(isPathSelected(item.path));
                 binding.icon.setImageResource(item.isFile ? R.drawable.ic_file : R.drawable.ic_folder);
                 binding.enter.setVisibility(item.isFile ? View.INVISIBLE : (item.hasChildren ? View.VISIBLE : View.INVISIBLE));
                 binding.enter.setImageResource(expanded.contains(item.path) ? R.drawable.ic_detail_minus : R.drawable.ic_detail_plus);
