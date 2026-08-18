@@ -54,6 +54,7 @@ public class SettingActivity extends BaseActivity implements ConfigListener, Sit
     private ActivitySettingBinding mBinding;
     private String[] size;
     private String[] language;
+    private String[] titleLines;
 
     public static void start(Activity activity) {
         activity.startActivity(new Intent(activity, SettingActivity.class));
@@ -94,6 +95,7 @@ public class SettingActivity extends BaseActivity implements ConfigListener, Sit
         mBinding.incognitoText.setText(getSwitch(Setting.isIncognito()));
         mBinding.languageText.setText((language = ResUtil.getStringArray(R.array.select_language))[Setting.getLanguageIndex()]);
         mBinding.sizeText.setText((size = ResUtil.getStringArray(R.array.select_size))[PlayerSetting.getSize()]);
+        mBinding.titleLinesText.setText((titleLines = ResUtil.getStringArray(R.array.select_title_lines))[Setting.getTitleLinesIndex()]);
     }
 
     private void setCacheText() {
@@ -113,6 +115,7 @@ public class SettingActivity extends BaseActivity implements ConfigListener, Sit
         mBinding.wall.setOnClickListener(this::onWall);
         mBinding.size.setOnClickListener(this::setSize);
         mBinding.language.setOnClickListener(this::setLanguage);
+        mBinding.titleLines.setOnClickListener(this::setTitleLines);
         mBinding.cache.setOnClickListener(this::onCache);
         mBinding.backup.setOnClickListener(this::onBackup);
         mBinding.enhance.setOnClickListener(this::onEnhance);
@@ -282,6 +285,13 @@ public class SettingActivity extends BaseActivity implements ConfigListener, Sit
         int index = (Setting.getLanguageIndex() + 1) % language.length;
         Setting.putLanguageIndex(index);
         RefreshEvent.language();
+    }
+
+    private void setTitleLines(View view) {
+        int index = (Setting.getTitleLinesIndex() + 1) % titleLines.length;
+        mBinding.titleLinesText.setText(titleLines[index]);
+        Setting.putTitleLinesIndex(index);
+        RefreshEvent.size();
     }
 
     private void setDoh(View view) {

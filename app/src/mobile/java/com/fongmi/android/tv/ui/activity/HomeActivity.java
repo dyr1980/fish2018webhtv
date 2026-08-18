@@ -96,7 +96,10 @@ public class HomeActivity extends BaseActivity implements NavigationBarView.OnIt
         mChrome = new WebHomeChromeController(this, mBinding, this, savedInstanceState, WebHomeChromeStartup.restore(mStartupConfig));
         mBinding.getRoot().addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> checkWindowShape(right - left, bottom - top));
         mBinding.navigation.setOnItemSelectedListener(this);
-        PermissionUtil.requestFile(this, allGranted -> PermissionUtil.requestNotify(this));
+        PermissionUtil.requestFile(this, allGranted -> {
+            PermissionUtil.requestNotify(this);
+            if (allGranted) initConfig();
+        });
         initFragment(savedInstanceState);
         initConfig();
     }
@@ -155,8 +158,8 @@ public class HomeActivity extends BaseActivity implements NavigationBarView.OnIt
         changeFragment(position <= 0 ? 0 : position);
     }
 
-    private void initConfig() {
-        VodConfig.get().config(mStartupConfig == null ? Config.vod() : mStartupConfig).load(getCallback());
+    public void initConfig() {
+        VodConfig.get().init().load(getCallback());
         LiveConfig.get().init().load();
         WallConfig.get().init();
     }
@@ -190,7 +193,7 @@ public class HomeActivity extends BaseActivity implements NavigationBarView.OnIt
     private void setNavigation() {
         mBinding.navigation.getMenu().findItem(R.id.vod).setVisible(true);
         mBinding.navigation.getMenu().findItem(R.id.setting).setVisible(true);
-        mBinding.navigation.getMenu().findItem(R.id.live).setVisible(LiveConfig.hasUrl());
+        mBinding.navigation.getMenu().findItem(R.id.live).setVisible(LiveConfig.hasLoadedLives());
         syncNavigationSelection();
     }
 
