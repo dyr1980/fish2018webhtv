@@ -82,7 +82,7 @@ public class ConfigDialog extends BaseAlertDialog {
         Config config = getConfig();
         binding.title.setText(getDialogTitle());
         binding.positive.setText(edit ? R.string.dialog_edit : R.string.dialog_positive);
-        binding.name.setText(edit ? config.getName() : "");
+        binding.name.setText(config.getName());
         binding.url.setText(ori = config.getUrl());
         binding.url.setSelection(TextUtils.isEmpty(ori) ? 0 : ori.length());
     }
@@ -92,6 +92,9 @@ public class ConfigDialog extends BaseAlertDialog {
         binding.negative.setOnClickListener(v -> dismiss());
         binding.positive.setOnClickListener(v -> onPositive());
         binding.choose.setEndIconOnClickListener(this::onChoose);
+        // 猫源本地包是一整个文件夹（index.js + index.config.js），文件选择器选不到目录，
+        // 所以单独给一个入口。选 zip 仍走上面那个文件选择。
+        binding.choose.setStartIconOnClickListener(this::onChooseDir);
         binding.url.addTextChangedListener(new CustomTextListener() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -151,6 +154,10 @@ public class ConfigDialog extends BaseAlertDialog {
         FileChooser.from(launcher).show();
     }
 
+    private void onChooseDir(View view) {
+        FileChooser.from(launcher).showDirectory();
+    }
+
     private void detect(String s) {
         if (append && "h".equalsIgnoreCase(s)) {
             append = false;
@@ -191,7 +198,7 @@ public class ConfigDialog extends BaseAlertDialog {
             config = Config.find(ori, type).url(url).name(name).update();
         } else {
             Config exists = AppDatabase.get().getConfigDao().find(url, type);
-            config = exists != null ? exists : Config.create(type).url(url).name(name).update();
+            config = exists != null ? exists.name(name).update() : Config.create(type).url(url).name(name).update();
         }
         return config;
     }

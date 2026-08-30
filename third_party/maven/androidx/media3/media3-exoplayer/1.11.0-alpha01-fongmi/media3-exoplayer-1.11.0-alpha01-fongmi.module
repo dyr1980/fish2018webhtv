@@ -70,11 +70,11 @@
         {
           "name": "media3-exoplayer-1.11.0-alpha01-fongmi.aar",
           "url": "media3-exoplayer-1.11.0-alpha01-fongmi.aar",
-          "size": 1740394,
-          "sha512": "88d8426be663504a1174a719eaa5286f42f8ef860dc63e0e3f7bae025b9657e670305c12b7e377738bae24731826deb874bfb8778a10ee945392d952c2376c8b",
-          "sha256": "3de2a24439fdbf5ef1641b9f8a53bfca5fb1b72f6d3ecabfb0aeebf3d296d3c6",
-          "sha1": "ca06709a242cbf556c1960b2a586703da357e66a",
-          "md5": "7df342d5749464e4968974e1c972597a"
+          "size": 1740506,
+          "sha512": "b36db9d13b0c4d36c2e49f471754c3e9aebe917b819f499c886697efd24e210dc2f4e3312508e1f3cced8d483f3f491d47268d6f45d224f75e5d822f3187b036",
+          "sha256": "d7c79ed8e3e61821c7b01b4b998b999bb5a74deba6bd7517ca52a4527c126bcb",
+          "sha1": "d7c39e895f4d8490573fc5fc9e0ef5b530983168",
+          "md5": "12292dc6b7135461fc8b016008483ae2"
         }
       ]
     },
@@ -155,11 +155,11 @@
         {
           "name": "media3-exoplayer-1.11.0-alpha01-fongmi.aar",
           "url": "media3-exoplayer-1.11.0-alpha01-fongmi.aar",
-          "size": 1740394,
-          "sha512": "88d8426be663504a1174a719eaa5286f42f8ef860dc63e0e3f7bae025b9657e670305c12b7e377738bae24731826deb874bfb8778a10ee945392d952c2376c8b",
-          "sha256": "3de2a24439fdbf5ef1641b9f8a53bfca5fb1b72f6d3ecabfb0aeebf3d296d3c6",
-          "sha1": "ca06709a242cbf556c1960b2a586703da357e66a",
-          "md5": "7df342d5749464e4968974e1c972597a"
+          "size": 1740506,
+          "sha512": "b36db9d13b0c4d36c2e49f471754c3e9aebe917b819f499c886697efd24e210dc2f4e3312508e1f3cced8d483f3f491d47268d6f45d224f75e5d822f3187b036",
+          "sha256": "d7c79ed8e3e61821c7b01b4b998b999bb5a74deba6bd7517ca52a4527c126bcb",
+          "sha1": "d7c39e895f4d8490573fc5fc9e0ef5b530983168",
+          "md5": "12292dc6b7135461fc8b016008483ae2"
         }
       ]
     },
@@ -175,11 +175,11 @@
         {
           "name": "media3-exoplayer-1.11.0-alpha01-fongmi-sources.jar",
           "url": "media3-exoplayer-1.11.0-alpha01-fongmi-sources.jar",
-          "size": 1252993,
-          "sha512": "bbe9650a315026f73c3f91e762c9cc4f7c47e22e1038a82e4a50f40d2fe8d52eebd7d0145bf3519af631566ee1241d2ed870eea07e3db6bbbb35936766b0ecbc",
-          "sha256": "8c29d18a91012c06c714238f7a44afa349c27afa9d2de16c7d4874a607ad603a",
-          "sha1": "16afaeeaf7af9899c745fc618f1745ff7fa6777b",
-          "md5": "a5203a283d2566378e30d0e33e0be457"
+          "size": 1253201,
+          "sha512": "1fa7e84e8fbaa2297c33148748b6093af21c42541a527a80d23344ea49e517699e08835cffa433be87e889fe00078fe1c79231779b98f0bcbaf80825399750b1",
+          "sha256": "1e37d176ffdb6c4a5a41c0fc5d8dce8ca3fb289e39ceb92ec3e8ebfeb232eda2",
+          "sha1": "8c2c9a8453b74f8235ad6a17be10679471e27452",
+          "md5": "b44ced233910e768a707d55d3dfd92e4"
         }
       ]
     }

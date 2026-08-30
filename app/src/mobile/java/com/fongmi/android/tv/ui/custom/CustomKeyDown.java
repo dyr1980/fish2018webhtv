@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import com.fongmi.android.tv.App;
 import com.fongmi.android.tv.setting.LiveSetting;
 import com.fongmi.android.tv.setting.PlayerSetting;
+import com.fongmi.android.tv.utils.BrightnessPolicy;
 import com.fongmi.android.tv.utils.ResUtil;
 import com.fongmi.android.tv.utils.Util;
 
@@ -27,6 +28,7 @@ public class CustomKeyDown extends GestureDetector.SimpleOnGestureListener imple
     private final Listener listener;
     private final Activity activity;
     private final View videoView;
+    private final int[] videoLocation;
     private boolean changeBright;
     private boolean changeVolume;
     private boolean changeSpeed;
@@ -38,6 +40,7 @@ public class CustomKeyDown extends GestureDetector.SimpleOnGestureListener imple
     private boolean lock;
     private float bright;
     private float currentBright;
+    private float brightLimit = BrightnessPolicy.NO_LIMIT;
     private float volume;
     private float scale;
     private long time;
@@ -53,25 +56,54 @@ public class CustomKeyDown extends GestureDetector.SimpleOnGestureListener imple
         this.listener = (Listener) activity;
         this.videoView = videoView;
         this.activity = activity;
+        this.videoLocation = new int[2];
         this.scale = 1.0f;
         applyBrightness();
     }
 
     public boolean onTouchEvent(MotionEvent e) {
         int action = e.getActionMasked();
+        boolean end = action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL;
         if (action == MotionEvent.ACTION_DOWN) multiTouch = false;
         if (action == MotionEvent.ACTION_POINTER_DOWN) multiTouch = true;
         if (action == MotionEvent.ACTION_UP) listener.onTouchEnd();
-        if (changeBright && action == MotionEvent.ACTION_UP) PlayerSetting.putBrightness(currentBright);
+        // 手势被父容器拦截或来电时只收到 CANCEL，同样要落盘，否则窗口已改而记忆值未更新
+        if (changeBright && end) PlayerSetting.putBrightness(currentBright);
         if (changeSpeed && action == MotionEvent.ACTION_UP) listener.onSpeedEnd();
         if (changeTime && action == MotionEvent.ACTION_UP) listener.onSeekEnd(time);
         return e.getPointerCount() == 2 ? scaleDetector.onTouchEvent(e) : detector.onTouchEvent(e);
     }
 
     private void applyBrightness() {
-        float brightness = PlayerSetting.getBrightness();
-        if (brightness < 0) return;
+        // merge 在「用户未设定且无夜间上限」时返回 -1，即 BRIGHTNESS_OVERRIDE_NONE，
+        // 写入窗口就是恢复跟随系统。所以这里必须无条件写，不能短路：
+        // 否则夜间模式由「有上限」切回「无上限」时窗口会停留在旧的压暗值。
+        applyWindowBrightness(BrightnessPolicy.merge(PlayerSetting.getBrightness(), brightLimit));
+    }
+
+    /**
+     * 设置夜间模式亮度上限（负数表示无上限），随后立即重算窗口亮度。
+     */
+    public void setBrightLimit(float limit) {
+        this.brightLimit = limit;
+        applyBrightness();
+    }
+
+    /**
+     * 退出播放页时把窗口亮度交还系统。
+     * <p>
+     * 窗口销毁本身会让覆盖值失效，但同一个 Activity 内（切到详情、关闭「记住亮度」后）
+     * 不还原就会一直停在旧的覆盖值上，表现为「屏幕莫名一直偏亮」。
+     */
+    public void release() {
+        applyWindowBrightness(BrightnessPolicy.FOLLOW_SYSTEM);
+    }
+
+    private void applyWindowBrightness(float brightness) {
         WindowManager.LayoutParams attributes = activity.getWindow().getAttributes();
+        // 值没变就不要回写，避免无谓的窗口属性更新；也保证「从未接管」的页面
+        // (如直播页) 不会因为显式写入默认值而触发多余的 relayout。
+        if (attributes.screenBrightness == brightness) return;
         attributes.screenBrightness = brightness;
         activity.getWindow().setAttributes(attributes);
     }
@@ -98,13 +130,41 @@ public class CustomKeyDown extends GestureDetector.SimpleOnGestureListener imple
     }
 
     private boolean isEdge(MotionEvent e) {
-        return ResUtil.isEdge(App.get(), e, ResUtil.dp2px(24));
+        int width = getVideoWidth();
+        int height = getVideoHeight();
+        if (width <= 0 || height <= 0) return false;
+        int edge = ResUtil.dp2px(24);
+        float x = getVideoX(e);
+        float y = getVideoY(e);
+        return x < edge || x > width - edge || y < edge || y > height - edge;
     }
 
     private boolean isSide(MotionEvent e) {
-        int four = ResUtil.getScreenWidth(App.get()) / 4;
-        float x = e.getRawX();
-        return x <= four || x >= four * 3;
+        int width = getVideoWidth();
+        if (width <= 0) return false;
+        int four = width / 4;
+        float x = getVideoX(e);
+        return !(x > four) || !(x < four * 3);
+    }
+
+    private int getVideoWidth() {
+        int width = videoView.getWidth();
+        return width > 0 ? width : videoView.getMeasuredWidth();
+    }
+
+    private int getVideoHeight() {
+        int height = videoView.getHeight();
+        return height > 0 ? height : videoView.getMeasuredHeight();
+    }
+
+    private float getVideoX(MotionEvent e) {
+        videoView.getLocationOnScreen(videoLocation);
+        return e.getRawX() - videoLocation[0];
+    }
+
+    private float getVideoY(MotionEvent e) {
+        videoView.getLocationOnScreen(videoLocation);
+        return e.getRawY() - videoLocation[1];
     }
 
     private void reset() {
@@ -114,7 +174,10 @@ public class CustomKeyDown extends GestureDetector.SimpleOnGestureListener imple
         changeSpeed = false;
         changeBright = false;
         changeVolume = false;
-        bright = Util.getBrightness(activity);
+        // 窗口里存的是「手势值与夜间上限合并后」的结果，直接回读会让夜间模式下的
+        // 手势基准被上限带偏，所以优先用已持久化的手势值。
+        float saved = PlayerSetting.getBrightness();
+        bright = saved >= 0 ? saved : Util.getBrightness(activity);
         currentBright = bright;
         volume = manager.getStreamVolume(AudioManager.STREAM_MUSIC);
     }
@@ -155,7 +218,7 @@ public class CustomKeyDown extends GestureDetector.SimpleOnGestureListener imple
     @Override
     public boolean onSingleTapConfirmed(@NonNull MotionEvent e) {
         if (isMultiple(e) || changeScale) return true;
-        listener.onSingleTap(e.getRawX(), ResUtil.getScreenWidth(App.get()));
+        listener.onSingleTap(getVideoX(e), getVideoWidth());
         return true;
     }
 
@@ -185,20 +248,19 @@ public class CustomKeyDown extends GestureDetector.SimpleOnGestureListener imple
     }
 
     private void checkSide(MotionEvent e2) {
-        int half = ResUtil.getScreenWidth(App.get()) / 2;
-        if (e2.getRawX() > half) changeVolume = true;
+        int width = getVideoWidth();
+        float x = getVideoX(e2);
+        if (x > width / 2f) changeVolume = true;
         else changeBright = true;
     }
 
     private void setBright(float deltaY) {
         int height = videoView.getMeasuredHeight();
-        float brightness = deltaY * 2.0f / height + bright;
-        if (brightness < 0) brightness = 0f;
-        if (brightness > 1.0f) brightness = 1.0f;
-        WindowManager.LayoutParams attributes = activity.getWindow().getAttributes();
-        attributes.screenBrightness = brightness;
-        activity.getWindow().setAttributes(attributes);
+        // 手势值先与夜间上限合并，再作为「当前亮度」对外报告并持久化。
+        // 否则夜间模式下滑到顶会把 1.0 落盘，切到无上限的页面（如直播）就突然全亮。
+        float brightness = BrightnessPolicy.merge(BrightnessPolicy.scroll(bright, deltaY, height), brightLimit);
         currentBright = brightness;
+        applyWindowBrightness(brightness);
         listener.onBright((int) (brightness * 100));
     }
 
