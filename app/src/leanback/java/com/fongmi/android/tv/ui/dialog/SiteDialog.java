@@ -30,7 +30,10 @@ import com.fongmi.android.tv.ui.custom.SpaceItemDecoration;
 import com.fongmi.android.tv.utils.Notify;
 import com.fongmi.android.tv.utils.ResUtil;
 import com.github.catvod.crawler.SpiderDebug;
+import com.github.catvod.utils.Prefers;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.util.List;
 
 public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickListener {
 
@@ -40,6 +43,7 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
     private static final int ITEM_SPACE = 12;
     private static final int MAX_HEIGHT = 344;
     private static final int INITIAL_BATCH = 48;
+    private static final String KEY_SCROLL_POSITION = "site_dialog_scroll_position";
 
     private RecyclerView.ItemDecoration decoration;
     private DialogSiteBinding binding;
@@ -51,6 +55,7 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
     private boolean action;
     private boolean listLoaded;
     private int type;
+    private int savedScrollPosition = -1;
 
     public static SiteDialog create() {
         return new SiteDialog();
@@ -71,7 +76,8 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
         this.activity = activity;
         if (activity instanceof SiteListener) listener = (SiteListener) activity;
         if (activity.isFinishing() || activity.isDestroyed()) return;
-        log("click received action=%s type=%s", action, type);
+        savedScrollPosition = Prefers.getInt(KEY_SCROLL_POSITION, -1);
+        log("click received action=%s type=%s savedPosition=%s", action, type, savedScrollPosition);
         showDirect(activity);
     }
 
@@ -180,6 +186,14 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
         runAfterFirstPreDraw("list preDraw", () -> {
             if (adapter != null) adapter.showAll();
             log("list expanded total=%sms items=%s", cost(), adapter == null ? -1 : adapter.getItemCount());
+            if (savedScrollPosition >= 0 && binding != null && binding.recycler != null) {
+                binding.recycler.post(() -> {
+                    if (binding != null && binding.recycler != null) {
+                        binding.recycler.scrollToPosition(savedScrollPosition);
+                        log("restored scroll position=%s", savedScrollPosition);
+                    }
+                });
+            }
         });
     }
 
@@ -269,6 +283,13 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
 
     @Override
     public void onItemClick(Site item) {
+        if (adapter != null) {
+            int position = adapter.getItems().indexOf(item);
+            if (position != -1) {
+                Prefers.put(KEY_SCROLL_POSITION, position);
+                log("saved clicked position=%s name=%s", position, item.getName());
+            }
+        }
         if (listener != null) listener.setSite(item);
         dismiss();
     }
@@ -350,6 +371,6 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
         super.onStart();
         Window window = getDialog() == null ? null : getDialog().getWindow();
         applyWindow(window);
-        if (adapter.getItemCount() == 0) dismiss();
+        if (adapter != null && adapter.getItemCount() == 0) dismiss();
     }
 }
