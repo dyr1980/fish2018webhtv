@@ -2,11 +2,30 @@ package com.fongmi.android.tv.utils;
 
 public class Github {
 
-    private static final String GITHUB_LATEST = "https://github.com/fish2018/webhtv/releases/latest/download";
-    private static final String GITHUB_RELEASE = "https://github.com/fish2018/webhtv/releases/download";
-    private static final String GITHUB_API = "https://api.github.com/repos/fish2018/webhtv/releases/tags";
-    private static final String GITHUB_RELEASES_API = "https://api.github.com/repos/fish2018/webhtv/releases";
-    private static final String GITHUB_RELEASE_ASSETS_API = "https://api.github.com/repos/fish2018/webhtv/releases/assets";
+    // ★★★★★ 修改开始：将 fish2018/webhtv 替换为 dyr1980/fish2018webhtv ★★★★★
+    // 原值：https://github.com/fish2018/webhtv/releases/latest/download
+    // 新值：https://github.com/dyr1980/fish2018webhtv/releases/latest/download
+    private static final String GITHUB_LATEST = "https://github.com/dyr1980/fish2018webhtv/releases/latest/download";
+    
+    // 原值：https://github.com/fish2018/webhtv/releases/download
+    // 新值：https://github.com/dyr1980/fish2018webhtv/releases/download
+    private static final String GITHUB_RELEASE = "https://github.com/dyr1980/fish2018webhtv/releases/download";
+    
+    // 原值：https://api.github.com/repos/fish2018/webhtv/releases/tags
+    // 新值：https://api.github.com/repos/dyr1980/fish2018webhtv/releases/tags
+    private static final String GITHUB_API = "https://api.github.com/repos/dyr1980/fish2018webhtv/releases/tags";
+    
+    // 原值：https://api.github.com/repos/fish2018/webhtv/releases
+    // 新值：https://api.github.com/repos/dyr1980/fish2018webhtv/releases
+    private static final String GITHUB_RELEASES_API = "https://api.github.com/repos/dyr1980/fish2018webhtv/releases";
+    
+    // 原值：https://api.github.com/repos/fish2018/webhtv/releases/assets
+    // 新值：https://api.github.com/repos/dyr1980/fish2018webhtv/releases/assets
+    private static final String GITHUB_RELEASE_ASSETS_API = "https://api.github.com/repos/dyr1980/fish2018webhtv/releases/assets";
+    // ★★★★★ 修改结束 ★★★★★
+
+    // ★ 如果你不使用 CNB，下面这行可以保留原样，或者也改成你自己的 CNB 仓库地址
+    // 原值：https://cnb.cool/fish2035/webhtv-release/-/git/raw/main
     private static final String CNB = "https://cnb.cool/fish2035/webhtv-release/-/git/raw/main";
 
     public static String getCnbAsset(String name) {
