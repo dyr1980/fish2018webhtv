@@ -22,7 +22,6 @@ import com.fongmi.android.tv.utils.Util;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class UpdateDialog extends BaseAlertDialog {
-
     private DialogUpdateBinding binding;
     private UpdateListener listener;
     private Update stable;
@@ -31,6 +30,13 @@ public class UpdateDialog extends BaseAlertDialog {
     private boolean stableExpanded = true;
     private boolean betaExpanded;
     private boolean downloading;
+
+    // ========== 新增：保存下载进度状态，用于onStart恢复 ==========
+    private int mLastProgress = -1;
+    private long mLastBytes = 0;
+    private long mLastTotal = 0;
+    private long mLastSpeed = 0;
+    private long mLastElapsed = 0;
 
     public static UpdateDialog create() {
         return new UpdateDialog();
@@ -95,6 +101,11 @@ public class UpdateDialog extends BaseAlertDialog {
         setCancelable(false);
         if (getDialog() != null) getDialog().setCanceledOnTouchOutside(false);
         setDialogWidth(ResUtil.isLand(requireActivity()) ? 0.62f : 0.92f);
+
+        // ========== 关键修复：弹窗重建完成，恢复下载进度 ==========
+        if (downloading) {
+            setProgress(mLastProgress, mLastBytes, mLastTotal, mLastSpeed, mLastElapsed);
+        }
     }
 
     private void select(String channel) {
@@ -145,6 +156,12 @@ public class UpdateDialog extends BaseAlertDialog {
         binding.close.setVisibility(View.VISIBLE);
         binding.progressPanel.setVisibility(View.GONE);
         downloading = false;
+        // 重置进度缓存
+        mLastProgress = -1;
+        mLastBytes = 0;
+        mLastTotal = 0;
+        mLastSpeed = 0;
+        mLastElapsed = 0;
     }
 
     private void renderItem(String channel, Update update) {
@@ -253,6 +270,14 @@ public class UpdateDialog extends BaseAlertDialog {
     public boolean setProgress(int progress, long bytes, long total, long speed, long elapsed) {
         if (!isProgressTarget()) return false;
         downloading = true;
+
+        // ========== 保存进度到本地缓存，供onStart恢复 ==========
+        mLastProgress = progress;
+        mLastBytes = bytes;
+        mLastTotal = total;
+        mLastSpeed = speed;
+        mLastElapsed = elapsed;
+
         boolean indeterminate = progress < 0;
         int value = Math.max(0, Math.min(100, progress));
         binding.stableItem.setEnabled(false);
@@ -269,7 +294,6 @@ public class UpdateDialog extends BaseAlertDialog {
         return true;
     }
 
-    // ★★★ 关键修改：使用和参考代码一样的判断条件 ★★★
     private boolean isProgressTarget() {
         return binding != null && isAdded() && getContext() != null && getDialog() != null;
     }
