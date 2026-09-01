@@ -507,17 +507,38 @@ public class Updater implements UpdateTransfer.Callback, UpdateListener {
         }
     }
 
+    /**
+     * 修复签名校验逻辑
+     * 原代码的问题：单签名场景下，没有优先对比 APK 当前实际使用的签名证书 (getApkContentsSigners())，
+     * 而是直接去拿证书轮换历史 (getSigningCertificateHistory()) 做判断。
+     * 当没有证书轮换时，history 集合为空，导致校验失败。
+     * 修复方案：优先对比实际签名证书，只有当前证书不匹配时，才走证书轮换历史兜底。
+     */
     private boolean signaturesMatch(PackageInfo installed, PackageInfo archive) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if (installed.signingInfo == null || archive.signingInfo == null) return false;
+
+            // 获取当前 APK 实际使用的签名证书
+            Set<String> installedCurrent = fingerprints(installed.signingInfo.getApkContentsSigners());
+            Set<String> archiveCurrent = fingerprints(archive.signingInfo.getApkContentsSigners());
+
+            // 多签名场景：直接对比全部当前证书
             if (installed.signingInfo.hasMultipleSigners() || archive.signingInfo.hasMultipleSigners()) {
-                return fingerprints(installed.signingInfo.getApkContentsSigners()).equals(fingerprints(archive.signingInfo.getApkContentsSigners()));
+                return installedCurrent.equals(archiveCurrent);
             }
-            Set<String> current = fingerprints(installed.signingInfo.getApkContentsSigners());
-            Set<String> candidateHistory = fingerprints(archive.signingInfo.getSigningCertificateHistory());
-            return !current.isEmpty() && candidateHistory.containsAll(current);
+
+            // 单签名场景：优先对比当前实际签名证书
+            if (installedCurrent.equals(archiveCurrent)) {
+                return true;
+            }
+
+            // 只有当前证书不匹配时，才兜底走证书轮换历史（v3 密钥轮换场景）
+            Set<String> archiveHistory = fingerprints(archive.signingInfo.getSigningCertificateHistory());
+            return !installedCurrent.isEmpty() && archiveHistory.containsAll(installedCurrent);
+        } else {
+            // Android P 以下，使用旧的 signatures 数组
+            return fingerprints(installed.signatures).equals(fingerprints(archive.signatures));
         }
-        return fingerprints(installed.signatures).equals(fingerprints(archive.signatures));
     }
 
     private Set<String> fingerprints(Signature[] signatures) {
