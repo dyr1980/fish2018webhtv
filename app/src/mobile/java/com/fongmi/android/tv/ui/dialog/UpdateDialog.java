@@ -1,6 +1,5 @@
 package com.fongmi.android.tv.ui.dialog;
 
-import android.app.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
@@ -23,6 +22,7 @@ import com.fongmi.android.tv.utils.Util;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class UpdateDialog extends BaseAlertDialog {
+
     private DialogUpdateBinding binding;
     private UpdateListener listener;
     private Update stable;
@@ -31,8 +31,6 @@ public class UpdateDialog extends BaseAlertDialog {
     private boolean stableExpanded = true;
     private boolean betaExpanded;
     private boolean downloading;
-    // 新增：标记弹窗是否真正就绪可渲染UI
-    private boolean isDialogShowing = false;
 
     public static UpdateDialog create() {
         return new UpdateDialog();
@@ -97,15 +95,6 @@ public class UpdateDialog extends BaseAlertDialog {
         setCancelable(false);
         if (getDialog() != null) getDialog().setCanceledOnTouchOutside(false);
         setDialogWidth(ResUtil.isLand(requireActivity()) ? 0.62f : 0.92f);
-        // 弹窗onStart完成，标记允许更新进度UI
-        isDialogShowing = true;
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-        // 弹窗关闭，禁止后续UI更新，防止View detach崩溃
-        isDialogShowing = false;
     }
 
     private void select(String channel) {
@@ -171,6 +160,7 @@ public class UpdateDialog extends BaseAlertDialog {
             binding.stableExpand.setVisibility(hasBeta() && !expanded ? View.VISIBLE : View.GONE);
             binding.stableExpand.setText(R.string.update_expand);
             binding.stableDesc.setText(MarkdownText.render(getBody(update), getString(R.string.update_no_notes)));
+            // 有更新时显示按钮，无更新时隐藏
             if (update != null && update.hasUpdate()) {
                 binding.stableConfirm.setVisibility(View.VISIBLE);
                 binding.stableConfirm.setEnabled(true);
@@ -184,6 +174,7 @@ public class UpdateDialog extends BaseAlertDialog {
             binding.betaExpand.setVisibility(!expanded ? View.VISIBLE : View.GONE);
             binding.betaExpand.setText(R.string.update_expand);
             binding.betaDesc.setText(MarkdownText.render(getBody(update), getString(R.string.update_no_notes)));
+            // 有更新时显示按钮，无更新时隐藏
             if (update != null && update.hasUpdate()) {
                 binding.betaConfirm.setVisibility(View.VISIBLE);
                 binding.betaConfirm.setEnabled(true);
@@ -278,9 +269,9 @@ public class UpdateDialog extends BaseAlertDialog {
         return true;
     }
 
+    // ★★★ 关键修改：使用和参考代码一样的判断条件 ★★★
     private boolean isProgressTarget() {
-        // 改用自定义标记，规避Dialog.isShowing()时序坑
-        return binding != null && isAdded() && getContext() != null && isDialogShowing;
+        return binding != null && isAdded() && getContext() != null && getDialog() != null;
     }
 
     private String getProgressText(boolean indeterminate, int value, long bytes, long total, long speed, long elapsed) {
