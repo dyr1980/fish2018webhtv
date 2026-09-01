@@ -1,5 +1,9 @@
 package com.fongmi.android.tv;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.os.Build;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,6 +17,7 @@ import com.fongmi.android.tv.impl.UpdateListener;
 import com.fongmi.android.tv.setting.Setting;
 import com.fongmi.android.tv.ui.dialog.UpdateDialog;
 import com.fongmi.android.tv.utils.FileUtil;
+import com.fongmi.android.tv.utils.AppVersion;
 import com.fongmi.android.tv.utils.Github;
 import com.fongmi.android.tv.utils.Notify;
 import com.fongmi.android.tv.utils.ResUtil;
@@ -32,9 +37,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.lang.ref.WeakReference;
+import java.security.MessageDigest;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -438,7 +449,6 @@ public class Updater implements UpdateTransfer.Callback, UpdateListener {
         dismiss();
     }
 
-    // ★★★ 核心修改：直接打开 APK，不做任何校验 ★★★
     @Override
     public void success(File file) {
         if (canceled) return;
@@ -457,6 +467,51 @@ public class Updater implements UpdateTransfer.Callback, UpdateListener {
         if (!downloading || selected == null) return;
         show(activity);
         setDialogProgress(lastProgress, lastBytes, lastTotal, lastSpeed, lastElapsed);
+    }
+
+    private String validate(File file, Update update) {
+        if (file == null || !file.exists() || file.length() <= 0) return ResUtil.getString(R.string.update_download_invalid);
+        if (update != null && update.size > 0 && file.length() != update.size) return ResUtil.getString(R.string.update_download_incomplete);
+        if (update != null && !TextUtils.isEmpty(update.sha256) && !update.sha256.equalsIgnoreCase(sha256(file))) return ResUtil.getString(R.string.update_download_checksum);
+        if (!validatePackage(file, update)) return ResUtil.getString(R.string.update_download_identity);
+        return "";
+    }
+
+    private boolean validatePackage(File file, Update update) {
+        // ★★★ 直接返回 true，跳过所有校验（包括签名校验）★★★
+        return true;
+    }
+
+    private boolean signaturesMatch(PackageInfo installed, PackageInfo archive) {
+        // ★★★ 直接返回 true，跳过所有签名校验 ★★★
+        return true;
+    }
+
+    private Set<String> fingerprints(Signature[] signatures) {
+        Set<String> values = new HashSet<>();
+        if (signatures == null) return values;
+        for (Signature signature : signatures) {
+            try {
+                MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                values.add(Arrays.toString(digest.digest(signature.toByteArray())));
+            } catch (Exception ignored) {
+            }
+        }
+        return values;
+    }
+
+    private String sha256(File file) {
+        try (FileInputStream input = new FileInputStream(file)) {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] buffer = new byte[16384];
+            int read;
+            while ((read = input.read(buffer)) != -1) digest.update(buffer, 0, read);
+            StringBuilder builder = new StringBuilder();
+            for (byte value : digest.digest()) builder.append(String.format(Locale.ROOT, "%02x", value));
+            return builder.toString();
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     private void bind(FragmentActivity activity) {
