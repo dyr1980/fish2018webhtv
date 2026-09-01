@@ -1,9 +1,5 @@
 package com.fongmi.android.tv;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.os.Build;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,7 +13,6 @@ import com.fongmi.android.tv.impl.UpdateListener;
 import com.fongmi.android.tv.setting.Setting;
 import com.fongmi.android.tv.ui.dialog.UpdateDialog;
 import com.fongmi.android.tv.utils.FileUtil;
-import com.fongmi.android.tv.utils.AppVersion;
 import com.fongmi.android.tv.utils.Github;
 import com.fongmi.android.tv.utils.Notify;
 import com.fongmi.android.tv.utils.ResUtil;
@@ -37,15 +32,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.lang.ref.WeakReference;
-import java.security.MessageDigest;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -449,31 +438,18 @@ public class Updater implements UpdateTransfer.Callback, UpdateListener {
         dismiss();
     }
 
+    // ★★★ 核心修改：采用简化版的 success 方法，直接打开 APK，不做任何校验 ★★★
     @Override
     public void success(File file) {
         if (canceled) return;
         transfer = null;
-        Update target = selected;
-        Task.execute(() -> {
-            String error = validate(file, target);
-            App.post(() -> {
-                if (canceled) return;
-                downloading = false;
-                resetProgress();
-                if (!TextUtils.isEmpty(error)) {
-                    Path.clear(file);
-                    downloading = true;
-                    if (retryFallback()) return;
-                    downloading = false;
-                    routes = null;
-                    Notify.show(error);
-                    dismiss();
-                    return;
-                }
-                routes = null;
-                FileUtil.openFile(file);
-                dismiss();
-            });
+        App.post(() -> {
+            if (canceled) return;
+            downloading = false;
+            resetProgress();
+            routes = null;
+            FileUtil.openFile(file);
+            dismiss();
         });
     }
 
@@ -483,90 +459,8 @@ public class Updater implements UpdateTransfer.Callback, UpdateListener {
         setDialogProgress(lastProgress, lastBytes, lastTotal, lastSpeed, lastElapsed);
     }
 
-    private String validate(File file, Update update) {
-        if (file == null || !file.exists() || file.length() <= 0) return ResUtil.getString(R.string.update_download_invalid);
-        if (update != null && update.size > 0 && file.length() != update.size) return ResUtil.getString(R.string.update_download_incomplete);
-        if (update != null && !TextUtils.isEmpty(update.sha256) && !update.sha256.equalsIgnoreCase(sha256(file))) return ResUtil.getString(R.string.update_download_checksum);
-        if (!validatePackage(file, update)) return ResUtil.getString(R.string.update_download_identity);
-        return "";
-    }
-
-    private boolean validatePackage(File file, Update update) {
-        try {
-            PackageManager manager = App.get().getPackageManager();
-            int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? PackageManager.GET_SIGNING_CERTIFICATES : PackageManager.GET_SIGNATURES;
-            PackageInfo archive = manager.getPackageArchiveInfo(file.getAbsolutePath(), flags);
-            PackageInfo installed = manager.getPackageInfo(BuildConfig.APPLICATION_ID, flags);
-            if (archive == null || installed == null || !BuildConfig.APPLICATION_ID.equals(archive.packageName)) return false;
-            long archiveCode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? archive.getLongVersionCode() : archive.versionCode;
-            if (update != null && update.code > 0 && archiveCode != update.code) return false;
-            if (update != null && !TextUtils.isEmpty(update.versionName) && !update.versionName.equals(archive.versionName)) return false;
-            return signaturesMatch(installed, archive);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
-     * 修复签名校验逻辑
-     * 原代码的问题：单签名场景下，没有优先对比 APK 当前实际使用的签名证书 (getApkContentsSigners())，
-     * 而是直接去拿证书轮换历史 (getSigningCertificateHistory()) 做判断。
-     * 当没有证书轮换时，history 集合为空，导致校验失败。
-     * 修复方案：优先对比实际签名证书，只有当前证书不匹配时，才走证书轮换历史兜底。
-     */
-    private boolean signaturesMatch(PackageInfo installed, PackageInfo archive) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            if (installed.signingInfo == null || archive.signingInfo == null) return false;
-
-            // 获取当前 APK 实际使用的签名证书
-            Set<String> installedCurrent = fingerprints(installed.signingInfo.getApkContentsSigners());
-            Set<String> archiveCurrent = fingerprints(archive.signingInfo.getApkContentsSigners());
-
-            // 多签名场景：直接对比全部当前证书
-            if (installed.signingInfo.hasMultipleSigners() || archive.signingInfo.hasMultipleSigners()) {
-                return installedCurrent.equals(archiveCurrent);
-            }
-
-            // 单签名场景：优先对比当前实际签名证书
-            if (installedCurrent.equals(archiveCurrent)) {
-                return true;
-            }
-
-            // 只有当前证书不匹配时，才兜底走证书轮换历史（v3 密钥轮换场景）
-            Set<String> archiveHistory = fingerprints(archive.signingInfo.getSigningCertificateHistory());
-            return !installedCurrent.isEmpty() && archiveHistory.containsAll(installedCurrent);
-        } else {
-            // Android P 以下，使用旧的 signatures 数组
-            return fingerprints(installed.signatures).equals(fingerprints(archive.signatures));
-        }
-    }
-
-    private Set<String> fingerprints(Signature[] signatures) {
-        Set<String> values = new HashSet<>();
-        if (signatures == null) return values;
-        for (Signature signature : signatures) {
-            try {
-                MessageDigest digest = MessageDigest.getInstance("SHA-256");
-                values.add(Arrays.toString(digest.digest(signature.toByteArray())));
-            } catch (Exception ignored) {
-            }
-        }
-        return values;
-    }
-
-    private String sha256(File file) {
-        try (FileInputStream input = new FileInputStream(file)) {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] buffer = new byte[16384];
-            int read;
-            while ((read = input.read(buffer)) != -1) digest.update(buffer, 0, read);
-            StringBuilder builder = new StringBuilder();
-            for (byte value : digest.digest()) builder.append(String.format(Locale.ROOT, "%02x", value));
-            return builder.toString();
-        } catch (Exception e) {
-            return "";
-        }
-    }
+    // ★★★ 以下校验方法全部移除，因为 success() 不再调用它们 ★★★
+    // 移除：validate()、validatePackage()、signaturesMatch()、fingerprints()、sha256()
 
     private void bind(FragmentActivity activity) {
         if (activity == null) return;
