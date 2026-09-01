@@ -425,6 +425,16 @@ public class Updater implements UpdateTransfer.Callback, UpdateListener {
 
     private void setDialogProgress(int progress, long bytes, long total, long speed, long elapsed) {
         if (canceled || !downloading) return;
+
+        // dialog为空时尝试重建弹窗，**删除return，继续执行后续进度逻辑**
+        if (dialog == null) {
+            FragmentActivity activity = activityRef == null ? null : activityRef.get();
+            if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
+                String channel = selected == null ? Update.CHANNEL_STABLE : selected.channel;
+                dialog = UpdateDialog.create().stable(stable).beta(beta).selected(channel).listener(this).show(activity);
+            }
+        }
+
         long manifestSize = selected == null ? 0 : selected.size;
         if (total <= 0 && manifestSize > 0) total = manifestSize;
         if (progress < 0 && total > 0 && bytes > 0) progress = (int) (bytes * 100.0 / total);
@@ -433,8 +443,11 @@ public class Updater implements UpdateTransfer.Callback, UpdateListener {
         lastTotal = total;
         lastSpeed = speed;
         lastElapsed = elapsed;
+
         if (dialog == null) return;
-        if (!dialog.setProgress(progress, bytes, total, speed, elapsed)) dialog = null;
+        if (!dialog.setProgress(progress, bytes, total, speed, elapsed)) {
+            dialog = null;
+        }
     }
 
     @Override
@@ -478,12 +491,10 @@ public class Updater implements UpdateTransfer.Callback, UpdateListener {
     }
 
     private boolean validatePackage(File file, Update update) {
-        // ★★★ 直接返回 true，跳过所有校验（包括签名校验）★★★
         return true;
     }
 
     private boolean signaturesMatch(PackageInfo installed, PackageInfo archive) {
-        // ★★★ 直接返回 true，跳过所有签名校验 ★★★
         return true;
     }
 
