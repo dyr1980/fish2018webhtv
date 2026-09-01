@@ -8,7 +8,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewbinding.ViewBinding;
 
@@ -103,7 +102,7 @@ public class UpdateDialog extends BaseAlertDialog {
     }
 
     @Override
-    public void onDismiss(@NonNull DialogInterface dialog) {
+    public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
         // 弹窗关闭，禁止后续UI更新，防止View detach崩溃
         isDialogShowing = false;
