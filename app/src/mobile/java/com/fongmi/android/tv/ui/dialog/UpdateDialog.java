@@ -46,6 +46,7 @@ public class UpdateDialog extends BaseAlertDialog {
         return this;
     }
 
+    // ★★★ 修改1：简化 selected() 方法，直接根据选中的频道控制展开状态 ★★★
     public UpdateDialog selected(String selected) {
         this.selected = selected;
         this.stableExpanded = !Update.CHANNEL_BETA.equals(selected);
@@ -147,6 +148,7 @@ public class UpdateDialog extends BaseAlertDialog {
         downloading = false;
     }
 
+    // ★★★ 修改2：让更新按钮在有更新时显示，无更新时隐藏 ★★★
     private void renderItem(String channel, Update update) {
         boolean stableChannel = Update.CHANNEL_STABLE.equals(channel);
         boolean expanded = stableChannel ? stableExpanded : betaExpanded;
@@ -160,18 +162,28 @@ public class UpdateDialog extends BaseAlertDialog {
             binding.stableExpand.setVisibility(hasBeta() && !expanded ? View.VISIBLE : View.GONE);
             binding.stableExpand.setText(R.string.update_expand);
             binding.stableDesc.setText(MarkdownText.render(getBody(update), getString(R.string.update_no_notes)));
-            binding.stableConfirm.setEnabled(update != null && update.hasUpdate());
-            binding.stableConfirm.setText(R.string.update_confirm);
-            binding.stableConfirm.setVisibility(View.GONE);
+            // ★★★ 修改：有更新时显示按钮，无更新时隐藏 ★★★
+            if (update != null && update.hasUpdate()) {
+                binding.stableConfirm.setVisibility(View.VISIBLE);
+                binding.stableConfirm.setEnabled(true);
+                binding.stableConfirm.setText(R.string.update_confirm);
+            } else {
+                binding.stableConfirm.setVisibility(View.GONE);
+            }
         } else {
             binding.betaVersion.setText(getVersion(update));
             binding.betaStatus.setText(getStatus(update));
             binding.betaExpand.setVisibility(!expanded ? View.VISIBLE : View.GONE);
             binding.betaExpand.setText(R.string.update_expand);
             binding.betaDesc.setText(MarkdownText.render(getBody(update), getString(R.string.update_no_notes)));
-            binding.betaConfirm.setEnabled(update != null && update.hasUpdate());
-            binding.betaConfirm.setText(R.string.update_confirm);
-            binding.betaConfirm.setVisibility(View.GONE);
+            // ★★★ 修改：有更新时显示按钮，无更新时隐藏 ★★★
+            if (update != null && update.hasUpdate()) {
+                binding.betaConfirm.setVisibility(View.VISIBLE);
+                binding.betaConfirm.setEnabled(true);
+                binding.betaConfirm.setText(R.string.update_confirm);
+            } else {
+                binding.betaConfirm.setVisibility(View.GONE);
+            }
         }
     }
 
