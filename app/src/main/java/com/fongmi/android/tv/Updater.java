@@ -438,7 +438,7 @@ public class Updater implements UpdateTransfer.Callback, UpdateListener {
         dismiss();
     }
 
-    // ★★★ 核心修改：采用简化版的 success 方法，直接打开 APK，不做任何校验 ★★★
+    // ★★★ 核心修改：直接打开 APK，不做任何校验 ★★★
     @Override
     public void success(File file) {
         if (canceled) return;
@@ -458,9 +458,6 @@ public class Updater implements UpdateTransfer.Callback, UpdateListener {
         show(activity);
         setDialogProgress(lastProgress, lastBytes, lastTotal, lastSpeed, lastElapsed);
     }
-
-    // ★★★ 以下校验方法全部移除，因为 success() 不再调用它们 ★★★
-    // 移除：validate()、validatePackage()、signaturesMatch()、fingerprints()、sha256()
 
     private void bind(FragmentActivity activity) {
         if (activity == null) return;
