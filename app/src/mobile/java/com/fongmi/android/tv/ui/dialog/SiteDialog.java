@@ -53,6 +53,12 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
     private boolean block;
     private int columnCount = 1;
 
+    // ========== 新增：滚动位置记忆相关变量 ==========
+    private int rememberedPosition = 0;          // 记忆的滚动位置（第一个可见项索引）
+    private int rememberedOffset = 0;            // 记忆的滚动偏移量（像素）
+    private boolean hasRememberedPosition = false;
+    // ================================================
+
     public static SiteDialog create() {
         return new SiteDialog();
     }
@@ -94,7 +100,19 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
         binding.recycler.setItemAnimator(null);
         binding.recycler.setHasFixedSize(true);
         attachSortTouchHelper();
-        binding.recycler.post(() -> binding.recycler.scrollToPosition(0));
+        // ========== 修改：恢复之前记忆的滚动位置 ==========
+        if (hasRememberedPosition) {
+            binding.recycler.post(() -> {
+                LinearLayoutManager layoutManager = (LinearLayoutManager) binding.recycler.getLayoutManager();
+                if (layoutManager != null && rememberedPosition < adapter.getItemCount()) {
+                    layoutManager.scrollToPositionWithOffset(rememberedPosition, rememberedOffset);
+                    hasRememberedPosition = false; // 恢复后清除标记，避免多次恢复
+                }
+            });
+        } else {
+            binding.recycler.post(() -> binding.recycler.scrollToPosition(0));
+        }
+        // ================================================
     }
 
     private void attachSortTouchHelper() {
@@ -130,8 +148,14 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
         binding.keyword.addTextChangedListener(new CustomTextListener() {
             @Override
             public void afterTextChanged(Editable s) {
+                // ========== 修改：搜索时重置记忆 ==========
+                rememberCurrentScrollPosition();
+                // 搜索内容变化后，过滤结果，滚动到顶部
                 filter();
                 binding.recycler.scrollToPosition(0);
+                // 清除记忆的滚动位置，因为搜索结果是全新的列表
+                hasRememberedPosition = false;
+                // ========================================
             }
         });
         binding.block.setOnClickListener(this::onBlockToggle);
@@ -146,8 +170,20 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
         adapter.block(block);
         groups = getGroups();
         setGroupView();
+        // ========== 修改：切换隐藏/显示时保留滚动位置 ==========
+        rememberCurrentScrollPosition();
         filter();
-        binding.recycler.scrollToPosition(0);
+        binding.recycler.post(() -> {
+            if (hasRememberedPosition && rememberedPosition < adapter.getItemCount()) {
+                LinearLayoutManager layoutManager = (LinearLayoutManager) binding.recycler.getLayoutManager();
+                if (layoutManager != null) {
+                    layoutManager.scrollToPositionWithOffset(rememberedPosition, rememberedOffset);
+                }
+            } else {
+                binding.recycler.scrollToPosition(0);
+            }
+        });
+        // =====================================================
     }
 
     private void onColumnToggle(View view) {
@@ -155,6 +191,16 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
         int nextColumn = columnCount == 1 ? 2 : 1;
         Setting.putSiteColumn(nextColumn);
         setColumnCount(nextColumn);
+        // ========== 修改：切换列数时保留滚动位置 ==========
+        binding.recycler.post(() -> {
+            if (hasRememberedPosition && rememberedPosition < adapter.getItemCount()) {
+                LinearLayoutManager layoutManager = (LinearLayoutManager) binding.recycler.getLayoutManager();
+                if (layoutManager != null) {
+                    layoutManager.scrollToPositionWithOffset(rememberedPosition, rememberedOffset);
+                }
+            }
+        });
+        // =================================================
     }
 
     private void setColumnCount(int count) {
@@ -208,9 +254,25 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
 
     private void onGroupClick(String group, View view) {
         selectedGroup = group.equals(selectedGroup) ? "" : group;
+        // ========== 修改：切换分组时先记忆当前滚动位置 ==========
+        rememberCurrentScrollPosition();
+        // =====================================================
         updateGroupView();
         filter();
-        binding.recycler.scrollToPosition(0);
+        // ========== 修改：切换分组后恢复到记忆的位置 ==========
+        // 如果切换分组后，记忆的位置仍然有效（同一分组且索引未超出），则恢复
+        if (selectedGroup.equals(group) && hasRememberedPosition && rememberedPosition < adapter.getItemCount()) {
+            binding.recycler.post(() -> {
+                LinearLayoutManager layoutManager = (LinearLayoutManager) binding.recycler.getLayoutManager();
+                if (layoutManager != null) {
+                    layoutManager.scrollToPositionWithOffset(rememberedPosition, rememberedOffset);
+                }
+            });
+        } else {
+            binding.recycler.scrollToPosition(0);
+            hasRememberedPosition = false;
+        }
+        // =====================================================
         if (!TextUtils.isEmpty(selectedGroup)) centerGroup(view);
     }
 
@@ -230,6 +292,19 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
     private void filter() {
         adapter.filter(selectedGroup, binding.keyword.getText().toString());
     }
+
+    // ========== 新增：保存当前滚动位置 ==========
+    private void rememberCurrentScrollPosition() {
+        RecyclerView.LayoutManager layoutManager = binding.recycler.getLayoutManager();
+        if (layoutManager instanceof LinearLayoutManager) {
+            LinearLayoutManager lm = (LinearLayoutManager) layoutManager;
+            rememberedPosition = lm.findFirstVisibleItemPosition();
+            View firstView = lm.findViewByPosition(rememberedPosition);
+            rememberedOffset = firstView == null ? 0 : firstView.getTop();
+            hasRememberedPosition = rememberedPosition != RecyclerView.NO_POSITION;
+        }
+    }
+    // =============================================
 
     @Override
     public void onTextClick(Site item) {
