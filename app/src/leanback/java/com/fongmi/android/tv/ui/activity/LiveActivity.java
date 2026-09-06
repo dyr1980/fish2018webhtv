@@ -79,6 +79,10 @@ import java.util.List;
 
 public class LiveActivity extends PlaybackActivity implements GroupAdapter.OnClickListener, ChannelAdapter.OnClickListener, EpgDataAdapter.OnClickListener, CustomKeyDownLive.Listener, CustomLiveListView.Callback, TrackDialog.Listener, PassListener, ConfigListener, LiveListener {
 
+    // ==================== 修改点 1：电视端专用隐藏时间（15秒） ====================
+    private static final long INTERVAL_LIVE_TV_HIDE = 15000L; // 电视端频道列表自动隐藏时间（毫秒）
+    // ========================================================================
+
     private ActivityLiveBinding mBinding;
     private ChannelAdapter mChannelAdapter;
     private EpgDataAdapter mEpgDataAdapter;
@@ -220,6 +224,11 @@ public class LiveActivity extends PlaybackActivity implements GroupAdapter.OnCli
             @Override
             public void onChildViewHolderSelected(@NonNull RecyclerView parent, @Nullable RecyclerView.ViewHolder child, int position, int subposition) {
                 if (mGroupAdapter.getItemCount() > 0) onChildSelected(child, mGroup = mGroupAdapter.get(position));
+                // ==================== 修改点 2：列表可见时，每次选中频道重置计时器 ====================
+                if (isVisible(mBinding.recycler)) {
+                    setUITimer();
+                }
+                // =================================================================================
             }
         });
     }
@@ -566,18 +575,17 @@ public class LiveActivity extends PlaybackActivity implements GroupAdapter.OnCli
                 break;
             case Player.STATE_ENDED:
                 checkEnded();
-                updatePlayControl(false);
                 break;
         }
     }
 
     @Override
     protected void onPlayingChanged(boolean isPlaying) {
-        if (isPlaying || isPaused()) updatePlayControl(isPlaying);
-    }
-
-    private void updatePlayControl(boolean isPlaying) {
-        mBinding.control.action.action.setText(isPlaying ? R.string.pause : R.string.play);
+        if (isPlaying) {
+            mBinding.control.action.action.setText(R.string.pause);
+        } else if (isPaused()) {
+            mBinding.control.action.action.setText(R.string.play);
+        }
     }
 
     @Override
@@ -678,6 +686,14 @@ public class LiveActivity extends PlaybackActivity implements GroupAdapter.OnCli
         App.post(mR3, Constant.INTERVAL_HIDE);
     }
 
+    // ==================== 修改点 3：setUITimer 使用电视端专用 15 秒 ====================
+    @Override
+    public void setUITimer() {
+        App.removeCallbacks(mR4);
+        App.post(mR4, INTERVAL_LIVE_TV_HIDE);
+    }
+    // =============================================================================
+
     private void onToggle() {
         if (isVisible(mBinding.control.getRoot())) hideControl();
         else if (isVisible(mBinding.recycler)) hideUI();
@@ -703,16 +719,21 @@ public class LiveActivity extends PlaybackActivity implements GroupAdapter.OnCli
         });
     }
 
+    // ==================== 修改点 4：点击分组后重置计时器而不是清除 ====================
     @Override
     public void onItemClick(Group item) {
         mChannelAdapter.addAll(setWidth(item).getChannel());
         mBinding.channel.setSelectedPosition(Math.max(item.getPosition(), 0));
         if (!item.isKeep() || ++count < 5 || mHides.isEmpty()) return;
         PassDialog.create().show(this);
-        App.removeCallbacks(mR4);
+        // 原逻辑：App.removeCallbacks(mR4);
+        // 改为：重置计时器，保持侧边栏
+        setUITimer();
         resetPass();
     }
+    // =============================================================================
 
+    // ==================== 修改点 5：点击频道切换后不关闭列表 ====================
     @Override
     public void onItemClick(Channel item) {
         if (!item.getData(mViewModel.getZoneId()).getList().isEmpty() && item.isSelected() && mChannel != null && mChannel.equals(item) && mChannel.getGroup().equals(mGroup)) {
@@ -720,9 +741,12 @@ public class LiveActivity extends PlaybackActivity implements GroupAdapter.OnCli
         } else if (mGroup != null) {
             mGroup.setPosition(mBinding.channel.getSelectedPosition());
             setChannel(item.group(mGroup));
-            hideUI();
+            // 原逻辑：hideUI();
+            // 改为：列表保持显示，重置计时器，方便连续选台
+            setUITimer();
         }
     }
+    // =========================================================================
 
     @Override
     public boolean onLongClick(Channel item) {
@@ -1050,15 +1074,19 @@ public class LiveActivity extends PlaybackActivity implements GroupAdapter.OnCli
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        // ==================== 修改点 6：返回键优先关闭列表 ====================
+        if (event.getAction() == KeyEvent.ACTION_UP && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if (isVisible(mBinding.recycler)) {
+                // 取消自动隐藏计时器（hideUI内部已包含removeCallbacks）
+                hideUI();
+                return true; // 消费事件，不退出Activity
+            }
+        }
+        // ====================================================================
         if (isVisible(mBinding.control.getRoot())) setR1Callback();
         if (isVisible(mBinding.control.getRoot())) mFocus2 = getCurrentFocus();
         if (mKeyDown.hasEvent(event) && service() != null) mKeyDown.onKeyDown(event);
         return super.dispatchKeyEvent(event);
-    }
-
-    @Override
-    public void setUITimer() {
-        App.post(mR4, Constant.INTERVAL_HIDE);
     }
 
     @Override
@@ -1154,12 +1182,16 @@ public class LiveActivity extends PlaybackActivity implements GroupAdapter.OnCli
 
     @Override
     protected void onBackInvoked() {
+        // ==================== 修改点 7：onBackInvoked 也优先关闭侧边栏 ====================
+        if (isVisible(mBinding.recycler)) {
+            hideUI();
+            return;
+        }
+        // ====================================================================
         if (isVisible(mBinding.control.getRoot())) {
             hideControl();
         } else if (isVisible(mBinding.widget.bottom)) {
             hideInfo();
-        } else if (isVisible(mBinding.recycler)) {
-            hideUI();
         } else {
             if (isTaskRoot()) startActivity(new Intent(this, HomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
             super.onBackInvoked();
