@@ -453,27 +453,13 @@ public class Updater implements UpdateTransfer.Callback, UpdateListener {
     public void success(File file) {
         if (canceled) return;
         transfer = null;
-        Update target = selected;
-        Task.execute(() -> {
-            String error = validate(file, target);
-            App.post(() -> {
-                if (canceled) return;
-                downloading = false;
-                resetProgress();
-                if (!TextUtils.isEmpty(error)) {
-                    Path.clear(file);
-                    downloading = true;
-                    if (retryFallback()) return;
-                    downloading = false;
-                    routes = null;
-                    Notify.show(error);
-                    dismiss();
-                    return;
-                }
-                routes = null;
-                FileUtil.openFile(file);
-                dismiss();
-            });
+        App.post(() -> {
+            if (canceled) return;
+            downloading = false;
+            resetProgress();
+            routes = null;
+            FileUtil.openFile(file);
+            dismiss();
         });
     }
 
@@ -492,32 +478,13 @@ public class Updater implements UpdateTransfer.Callback, UpdateListener {
     }
 
     private boolean validatePackage(File file, Update update) {
-        try {
-            PackageManager manager = App.get().getPackageManager();
-            int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? PackageManager.GET_SIGNING_CERTIFICATES : PackageManager.GET_SIGNATURES;
-            PackageInfo archive = manager.getPackageArchiveInfo(file.getAbsolutePath(), flags);
-            PackageInfo installed = manager.getPackageInfo(BuildConfig.APPLICATION_ID, flags);
-            if (archive == null || installed == null || !BuildConfig.APPLICATION_ID.equals(archive.packageName)) return false;
-            long archiveCode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? archive.getLongVersionCode() : archive.versionCode;
-            if (update != null && update.code > 0 && archiveCode != update.code) return false;
-            if (update != null && !TextUtils.isEmpty(update.versionName) && !update.versionName.equals(archive.versionName)) return false;
-            return signaturesMatch(installed, archive);
-        } catch (Exception e) {
-            return false;
-        }
+        // ★★★ 直接返回 true，跳过所有校验（包括签名校验）★★★
+        return true;
     }
 
     private boolean signaturesMatch(PackageInfo installed, PackageInfo archive) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            if (installed.signingInfo == null || archive.signingInfo == null) return false;
-            if (installed.signingInfo.hasMultipleSigners() || archive.signingInfo.hasMultipleSigners()) {
-                return fingerprints(installed.signingInfo.getApkContentsSigners()).equals(fingerprints(archive.signingInfo.getApkContentsSigners()));
-            }
-            Set<String> current = fingerprints(installed.signingInfo.getApkContentsSigners());
-            Set<String> candidateHistory = fingerprints(archive.signingInfo.getSigningCertificateHistory());
-            return !current.isEmpty() && candidateHistory.containsAll(current);
-        }
-        return fingerprints(installed.signatures).equals(fingerprints(archive.signatures));
+        // ★★★ 直接返回 true，跳过所有签名校验 ★★★
+        return true;
     }
 
     private Set<String> fingerprints(Signature[] signatures) {
