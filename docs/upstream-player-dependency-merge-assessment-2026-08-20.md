@@ -48,6 +48,18 @@
 | 23 | `E9-3` | Exo | DV5 MediaCodec + Vulkan/libplacebo GPU 映射 | **已实现并通过目标设备验收**：DV5 色彩映射稳定，DV5 -> DV7/HDR10 Surface 生命周期切换正常；最终提交 `6a3ddd266a94a6b984099876631cc6260e77b776` | [E9-3-exo-dv5-vulkan-renderer.md](E9-3-exo-dv5-vulkan-renderer.md) |
 | 24 | `P4-3` | MPV | 终止退出时抑制无 Surface 的 MediaCodec 重初始化 | **已实施并通过定向测试/真机验收**：`8250e2204f4054601202a3a3f2fe04f8766744ee` / `recovery/P4-3-MPV-SURFACE-TEARDOWN/20260829132806-8250e2204f40`；终止退出后不再创建一次性 decoder，PiP 返回和快速重开正常，不改 native/FFmpeg | [P4-3-mpv-surface-teardown.md](P4-3-mpv-surface-teardown.md) |
 | 25 | `P4-4` | MPV | 自动播放意图与延迟 pause 回调隔离 | **已完成**：`e8a1582d74844df0292cb27c6c8259a3d5eb5dfa` / `recovery/P4-4-MPV-AUTOPLAY-PAUSE-RACE/20260829135715-e8a1582d7484`；V2453A/API 35 冷启动和两次快速媒体替换均保持自动播放，两个暖切换样本约 3 秒推进约 2.8 秒；不改 native/FFmpeg/渲染链 | [P4-4-mpv-autoplay-pause-race.md](P4-4-mpv-autoplay-pause-race.md) |
+| 26 | `E10` | Exo | 音频真实硬件 MediaCodec 优先与可信能力展示 | **已实施并通过聚焦单测/App 编译**：真实硬件稳定置顶、查询缓存和视频不受影响；设备离线，实际 decoder/启动时延待补验；不改 Media3 AAR、nextlib 或 native | [E10-exo-audio-hardware-first.md](E10-exo-audio-hardware-first.md) |
+| 27 | `E11` | Exo | 普通压缩音频 AudioTrack/DSP 硬件直出优先 | **实施中**：复用 Media3 encoded access-unit/offload 管线；标准 offload 或系统 direct playback 明确支持时启用，初始化/写入失败回退同轨 PCM | [E11-exo-compressed-audio-direct.md](E11-exo-compressed-audio-direct.md) |
+| 28 | `P3-5` | MPV | 普通压缩音频原生 AudioTrack/direct/offload 优先 | **实施中**：保持 IEC61937 直通不变，新增经证实的 AAC/MP3 raw access-unit 输出；初始化/写入失败回退同轨 PCM；同步修复播放参数文案为“硬解/软解” | [P3-5-mpv-compressed-audio-offload.md](P3-5-mpv-compressed-audio-offload.md) |
+| 29 | `E12` | Exo | ALAC/MP3/AV3A 解码兼容性与 MP4/CMAF 音轨可达性 | **研究完成，实施拆分为 E12-1**：nextlib native AAR 已含 ALAC/MP3/AV3A 与 FFmpeg 7 channel-layout 修复；锁定 Media3 extractor 缺少 MP4 `av3a` sample-entry 分支，另需验证 ALAC/MP3 PCM 输出契约 | [E12-exo-audio-codec-compat.md](E12-exo-audio-codec-compat.md) |
+| 30 | `P3-6` | MPV | MP3/AV3A 音轨 MIME 与主轨诊断兼容性 | **实施中**：MP3 保持 `audio/mpeg` 与封面流过滤；补齐 MPV AV3A 到 `audio/av3a` 的轨道映射，沿用 FFmpeg `libarcdav3a` 软件解码，不伪造不存在的 MediaCodec 硬解 | [P3-6-mpv-audio-codec-compat.md](P3-6-mpv-audio-codec-compat.md) |
+| 31 | `P3-7` | MPV | AV3A 未知 9 声道到 stereo 的安全下混 | **实施中**：只在未知多声道输入到 stereo 时设置显式 `swr_set_matrix()`；保留已知布局、AAC/MP3 和 IEC61937 行为。AVS3 视频 decoder 另行评估，不并入本阶段 | [P3-7-mpv-av3a-channel-layout.md](P3-7-mpv-av3a-channel-layout.md) |
+| 32 | `C4` | 通用 | 六级音频决策与运行时诊断契约 | **已完成并提交**：`0a31951e3c923154b2ef8218d1a3811a96fa446b` / `recovery/C4/20260904155551-0a31951e3c92`；只统一 `DecisionLevel`/`RuntimeState`/失败原因映射，不改变 Exo/MPV 选轨、解码或 AudioTrack 回退行为；聚焦 JVM 单测与 Mobile Arm64 Java 编译通过 | [C4-common-audio-policy-contract.md](C4-common-audio-policy-contract.md) |
+| 33 | `E13` | Exo | APE demux 与 FFmpeg 解码接入 | **实施中（已复现并获批）**：新增边界安全的 APE extractor，接通 `audio/ape` 到 nextlib FFmpeg，并重建双 ARM ABI AAR | [E13-exo-ape-demux-ffmpeg.md](E13-exo-ape-demux-ffmpeg.md) |
+| 34 | `P6-1` | MPV | 原生 P8.1 不支持时剥离 RPU 并回退 HDR10 基础层硬解 | **实施中（用户已批准）**：独立能力判断、`demuxer-dovi-profile8=preserve|hdr10` 和 native `dovi_split=mode=bl` | [P6-1-mpv-p81-hdr10-fallback.md](P6-1-mpv-p81-hdr10-fallback.md) |
+| 35 | `P3-8` | MPV | 硬解失败禁止自动切换软件视频解码 | **实施中**：设置 MPV `hwdec-software-fallback=no`；硬解不可用或运行失败时报告失败，只有用户手动切换到软件模式才使用 `hwdec=no` | [P3-8-mpv-hardware-only-video-decode.md](P3-8-mpv-hardware-only-video-decode.md) |
+| 36 | `P7-MPV-SCRIPT-BUTTONS` | MPV App | 在现有 scripts 管理中提供最多 8 个 Lua 自定义播放按钮，支持短按/长按/启动代码 | **已批准，待实施**：采用 `custombuttons.json` + `webhtv-custom-buttons.lua` 桥接；普通脚本保持兼容，Anime4K 不并入本阶段 | [P7-mpv-script-buttons.md](P7-mpv-script-buttons.md) |
+| 37 | `P8-MPV-CONFIG-SYNC` | MPV App/通用 | 一键同步 MPV 配置管理的三个目标及 profile 状态 | **已实施**：`123db7e7553eb0066e3c815f437b8cf266fe1aa7`；独立 `mpvConfigFiles` allowlist archive，携带 `mpv.conf`、`input.conf`、`scripts/` 与受管 profile 快照/元数据 | [P8-mpv-config-sync.md](P8-mpv-config-sync.md) |
 
 `C1` 是跨播放器真实输入验收维度，不单独形成代码任务或文档；它写入对应的 E/P 任务文档。`E-SP3` 已在 `fongmi-sync` 完成 App/Media3 合并，保留既有 `E4-J1`/`E6-1`/`E7-1`/`E7-2 + C3` 能力；`E9-3` 与已完成的 `P1` 现已共同进入集成树，后续按既定顺序处理 P2 阶段。
 
@@ -4905,3 +4917,21 @@ C3 的触发来源主要是 media `990abc2368fd74779f525ee345734470659f3d53`（`
 - 最新有效 trace `p-dhezv2-1` 已确认转换结果被识别为 Dolby Vision profile 8，且 `c2.mtk.dvhe.st.decoder` 启动成功；厂商 decoder 在无首帧时主动进入 `Released`，随后才出现 output dequeue 失败和主线程 `reader-pts` 长时间阻塞。
 - 因此错误 renderer、错误 MIME/profile/codec 和 Java 同步查询均不再作为码流首因。完整证据与时间线见 [C2-dv7-p81-bsf.md](C2-dv7-p81-bsf.md)。
 - 下一单元只验证转换输出残留的 `AV_PKT_DATA_HEVC_CONF`：该 side data 表示已被删除的增强层配置，FFmpeg 自带 `dovi_split` 在输出端会明确删除。验证不得同时改变 RPU、extradata、packet、Surface、GPU、解码器选择或回退策略；若电视仍无首帧，则否定该假设并转向 FEL RPU 重写兼容性。
+
+## 检查点 53：2026-08-30 通用任务 C5 下一集预取
+
+- 稳定任务 ID：`C5`；唯一任务文档：[C5-next-episode-preload.md](C5-next-episode-preload.md)。
+- 来源：FongMi/TV `79d2178de259a3110573f5a4174c672015f81526`，AndroidX Media `ec6ac47311feae31c2e1245fe324065a14474728`，Jellyfin Android TV `3f0d4bdbfc13eedc551c460de934102168c7d5bf`；当前 Media3 fork `e3e922d5c01bc0b564849940fe589daf37360d15` 已包含所需 API，不升级依赖。
+- 决策：实施 WebHTV 窄适配，不照搬播放开始即预加载。按 `duration - ending` 的逻辑片尾分两段执行：约 30 秒前解析下一集，约 15 秒前且当前缓冲覆盖逻辑片尾时才让 Exo 从 `max(opening, validResume)` 预加载约 10 秒；不足 5 秒不新启媒体加载。
+- 引擎边界：Exo 接管同一个 Media3 预加载源；MPV/IJK 只复用已解析 `Result`，本任务不改 native preload、ABI、JNI、lock 或二进制。
+- 必须保留：现有 `PreCache`、播放流量优先级、内存压力、seek、前后台、stop/release 保护；切集/源/清晰度/解析器/顺序/播放器/片头片尾设置变化全部使预取失效。
+- 当前状态：实现已完成；9 个聚焦控制器测试、mobile/leanback arm64 Debug Java 编译通过，等待 C5 task guard 原子 commit/tag。task guard 基线为 `6d3c96f3d46cb045e329a23b0da99a54a4de370d`。
+
+## 检查点 54：2026-09-01 P3-4 MPV 音频硬件解码优先
+
+- 稳定任务 ID：`P3-4`；唯一任务文档：[P3-4-mpv-audio-hardware-first.md](P3-4-mpv-audio-hardware-first.md)。
+- 当前缺陷：App 未设置 MPV 音频 `ad` 优先级；锁定 FFmpeg audio MediaCodec 使用 `createDecoderByType()`，可被 Android 分配到 `c2.android.*` 等软件 decoder，因此“硬解能力存在”不等于“实际使用硬解”。
+- 采用设计：只为当前真实存在的 AAC、MP3、AMR-NB、AMR-WB wrapper 设置硬件优先；FFmpeg audio MediaCodec 复用既有视频 codec-list helper，过滤软件实现并按硬件 codec 名创建；初始化失败由 mpv 继续普通 FFmpeg decoder。
+- 性能边界：硬件枚举只发生在 decoder 初始化，不进入 packet/buffer/AudioTrack 热路径；不并行解码、不预热、不新增线程。AC3/EAC3/DTS/TrueHD/FLAC/Opus/Vorbis wrapper 因缺少格式适配与设备验证不在本阶段虚假扩展。
+- 来源：FongMi FFmpeg `177f090e0503b7e013922ca903bde14b1c375f18`、FongMi mpv `cca559b41ceb0bb7731cf6ef2e1f33276cd30c42`、mpvRex `52477d85f578547288081ee35fc80e0e3e28a446`、SaltPlayerSource `48b2fde247d6b5529fee14ebf0d4198c9436cd3d`。
+- 当前状态：App/FFmpeg 实现、聚焦 JVM/Java 检查、双 ABI native rebuild/install、ELF/marker 校验和 Mobile arm64 Debug APK 资产一致性均通过；APK SHA-256 为 `e7c60388d449211902502dca81ff3c30ccf21d2447224bf44ab10ebf157dad2a`，两 ABI `libplayer.so` 未变化。当前 ADB 无设备且旧无线地址拒绝连接，实际 decoder、软件回退、seek/切轨和 CPU/温度仍是提交前门禁；下一动作是设备恢复后完成一次聚焦实机验收。

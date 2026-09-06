@@ -24,6 +24,7 @@ import com.fongmi.android.tv.server.impl.Process;
 import com.fongmi.android.tv.service.PlaybackService;
 import com.fongmi.android.tv.utils.FileUtil;
 import com.fongmi.android.tv.utils.LoginStateSync;
+import com.fongmi.android.tv.utils.MpvConfigSync;
 import com.fongmi.android.tv.utils.Notify;
 import com.fongmi.android.tv.utils.ProgressRequestBody;
 import com.fongmi.android.tv.utils.ResUtil;
@@ -83,6 +84,7 @@ public class Action implements Process {
             }
             case "sync" -> onSync(params, files);
             case "apk" -> onApk(params, files);
+            case "apk_url" -> onApkUrl(params);
             case "search" -> {
                 onSearch(params);
                 yield Nano.ok();
@@ -243,6 +245,21 @@ public class Action implements Process {
         }
     }
 
+    private Response onApkUrl(Map<String, String> params) {
+        try {
+            Device senderDevice = Device.objectFrom(params.get("device"));
+            String sender = senderDevice == null ? "" : senderDevice.getName();
+            ApkUrlPush.StartResult result = ApkUrlPush.get().start(params.get("url"), sender);
+            if (result == ApkUrlPush.StartResult.BUSY) return Nano.error(Response.Status.CONFLICT, ResUtil.getString(R.string.apk_push_url_busy));
+            return Nano.ok("APK URL accepted");
+        } catch (IllegalArgumentException e) {
+            return Nano.error(Response.Status.BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
+            SpiderDebug.log("apk-push-url", e);
+            return Nano.error(ResUtil.getString(R.string.apk_push_url_schedule_failed));
+        }
+    }
+
     private String sanitizeApkName(String name) {
         if (TextUtils.isEmpty(name)) return "app.apk";
         return name.replace('\\', '_').replace('/', '_').replace('\u0000', '_').trim();
@@ -314,11 +331,13 @@ public class Action implements Process {
         try {
             SyncOptions options = SyncOptions.objectFrom(params.get("options"));
             SyncFiles.Archive archive = SyncFiles.hasPaths(options) ? SyncFiles.createArchive(SyncFiles.getPaths(options)) : null;
+            MpvConfigSync.Archive mpvArchive = options.isMpvConfig() ? MpvConfigSync.createArchive() : null;
             LoginStateSync.Archive loginArchive = options.isLoginState() ? LoginStateSync.createArchive() : null;
             try {
-                return post(device, "backup", getBackupBody(options, archive, loginArchive));
+                return post(device, "backup", getBackupBody(options, archive, mpvArchive, loginArchive));
             } finally {
                 if (archive != null) archive.delete();
+                if (mpvArchive != null) mpvArchive.delete();
                 if (loginArchive != null) loginArchive.delete();
             }
         } catch (Exception e) {
@@ -327,8 +346,8 @@ public class Action implements Process {
         }
     }
 
-    private RequestBody getBackupBody(SyncOptions options, SyncFiles.Archive archive, LoginStateSync.Archive loginArchive) {
-        if (archive == null && loginArchive == null) {
+    private RequestBody getBackupBody(SyncOptions options, SyncFiles.Archive archive, MpvConfigSync.Archive mpvArchive, LoginStateSync.Archive loginArchive) {
+        if (archive == null && mpvArchive == null && loginArchive == null) {
             FormBody.Builder body = new FormBody.Builder();
             body.add("options", options.toString());
             body.add("backup", Backup.create(options).toString());
@@ -340,6 +359,7 @@ public class Action implements Process {
         body.addFormDataPart("backup", Backup.create(options).toString());
         if (options.isRemoteRelay()) body.addFormDataPart("remoteRelay", RemoteStore.exportRelayConfig());
         if (archive != null) body.addFormDataPart(SyncFiles.PART_NAME, archive.getFile().getName(), new ProgressRequestBody(archive.getFile(), ZIP, null));
+        if (mpvArchive != null) body.addFormDataPart(MpvConfigSync.PART_NAME, mpvArchive.getFile().getName(), new ProgressRequestBody(mpvArchive.getFile(), ZIP, null));
         if (loginArchive != null) body.addFormDataPart(LoginStateSync.PART_NAME, loginArchive.getFile().getName(), new ProgressRequestBody(loginArchive.getFile(), ZIP, null));
         return body.build();
     }
@@ -351,6 +371,16 @@ public class Action implements Process {
             File archive = new File(files.get(SyncFiles.PART_NAME));
             try {
                 SyncFiles.restoreArchive(archive);
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            } finally {
+                Path.clear(archive);
+            }
+        }
+        if (options.isMpvConfig() && files.containsKey(MpvConfigSync.PART_NAME)) {
+            File archive = new File(files.get(MpvConfigSync.PART_NAME));
+            try {
+                MpvConfigSync.restoreArchive(archive);
             } catch (Exception e) {
                 throw new IllegalStateException(e);
             } finally {

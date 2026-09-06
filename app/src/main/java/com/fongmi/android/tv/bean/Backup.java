@@ -33,7 +33,7 @@ public class Backup {
     public static final String PREF_WEB_HOME_EXTENSION = "web_home_extension";
     public static final String PREF_WEB_HOME_EXTENSION_SOURCES = "web_home_extension_user_sources";
 
-    private static final Set<String> APP_PREFS = Set.of("doh", "ua", "wall", "wall_type", "reset", "site_mode", "site_block_keys", "search_column", "sync_mode", "sync_paths", "incognito", "drive_check", "drive_check_cache", "compact_episode_title", "web_home_fullscreen", "viewing_record_sync_enabled", "viewing_record_sync_local_write", "playback_remote_sync_config", "playback_webhook_config", "playback_webhook_privacy_accepted", "shell_proxy", "shell_proxy_rules", "shell_proxy_url", "shell_proxy_hosts", "update", "adblock", "zhuyin", "theme_color", "wall_color", "crash", "render", "pad_live_mode", "size", "scale", "buffer", "buffer_bytes", "back_buffer", "play_cache", "preload", "preload_threads", "preload_size", "preload_time", "player_auto_change", "background", "speed", "play_speed", "caption", "tunnel", "exo_4k_compat", "playback_performance_profile", "playback_performance_initialized", "perf_codec_async_queueing", "perf_dynamic_scheduling", "perf_video_duration_progress", "perf_late_drop_input", "perf_track_limit", "perf_adaptive_downgrade", "perf_load_only_selected_tracks", "perf_surface_fixed_size", "perf_decoder_fallback", "perf_soft_video_tune", "perf_high_buffer", "perf_bandwidth_meter", "perf_exo_network_protection_mode", "player_button_order", "player_button_hidden", "audio_prefer", "video_prefer", "prefer_aac", "subtitle_text_size", "subtitle_position", "player_osd_title", "player_osd_resolution", "player_osd_time", "player_osd_progress", "player_osd_traffic", "player_osd_mini", "player_osd_diagnostics", "boot_live", "across", "change", "invert", "scale_live", "live_epg_url", "live_epg_history");
+    private static final Set<String> APP_PREFS = Set.of("doh", "ua", "wall", "wall_type", "reset", "site_mode", "site_block_keys", "search_column", "sync_mode", "sync_paths", "incognito", "drive_check", "drive_check_cache", "compact_episode_title", "web_home_fullscreen", "viewing_record_sync_enabled", "viewing_record_sync_local_write", "playback_remote_sync_config", "playback_webhook_config", "playback_webhook_privacy_accepted", "shell_proxy", "shell_proxy_rules", "shell_proxy_url", "shell_proxy_hosts", "update", "update_source", "update_github_proxy", "update_github_proxy_url", "update_github_proxy_mode", "update_oci_mirror", "update_oci_mirror_url", "adblock", "zhuyin", "theme_color", "wall_color", "crash", "render", "pad_live_mode", "size", "scale", "buffer", "buffer_bytes", "back_buffer", "play_cache", "preload", "preload_threads", "preload_size", "preload_time", "player_auto_change", "background", "speed", "play_speed", "caption", "tunnel", "exo_4k_compat", "playback_performance_profile", "playback_performance_initialized", "perf_codec_async_queueing", "perf_dynamic_scheduling", "perf_video_duration_progress", "perf_late_drop_input", "perf_track_limit", "perf_adaptive_downgrade", "perf_load_only_selected_tracks", "perf_surface_fixed_size", "perf_decoder_fallback", "perf_soft_video_tune", "perf_high_buffer", "perf_bandwidth_meter", "perf_exo_network_protection_mode", "player_button_order", "player_button_hidden", "audio_prefer", "video_prefer", "prefer_aac", "subtitle_text_size", "subtitle_position", "player_osd_title", "player_osd_resolution", "player_osd_time", "player_osd_progress", "player_osd_traffic", "player_osd_mini", "player_osd_diagnostics", "boot_live", "across", "change", "invert", "scale_live", "live_epg_url", "live_epg_history");
 
     @SerializedName("site")
     private List<Site> site;
@@ -126,7 +126,9 @@ public class Backup {
             for (History item : getHistory()) if (cids.containsKey(item.getCid())) item.setCid(cids.get(item.getCid()));
             AppDatabase.get().getHistoryDao().insertOrUpdate(getHistory());
         }
-        restorePrefers(filter(getPrefers(), options), false, false);
+        Map<String, ?> prefers = filter(getPrefers(), options);
+        if (options.isMpvConfig()) clearMpvConfigPreferences();
+        restorePrefers(prefers, false, false);
         if (options.isConfig() || options.isSpider() || options.isWebHome() || options.isLoginState()) BaseLoader.get().clear();
         if (options.isConfig() || options.isSpider() || options.isWebHome() || options.isLoginState()) reloadConfig();
         if (options.isWebHome()) refreshWebHomeExtensions();
@@ -182,6 +184,7 @@ public class Backup {
         if ("keyword".equals(key) || "hot".equals(key) || key.startsWith("hot_")) return options.isSearch();
         if ("git_cloud_accounts".equals(key)) return options.isSpider() || options.isSettings() || options.isLoginState();
         if (key.startsWith("login_state_")) return options.isLoginState();
+        if (key.startsWith("mpv_config_")) return options.isMpvConfig();
         if (isAppPref(key)) return options.isSettings();
         return options.isSpider();
     }
@@ -209,6 +212,19 @@ public class Backup {
         putPrefers(editor, preserved);
         putPrefers(editor, values);
         editor.commit();
+    }
+
+    private static void clearMpvConfigPreferences() {
+        SharedPreferences preferences = Prefers.getPrefers();
+        SharedPreferences.Editor editor = preferences.edit();
+        boolean changed = false;
+        for (String key : preferences.getAll().keySet()) {
+            if (key.startsWith("mpv_config_")) {
+                editor.remove(key);
+                changed = true;
+            }
+        }
+        if (changed) editor.commit();
     }
 
     private static boolean containsPlaybackPerformanceProfile(

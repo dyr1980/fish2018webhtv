@@ -693,6 +693,12 @@ public class PlayerManager implements ParseCallback {
                 : engine.getVideoPlaybackDetails();
     }
 
+    public AudioPlaybackDiagnostics.Snapshot getAudioPlaybackDiagnostics() {
+        return engine == null
+                ? AudioPlaybackDiagnostics.Snapshot.empty()
+                : engine.getAudioPlaybackDiagnostics();
+    }
+
     public long getDroppedFrames() {
         return engine == null ? 0 : engine.getDroppedFrames();
     }
@@ -797,6 +803,11 @@ public class PlayerManager implements ParseCallback {
 
     public boolean isMpv() {
         return playerType == PlayerSetting.MPV;
+    }
+
+    public boolean sendMpvCustomButton(String id, boolean longPress) {
+        if (!isMpv() || TextUtils.isEmpty(id) || !(engine instanceof MpvPlayerEngine mpv)) return false;
+        return mpv.sendScriptMessage(MpvConfigStore.CUSTOM_BUTTON_MESSAGE, id, longPress ? "long" : "short");
     }
 
     public boolean isMpvSurfaceDirect() {
@@ -1002,6 +1013,8 @@ public class PlayerManager implements ParseCallback {
     }
 
     private ExoNetworkGuardEligibility.Decision getNetworkProtectionEligibility() {
+        AudioPlaybackDiagnostics.OutputMode audioOutputMode = getAudioPlaybackDiagnostics()
+                .outputMode();
         return ExoNetworkGuardEligibility.resolve(new ExoNetworkGuardEligibility.Request(
                 ExoPerformanceSetting.isNetworkProtectionEnabled()
                         && experimentAllowed(
@@ -1011,16 +1024,19 @@ public class PlayerManager implements ParseCallback {
                 Math.abs(userPlaybackSpeed - 1f) < 0.001f,
                 player != null && player.isCommandAvailable(Player.COMMAND_SET_SPEED_AND_PITCH),
                 PlayerSetting.isTunnel(),
-                PlayerSetting.isAudioPassThrough(PlayerSetting.EXO)));
+                audioOutputMode));
     }
 
     private void scheduleNetworkProtection(long delayMs) {
         App.removeCallbacks(networkProtectionRunnable);
         ExoNetworkGuardEligibility.Decision eligibility = getNetworkProtectionEligibility();
+        AudioPlaybackDiagnostics.OutputMode audioOutputMode = getAudioPlaybackDiagnostics()
+                .outputMode();
         logNetworkGuard("schedule delay=" + delayMs + " eligible=" + eligibility.eligible()
                 + " reason=" + eligibility.reason() + " exo=" + isExo() + " vod=" + isVod()
                 + " userSpeed=" + userPlaybackSpeed + " tunnel=" + PlayerSetting.isTunnel()
-                + " passthrough=" + PlayerSetting.isAudioPassThrough(PlayerSetting.EXO)
+                + " configuredPassthrough=" + PlayerSetting.isAudioPassThrough(PlayerSetting.EXO)
+                + " audioOutput=" + audioOutputMode
                 + " state=" + (player == null ? -1 : player.getPlaybackState())
                 + " playing=" + (player != null && player.isPlaying()));
         if (!eligibility.eligible()) {
@@ -1181,10 +1197,17 @@ public class PlayerManager implements ParseCallback {
 
     public void setTrack(List<Track> tracks) {
         mpvExplicitSubtitlePreference = hasRequestedSubtitle(tracks);
+        if (mpvExplicitSubtitlePreference && engine instanceof MpvPlayerEngine mpv) {
+            mpv.retainSubtitleSurfaceForCurrentItem();
+        }
         if (!tracks.isEmpty()) engine.setTrack(tracks);
     }
 
     public void setSecondarySubtitleTrack(Track track) {
+        if (track != null && !track.isDisabled()
+                && engine instanceof MpvPlayerEngine mpv) {
+            mpv.retainSubtitleSurfaceForCurrentItem();
+        }
         if (engine != null) engine.setSecondarySubtitleTrack(track);
     }
 
@@ -4584,6 +4607,7 @@ public class PlayerManager implements ParseCallback {
         mpv.setSurfaceDirectOverride(null);
         mpv.setVulkanRenderOverride(null);
         mpv.resetDv7HandlingForNewItem();
+        mpv.resetDv8HandlingForNewItem();
         rebuildAndRestartMpv(null, "performance-settings-changed");
     }
 
@@ -4648,9 +4672,13 @@ public class PlayerManager implements ParseCallback {
 
     private void prepareMpvOutputForNewItem() {
         resetMpvOutputEvaluationState();
-        mpvExplicitSubtitlePreference = hasRequestedSubtitle(Track.find(getKey()));
+        List<Track> persistedTracks = Track.find(getKey());
+        Track persistedSubtitle = findRequestedSubtitle(persistedTracks);
+        mpvExplicitSubtitlePreference = persistedSubtitle != null;
         if (!(engine instanceof MpvPlayerEngine mpv)) return;
+        mpv.prepareSubtitleForNewItem(persistedSubtitle);
         boolean dv7HandlingChanged = mpv.resetDv7HandlingForNewItem();
+        boolean dv8HandlingChanged = mpv.resetDv8HandlingForNewItem();
         boolean clearAutoVulkanRenderer = mpvAutoVulkanPinnedForItem;
         mpvAutoVulkanPinnedForItem = false;
         mpvAutoVulkanDisabledForItem = false;
@@ -4673,7 +4701,7 @@ public class PlayerManager implements ParseCallback {
         boolean shouldStartDirect = MpvPerformanceSetting.shouldUseSurfaceDirect(
                 autoDirectEligible, Util.isLeanback(), engine.isHard());
         if (mpv.isSurfaceDirect() == shouldStartDirect
-                && !clearAutoVulkanRenderer && !dv7HandlingChanged) return;
+                && !clearAutoVulkanRenderer && !dv7HandlingChanged && !dv8HandlingChanged) return;
         if (SpiderDebug.isEnabled()) SpiderDebug.log("mpv-output", "prepare new item rebuild currentDirect=%s desiredDirect=%s clearAutoVulkan=%s mode=%s", mpv.isSurfaceDirect(), shouldStartDirect, clearAutoVulkanRenderer, MpvPerformanceSetting.getOutputModeText());
         mpv.setSurfaceDirectOverride(shouldStartDirect);
         rebuildPlayer();
@@ -4766,6 +4794,14 @@ public class PlayerManager implements ParseCallback {
         boolean dv7HandlingChanged = dolbyVision
                 && videoDetails.dolbyVisionProfile() == 7
                 && mpv.updateDv7Handling(dolbyVisionSupport, profile81Support);
+        MpvAutoOutputPolicy.DolbyVisionSupport hevcHdr10Support =
+                dolbyVision && videoDetails.dolbyVisionProfile() == 8
+                        ? CodecCapabilityInspector.hevcHdr10Support(
+                        App.get(), format, width, height)
+                        : MpvAutoOutputPolicy.DolbyVisionSupport.UNKNOWN;
+        boolean dv8HandlingChanged = dolbyVision
+                && videoDetails.dolbyVisionProfile() == 8
+                && mpv.updateDv8Handling(dolbyVisionSupport, hevcHdr10Support);
         dv7Hdr10FallbackEnabled = dolbyVision
                 && videoDetails.dolbyVisionProfile() == 7
                 && mpv.isDv7Hdr10Active();
@@ -4774,7 +4810,8 @@ public class PlayerManager implements ParseCallback {
                 Util.isLeanback(), lutOrFilterActive, customGpuProcessing,
                 dolbyVisionSupport,
                 dolbyVision ? videoDetails.dolbyVisionProfile() : C.INDEX_UNSET,
-                dv7Hdr10FallbackEnabled);
+                dv7Hdr10FallbackEnabled,
+                hevcHdr10Support);
         int dolbyVisionProfile = dolbyVision
                 ? videoDetails.dolbyVisionProfile() : C.INDEX_UNSET;
         boolean currentlyVulkan = mpv.isVulkanRenderer();
@@ -4798,18 +4835,20 @@ public class PlayerManager implements ParseCallback {
         boolean currentlyDirect = isMpvSurfaceDirect();
         MpvAutoOutputPolicy.Transition transition = MpvAutoOutputPolicy.transition(decision.eligible(), currentlyDirect);
         if (SpiderDebug.isEnabled()) SpiderDebug.log("mpv-output", "auto decision eligible=%s transition=%s reason=%s renderAction=%s renderReason=%s size=%dx%d tracksReady=%s early=%s subtitle=%s lutOrFilter=%s customGpu=%s dvProfile=%d dvSupport=%s direct=%s gpuPinned=%s autoVulkan=%s attempts=%d", decision.eligible(), transition, decision.reason(), renderDecision.action(), renderDecision.reason(), width, height, tracksReady, earlyEvaluation, subtitleActive, lutOrFilterActive, customGpuProcessing, dolbyVisionProfile, dolbyVisionSupport, currentlyDirect, mpvAutoGpuPinnedForSession, mpvAutoVulkanPinnedForItem, mpvAutoOutputProbeAttempts);
-        boolean transitionRequested = dv7HandlingChanged || enableAutoVulkan
+        boolean transitionRequested = dv7HandlingChanged || dv8HandlingChanged || enableAutoVulkan
                 || transition == MpvAutoOutputPolicy.Transition.ENTER_SURFACE_DIRECT
                 || transition == MpvAutoOutputPolicy.Transition.LEAVE_SURFACE_DIRECT;
         boolean requestAccepted = true;
-        if (dv7HandlingChanged) {
+        if (dv7HandlingChanged || dv8HandlingChanged) {
             Boolean outputOverride = enableAutoVulkan
                     || transition == MpvAutoOutputPolicy.Transition.LEAVE_SURFACE_DIRECT
-                    ? false
+                    ? Boolean.FALSE
                     : transition == MpvAutoOutputPolicy.Transition.ENTER_SURFACE_DIRECT
-                    ? true : null;
-            requestAccepted = rebuildAndRestartMpv(outputOverride,
-                    "auto-dv7-" + mpv.getDv7HandlingOption());
+                    ? Boolean.TRUE : null;
+            String reason = dv7HandlingChanged
+                    ? "auto-dv7-" + mpv.getDv7HandlingOption()
+                    : "auto-dv8-" + mpv.getDv8HandlingOption();
+            requestAccepted = rebuildAndRestartMpv(outputOverride, reason);
         } else if (enableAutoVulkan) {
             requestAccepted = rebuildAndRestartMpv(false,
                     "auto-" + renderDecision.reason());
@@ -4855,11 +4894,16 @@ public class PlayerManager implements ParseCallback {
     }
 
     private boolean hasRequestedSubtitle(List<Track> tracks) {
-        if (tracks == null || tracks.isEmpty()) return false;
+        return findRequestedSubtitle(tracks) != null;
+    }
+
+    private Track findRequestedSubtitle(List<Track> tracks) {
+        if (tracks == null || tracks.isEmpty()) return null;
         for (Track track : tracks) {
-            if (track.getType() == C.TRACK_TYPE_TEXT && track.isSelected() && !track.isDisabled()) return true;
+            if (track.getType() == C.TRACK_TYPE_TEXT
+                    && track.isSelected() && !track.isDisabled()) return track;
         }
-        return false;
+        return null;
     }
 
     private void restoreTrackSelection(List<Track> tracks) {
@@ -7448,6 +7492,9 @@ public class PlayerManager implements ParseCallback {
             if (!tracks.isEmpty() && !initTrack) {
                 playbackTrace.mark(PlaybackTrace.Stage.TRACKS, trackSummary(tracks));
                 restoreTrackSelection(Track.find(getKey()));
+                if (engine instanceof MpvPlayerEngine mpv) {
+                    mpv.completeInitialSubtitleTrackRestore();
+                }
                 callback.onTracksChanged();
                 initTrack = true;
             }
