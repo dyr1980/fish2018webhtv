@@ -33,6 +33,7 @@ import com.fongmi.android.tv.ui.custom.CustomTextListener;
 import com.fongmi.android.tv.ui.custom.SpaceItemDecoration;
 import com.fongmi.android.tv.utils.ResUtil;
 import com.fongmi.android.tv.utils.Util;
+import com.github.catvod.utils.Prefers;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -40,6 +41,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickListener {
+
+    // ========== 和电视版保持一致的 KEY ==========
+    private static final String KEY_SCROLL_POSITION = "site_dialog_scroll_position";
+    // =============================================
 
     private DialogSiteBinding binding;
     private SiteListener listener;
@@ -52,6 +57,10 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
     private boolean change;
     private boolean block;
     private int columnCount = 1;
+
+    // ========== 新增：和电视版一致的记忆变量 ==========
+    private int savedScrollPosition = -1;
+    // =================================================
 
     public static SiteDialog create() {
         return new SiteDialog();
@@ -84,6 +93,10 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
 
     @Override
     protected void initView() {
+        // ========== 和电视版一致：从 Prefers 读取保存的位置 ==========
+        savedScrollPosition = Prefers.getInt(KEY_SCROLL_POSITION, -1);
+        // =============================================================
+
         adapter = new SiteAdapter(this);
         groups = getGroups();
         binding.recycler.setAdapter(adapter);
@@ -94,7 +107,22 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
         binding.recycler.setItemAnimator(null);
         binding.recycler.setHasFixedSize(true);
         attachSortTouchHelper();
-        binding.recycler.post(() -> binding.recycler.scrollToPosition(0));
+
+        // ========== 和电视版一致：列表加载完成后恢复滚动位置 ==========
+        if (savedScrollPosition >= 0) {
+            binding.recycler.post(() -> {
+                if (binding != null && binding.recycler != null && adapter != null) {
+                    if (savedScrollPosition < adapter.getItemCount()) {
+                        binding.recycler.scrollToPosition(savedScrollPosition);
+                    } else {
+                        binding.recycler.scrollToPosition(0);
+                    }
+                }
+            });
+        } else {
+            binding.recycler.post(() -> binding.recycler.scrollToPosition(0));
+        }
+        // ===============================================================
     }
 
     private void attachSortTouchHelper() {
@@ -132,6 +160,10 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
             public void afterTextChanged(Editable s) {
                 filter();
                 binding.recycler.scrollToPosition(0);
+                // ========== 新增：搜索时清除保存的位置 ==========
+                Prefers.remove(KEY_SCROLL_POSITION);
+                savedScrollPosition = -1;
+                // =================================================
             }
         });
         binding.block.setOnClickListener(this::onBlockToggle);
@@ -147,6 +179,10 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
         groups = getGroups();
         setGroupView();
         filter();
+        // ========== 新增：切换隐藏/显示时清除保存的位置（因为列表变了） ==========
+        Prefers.remove(KEY_SCROLL_POSITION);
+        savedScrollPosition = -1;
+        // =========================================================
         binding.recycler.scrollToPosition(0);
     }
 
@@ -155,6 +191,10 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
         int nextColumn = columnCount == 1 ? 2 : 1;
         Setting.putSiteColumn(nextColumn);
         setColumnCount(nextColumn);
+        // 列数切换后，尝试恢复之前保存的位置
+        if (savedScrollPosition >= 0 && savedScrollPosition < adapter.getItemCount()) {
+            binding.recycler.post(() -> binding.recycler.scrollToPosition(savedScrollPosition));
+        }
     }
 
     private void setColumnCount(int count) {
@@ -210,6 +250,10 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
         selectedGroup = group.equals(selectedGroup) ? "" : group;
         updateGroupView();
         filter();
+        // ========== 新增：切换分组时清除保存的位置（因为分组变了） ==========
+        Prefers.remove(KEY_SCROLL_POSITION);
+        savedScrollPosition = -1;
+        // ==============================================================
         binding.recycler.scrollToPosition(0);
         if (!TextUtils.isEmpty(selectedGroup)) centerGroup(view);
     }
@@ -238,6 +282,16 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
             filter();
             return;
         }
+
+        // ========== 和电视版一致：点击站点时保存位置 ==========
+        if (adapter != null) {
+            int position = adapter.getItems().indexOf(item);
+            if (position != -1) {
+                Prefers.put(KEY_SCROLL_POSITION, position);
+            }
+        }
+        // =====================================================
+
         if (listener != null) listener.setSite(item);
         dismiss();
     }
@@ -246,12 +300,20 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
     public void onSearchClick(int position, Site item) {
         item.setSearchable(!item.isSearchable()).save();
         adapter.notifyItemChanged(position);
+        // ========== 新增：操作后清除保存的位置（因为列表顺序可能变了） ==========
+        Prefers.remove(KEY_SCROLL_POSITION);
+        savedScrollPosition = -1;
+        // ======================================================================
     }
 
     @Override
     public void onChangeClick(int position, Site item) {
         item.setChangeable(!item.isChangeable()).save();
         adapter.notifyItemChanged(position);
+        // ========== 新增：操作后清除保存的位置（因为列表顺序可能变了） ==========
+        Prefers.remove(KEY_SCROLL_POSITION);
+        savedScrollPosition = -1;
+        // ======================================================================
     }
 
     @Override
@@ -267,6 +329,10 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
         boolean result = !item.isSearchable();
         adapter.getItems().forEach(site -> site.setSearchable(result).save());
         adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+        // ========== 新增：操作后清除保存的位置 ==========
+        Prefers.remove(KEY_SCROLL_POSITION);
+        savedScrollPosition = -1;
+        // =================================================
         return true;
     }
 
@@ -275,6 +341,10 @@ public class SiteDialog extends BaseAlertDialog implements SiteAdapter.OnClickLi
         boolean result = !item.isChangeable();
         adapter.getItems().forEach(site -> site.setChangeable(result).save());
         adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+        // ========== 新增：操作后清除保存的位置 ==========
+        Prefers.remove(KEY_SCROLL_POSITION);
+        savedScrollPosition = -1;
+        // =================================================
         return true;
     }
 
