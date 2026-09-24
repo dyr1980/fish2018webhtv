@@ -106,6 +106,7 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
 
     private static final int LIVE_PIP_WIDTH = 16;
     private static final int LIVE_PIP_HEIGHT = 9;
+    private static final long PLAYBACK_END_RETRY_DELAY = 500;
     private static final String ORIENTATION_TAG = "LiveOrientation";
 
     private ActivityLiveBinding mBinding;
@@ -127,6 +128,7 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
     private Runnable mR1;
     private Runnable mR2;
     private Runnable mR3;
+    private Runnable mEndRetry;
     private boolean rotate;
     private int count;
     private PiP mPiP;
@@ -249,6 +251,7 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
         mR1 = this::hideControl;
         mR2 = this::setTraffic;
         mR3 = this::hideInfo;
+        mEndRetry = this::checkNext;
         mPiP = new PiP();
         setRecyclerView();
         mOsd = new PlayerOsdController(mBinding.osd.getRoot(), mBinding.osd.osdTopLeft, mBinding.osd.osdTopRight, mBinding.osd.osdBottomLeft, mBinding.osd.osdBottomRight, mBinding.osd.osdDiagnostics, mBinding.osd.osdMiniProgress, new PlayerOsdController.Source() {
@@ -274,7 +277,6 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
         mBinding.control.back.setOnClickListener(view -> onBack());
         mBinding.control.cast.setOnClickListener(view -> onCast());
         mBinding.control.info.setOnClickListener(view -> onInfo());
-        mBinding.control.osdDiagnostics.setOnClickListener(view -> onPlayParams());
         mBinding.control.play.setOnClickListener(view -> checkPlay());
         mBinding.control.next.setOnClickListener(view -> nextChannel());
         mBinding.control.prev.setOnClickListener(view -> prevChannel());
@@ -294,7 +296,6 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
         mBinding.control.action.player.setOnClickListener(view -> onPlayerKernel());
         mBinding.control.action.player.setOnLongClickListener(view -> onChooseLong());
         mBinding.control.action.decode.setOnClickListener(view -> onDecode());
-        mBinding.control.action.playParams.setOnClickListener(view -> onPlayParams());
         mBinding.control.action.text.setOnLongClickListener(view -> onTextLong());
         mBinding.control.action.speed.setOnLongClickListener(view -> onSpeedLong());
         mBinding.control.action.getRoot().setOnTouchListener(this::onActionTouch);
@@ -868,7 +869,6 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
 
     private void showControl() {
         if (service() == null || isInPictureInPictureMode()) return;
-        setPlayParamsState();
         boolean embedded = isEmbeddedLiveUi();
         if (!embedded && isVisible(mBinding.recycler)) hideUI(false);
         mBinding.control.info.setVisibility(player().isEmpty() ? View.GONE : View.VISIBLE);
@@ -890,22 +890,6 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
         mBinding.control.getRoot().setVisibility(View.GONE);
         if (mOsd != null) mOsd.setControlsVisible(false);
         App.removeCallbacks(mR1);
-    }
-
-    private void onPlayParams() {
-        if (mOsd == null) return;
-        boolean visible = !mOsd.isDiagnosticsVisible();
-        PlayerSetting.putOsdDiagnostics(visible);
-        mOsd.setDiagnosticsVisible(visible);
-        setPlayParamsState();
-        hideControl();
-    }
-
-    private void setPlayParamsState() {
-        boolean visible = mOsd != null && mOsd.isDiagnosticsVisible();
-        mBinding.control.action.playParams.setSelected(visible);
-        mBinding.control.osdDiagnostics.setSelected(visible);
-        mBinding.control.osdDiagnostics.setAlpha(visible ? 1f : 0.6f);
     }
 
     private void showInfo() {
@@ -1180,6 +1164,7 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
     }
 
     private void fetch(EpgData item) {
+        App.removeCallbacks(mEndRetry);
         if (mChannel == null) return;
         playbackCatchup = true;
         mViewModel.getUrl(mChannel, item);
@@ -1191,6 +1176,7 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
     }
 
     private void fetch() {
+        App.removeCallbacks(mEndRetry);
         if (mChannel == null) return;
         playbackCatchup = false;
         LiveConfig.get().setKeep(mChannel);
@@ -1311,8 +1297,7 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
     @Override
     public void onLiveBackgroundPanel() {
         dismissLiveControlDialog();
-        Util.moveToBackground(this);
-        setAudioOnly(true);
+        switchToAudioBackground();
     }
 
     @Override
@@ -1352,10 +1337,14 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
 
         @Override
         public void onAudio() {
-            Util.moveToBackground(LiveActivity.this);
-            setAudioOnly(true);
+            switchToAudioBackground();
         }
     };
+
+    private void switchToAudioBackground() {
+        moveTaskToBack(true);
+        setAudioOnly(true);
+    }
 
     @Override
     protected void onPrepare() {
@@ -1517,11 +1506,8 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
     }
 
     private void checkEnded() {
-        if (player().isLive()) {
-            checkNext();
-        } else {
-            nextChannel();
-        }
+        App.removeCallbacks(mEndRetry);
+        App.post(mEndRetry, PLAYBACK_END_RETRY_DELAY);
     }
 
     private void setTrackVisible() {
@@ -2046,11 +2032,7 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
     @Override
     protected void onStart() {
         super.onStart();
-        if (mOsd != null) {
-            mOsd.setDiagnosticsVisible(PlayerSetting.isOsdDiagnostics());
-            mOsd.start();
-        }
-        setPlayParamsState();
+        if (mOsd != null) mOsd.start();
         setAudioOnly(false);
         setStop(false);
     }
@@ -2076,6 +2058,7 @@ public class LiveActivity extends PlaybackActivity implements CustomKeyDown.List
         clearArtworkTarget();
         Source.get().exit();
         App.removeCallbacks(mR1, mR2, mR3);
+        App.removeCallbacks(mEndRetry);
         if (mOsd != null) mOsd.release();
         mViewModel.url().removeObserver(mObserveUrl);
         mViewModel.epg().removeObserver(mObserveEpg);
